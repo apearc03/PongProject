@@ -1,6 +1,7 @@
 package pongproject.game.menuscreen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,22 +12,23 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import pongproject.game.AbstractScreen;
 import pongproject.game.Constants;
-import pongproject.game.pong;
+import pongproject.game.Pong;
 
-public class MenuScreen extends AbstractScreen{
+public class MenuScreen implements Screen{
 
 	private Table table;
-	private Stage stage;
 	private Label label;
+	private Stage stage;
 	private TextButton gameButton;
 	private TextButton highScoreButton;
 	private boolean isSelected; //testing purposes
+	private Pong pongGame;
 	
 	//Constructor initialises stage, table, widgets and input for the screen
-	public MenuScreen(final pong pongGame) {
-		super(pongGame);
+	public MenuScreen(final Pong pongGame) {
+		this.pongGame = pongGame;
+		
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
 		table = new Table();
 		stage.addActor(table);
@@ -80,12 +82,19 @@ public class MenuScreen extends AbstractScreen{
 	//Method repeatedly called to render and update screen
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT );
-		stage.act(Gdx.graphics.getDeltaTime());
-		stage.draw();	
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		
+		
+		stage.act(delta);
+		stage.draw();
+		
+		
+	
 		pongGame.getBatch().begin();
 		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 		pongGame.getBatch().end();
+		
 
 	}
 	@Override

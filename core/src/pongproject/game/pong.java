@@ -1,6 +1,5 @@
 package pongproject.game;
 
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -13,9 +12,7 @@ import pongproject.game.highscorescreen.HighScoreScreen;
 import pongproject.game.menuscreen.MenuScreen;
 import pongproject.game.tests.screenFunctionalityTest;
 
-
-public class pong extends Game {
-
+public class Pong extends Game {
 	private screenFunctionalityTest screenTest; //testing only
 	
 	
@@ -33,17 +30,17 @@ public class pong extends Game {
 	/*to do
 	 * 
 	 * 
-	 * Need git commit soon.
-	 * Then update written report. Exclude junit and replace with unit tests written in core java.
-	 * Talk about:
-	 * Class structure and design.
-	 * Initial code implemented to see screens, code to change to viewport.
-	 * Talk about skins
-	 * commit, then push to github. Add assets and skins to commit
+	 * Update written report, see texts on phone.
+	 * Removed abstractScreen for now. Didnt have enough shared code between screens to warrant it.
+	 * Go to jessops
+	 * Work on actual pong game.
+	 * possibly test app on phone.
+	 * Commit to github
 	 * 
 	 */
 	
 	//initialises all necessary variables and sets screen to the menu
+	
 	@Override
 	public void create () {
 		
@@ -113,7 +110,4 @@ public class pong extends Game {
 		return skin;
 	}
 	
-
-	
-
 }

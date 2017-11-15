@@ -1,21 +1,16 @@
 package pongproject.game.tests;
 
-
-
-import pongproject.game.pong;
-
-	
-
+import pongproject.game.Pong;
 
 public class screenFunctionalityTest {
 
 	
 	
-	private pong game;
+	private Pong game;
 	
 	
 	
-	public screenFunctionalityTest(pong gameTest) {
+	public screenFunctionalityTest(Pong gameTest) {
 			game = gameTest;
 		
 	}

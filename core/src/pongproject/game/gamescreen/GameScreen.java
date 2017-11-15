@@ -1,6 +1,7 @@
 package pongproject.game.gamescreen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,17 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import pongproject.game.AbstractScreen;
 import pongproject.game.Constants;
-import pongproject.game.pong;
+import pongproject.game.Pong;
 
-public class GameScreen extends AbstractScreen{
+public class GameScreen implements Screen{
 
 	private Table table;
 	private Stage stage;
 	private TextButton menuButton;
 	private Label label;
-	
+	private Pong pongGame;
 
 	
 	private boolean isSelected; //testing purposes
@@ -32,8 +32,8 @@ public class GameScreen extends AbstractScreen{
 
 	
 	
-	public GameScreen(final pong pongGame) {
-		super(pongGame);
+	public GameScreen(final Pong pongGame) {
+		this.pongGame = pongGame;
 		
 		gameController = new GameController(pongGame);
 		
@@ -94,18 +94,15 @@ public class GameScreen extends AbstractScreen{
 
 	@Override
 	public void render(float delta) {
-		
-		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		
 		
-		
-		
-		
-		stage.act(Gdx.graphics.getDeltaTime()); //may need to call in game controller or create an update method
+		stage.act(delta);
 		stage.draw();
 		
+		
+	
 		pongGame.getBatch().begin();
 		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 		pongGame.getBatch().end();
@@ -134,8 +131,8 @@ public class GameScreen extends AbstractScreen{
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		isSelected = false; //testing purposes
+		isSelected = false;//testing purposes
+		
 	}
 
 	@Override

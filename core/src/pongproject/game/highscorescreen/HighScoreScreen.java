@@ -1,6 +1,7 @@
 package pongproject.game.highscorescreen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,26 +12,25 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import pongproject.game.AbstractScreen;
 import pongproject.game.Constants;
-import pongproject.game.pong;
+import pongproject.game.Pong;
 
-public class HighScoreScreen extends AbstractScreen{
+public class HighScoreScreen implements Screen{
 
 	private Table table;
 	private Stage stage;
 	private TextButton menuButton;
 	private Label label;
-	
+	private Pong pongGame;
 	private boolean isSelected; //testing purposes
 	
 	
-	public HighScoreScreen(final pong pongGame) {
-		super(pongGame);
+	public HighScoreScreen(final Pong pongGame) {
+		this.pongGame = pongGame;
 		
 		
 		
-		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera())); //keep fit or stretch
+		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
 		table = new Table();
 		stage.addActor(table);
 		
@@ -77,7 +77,7 @@ public class HighScoreScreen extends AbstractScreen{
 		
 		
 		
-		stage.act(Gdx.graphics.getDeltaTime());
+		stage.act(delta);
 		stage.draw();
 		
 		
@@ -110,7 +110,6 @@ public class HighScoreScreen extends AbstractScreen{
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		isSelected = false; //testing purposes
 	}
 

@@ -1,12 +1,12 @@
 package pongproject.game.gamescreen;
 
-import com.badlogic.gdx.Game;
+import pongproject.game.Pong;
 
 public class GameController {
 
-	private Game game;
+	private Pong game;
 	
-	public GameController(Game game) {
+	public GameController(Pong game) {
 		this.game = game;
 	}
 	
