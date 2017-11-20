@@ -31,8 +31,13 @@ public class screenFunctionalityTest {
 				
 			System.out.println("The high score screen is selected and the show method has successfully executed");
 					
-
-		}else {
+			
+		}else if(game.getLoginScreen().isSelected()) {
+			
+		System.out.println("The log in screen is selected and the show method has successfully executed");
+				
+		
+		}else{
 			
 			System.out.println("ERROR: No screen selected, this should not be possible");
 		}

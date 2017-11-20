@@ -10,4 +10,15 @@ public class GameController {
 		this.game = game;
 	}
 	
+	/* private void updateBallMovement(float deltaTime) {
+	        if (!(ball == null)) {
+	            ball.moveX(deltaTime);
+	            checkForPaddleCollision();
+	            checkForBallOutOfBounds();
+	            ball.moveY(deltaTime);
+	            checkForWallCollision();
+	        }
+	    }
+	    
+	  */
 }

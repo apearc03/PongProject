@@ -1,4 +1,4 @@
-package pongproject.game.highscorescreen;
+package pongproject.game.loginscreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,82 +13,78 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import pongproject.game.Constants;
 import pongproject.game.Pong;
 
-public class HighScoreScreen implements Screen{
+public class LoginScreen implements Screen {
 
-
-	private Stage stage;
-	private TextButton menuButton;
-	private Label label;
 	private Pong pongGame;
-	private boolean isSelected; //testing purposes
+	private Label label;
+	private Stage stage;
+	private TextButton gameButton;
+	private boolean isSelected;
 	
-	
-	public HighScoreScreen(final Pong pongGame) {
+	public LoginScreen(final Pong pongGame) {
+		
+		
+		
+		
+		
+		
+		//Perform database queries here
+		//if there are any exceptions, just set the screen back to the menu screen.
+		
+		
+		
+		
+		
+		
 		this.pongGame = pongGame;
-		
-		
-		
+	
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
 		
 		
-		
-		label = new Label("High Score Screen", pongGame.getSkin());
-		menuButton = new TextButton("Menu", pongGame.getSkin());
-		;
-
+		label = new Label("Enter your login details", pongGame.getSkin());
 		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 300);
 		stage.addActor(label);
-		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-(menuButton.getWidth()/2), 200);
-		stage.addActor(menuButton);	
 		
+		gameButton = new TextButton("Play", pongGame.getSkin());
+		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-(gameButton.getWidth()/2), 200);
+		stage.addActor(gameButton);	
 		
-		menuButton.addListener(new ClickListener() {
+		gameButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
-				pongGame.setScreen(pongGame.getMenuScreen());
+				
+				pongGame.setScreen(pongGame.getGameScreen());
+				
+				
 			}
 		});
-		
 	}
-
+	
 	@Override
 	public void show() {
-		
 		Gdx.input.setInputProcessor(stage);
-		
 		isSelected = true; //testing purposes
-		
-		pongGame.getScreenTest().testScreens(); //testing
-		
+		pongGame.getScreenTest().testScreens();
 		
 	}
 
-	
-	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		
-		
 		stage.act(delta);
 		stage.draw();
 		
-		
-	
 		pongGame.getBatch().begin();
 		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 		pongGame.getBatch().end();
-	
-
 		
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, false);
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -106,16 +102,16 @@ public class HighScoreScreen implements Screen{
 
 	@Override
 	public void hide() {
-		isSelected = false; //testing purposes
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void dispose() {
 		stage.dispose();
 		
-		
 	}
- 
+
 	public boolean isSelected() { //testing
 		
 		return isSelected;

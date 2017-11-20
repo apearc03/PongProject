@@ -6,10 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import pongproject.game.Constants;
@@ -17,11 +15,12 @@ import pongproject.game.Pong;
 
 public class GameScreen implements Screen{
 
-	private Table table;
+
 	private Stage stage;
 	private TextButton menuButton;
 	private Label label;
 	private Pong pongGame;
+
 
 	
 	private boolean isSelected; //testing purposes
@@ -37,16 +36,11 @@ public class GameScreen implements Screen{
 		
 		gameController = new GameController(pongGame);
 		
-		
+	
 		
 		
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
-		table = new Table();
-		stage.addActor(table);
 		
-		table.setFillParent(true);
-		table.setWidth(stage.getWidth());
-		table.align(Align.center|Align.bottom);
 		
 		
 		
@@ -60,9 +54,12 @@ public class GameScreen implements Screen{
 		label = new Label("Game Screen", pongGame.getSkin());
 		menuButton = new TextButton("Menu", pongGame.getSkin());
 
-		table.add(label).padBottom(170);
-		table.row();
-		table.add(menuButton).padBottom(125);
+		
+		
+		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 300);
+		stage.addActor(label);
+		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-(menuButton.getWidth()/2), 200);
+		stage.addActor(menuButton);	
 		
 		
 		
