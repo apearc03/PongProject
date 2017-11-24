@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,6 +26,7 @@ public class Pong extends Game {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private BitmapFont font;
+	private BitmapFont errorFont;
 	
 	private Skin skin;
 	
@@ -38,22 +40,9 @@ public class Pong extends Game {
 	/*to do
 	 * 
 	 * 
-	 * Git commit asap.
 	 * 
 	 * 
 	 * Next unit test will be a database unit test, add a row to database, select row from database, then remove row. Along with onscreen database connection message.
-	 * 
-	 * Need to add table to database for scores.
-	 * 
-	 * Store passwords as hashes.
-	 * 
-	 * If no connection is made, put message on menu screen "You can play but your score will not be recorded". With a retry connection button, calls makeConnection in database manager
-	 * Disable highscore button with no connection.
-	 * If connection is made. Put message in same area. top right or left. "Connected". Only allow player to play if they have logged in.
-	 * Public instance of database manager in Pong class.
-	 * 
-	 * Use two textfields for input, record results in manager. Call account login checks on play button click. 
-	 * Might be easier to make a separate loginscreen that is accessed if there is a connection.
 	 * 
 	 * 
 	 * 
@@ -65,6 +54,8 @@ public class Pong extends Game {
 	 * When ball hits paddle. Create calculation from ball and paddles velocity.
 	 * 
 	 * 
+	 * Have a play again method in the gameScreen. Prevents having to login each time.
+	 * 
 	 * 
 	 */
 	
@@ -74,7 +65,15 @@ public class Pong extends Game {
 	public void create () {
 		
 		
-		data = new databaseManager();
+	
+			try {
+				data = new databaseManager();
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+		
+			
 		
 		Gdx.graphics.setTitle(Constants.title);
 		
@@ -84,6 +83,10 @@ public class Pong extends Game {
 		
 		font = new BitmapFont();
 		font.getData().setScale(0.7f);
+		
+		errorFont = new BitmapFont();
+		errorFont.getData().setScale(1f);
+		errorFont.setColor(Color.RED);
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		
@@ -109,7 +112,7 @@ public class Pong extends Game {
 		gameScreen.dispose();
 		highScoreScreen.dispose();
 		loginScreen.dispose();
-		
+	
 	}
 	
 	// Getter methods
@@ -124,6 +127,10 @@ public class Pong extends Game {
 	
 	public BitmapFont getFont() {
 		return font;
+	}
+	
+	public BitmapFont getErrorFont() {
+		return errorFont;
 	}
 	
 	public GameScreen getGameScreen() {

@@ -49,6 +49,7 @@ public class MenuScreen implements Screen{
 		connectionButton.setPosition(20, Constants.VIEWPORT_HEIGHT-50);
 		connectionButton.setTransform(true);
 		connectionButton.setScale(0.5f);
+		
 		stage.addActor(connectionButton);
 		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 300);
 		stage.addActor(label);
@@ -193,8 +194,8 @@ public class MenuScreen implements Screen{
 		try {
 			if(firstConnection) {
 				pongGame.getData().closeConnection();
-			}
-		} catch (SQLException e) {
+				}
+		}catch (SQLException e) {
 			
 			e.printStackTrace();
 		}
