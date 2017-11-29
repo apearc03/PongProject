@@ -2,13 +2,14 @@ package pongproject.game.database;
 
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Base64;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
 
 import x.xyz;
 
@@ -18,7 +19,7 @@ import x.xyz;
 public class databaseManager {
 
 	private Connection conn; 
-	private MysqlDataSource data;
+	//private MysqlDataSource data;
 	private String accountUsername;
 	private Statement checkLoginStatement;
 	private String checkLoginQuery;
@@ -51,8 +52,7 @@ public class databaseManager {
 		 u = new String(z);
 		 
 
-		 data = new MysqlDataSource();
-		 data.setURL(i);
+		
 		 
 		 check = false;
 		 insert = false;
@@ -65,7 +65,7 @@ public class databaseManager {
 	public void makeConnection() throws SQLException {
 
 		
-		conn = data.getConnection(o, u);
+		conn = DriverManager.getConnection(i, o, u);
 
 		
 

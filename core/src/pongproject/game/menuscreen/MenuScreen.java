@@ -4,11 +4,13 @@ import java.sql.SQLException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -25,10 +27,14 @@ public class MenuScreen implements Screen{
 	private TextButton connectionButton;
 	private boolean isSelected; //testing purposes
 	private Pong pongGame;
+	private Label connectionMessage;
+	private LabelStyle connectionStyle;
+	
+	//private String connectionMessage;
 	
 	
 	
-	private String connectionMessage;
+	
 	private boolean firstConnection;
 	
 	
@@ -50,6 +56,13 @@ public class MenuScreen implements Screen{
 		connectionButton.setTransform(true);
 		connectionButton.setScale(0.5f);
 		
+		//connectionMessage = "";
+		connectionStyle = new LabelStyle(pongGame.getErrorFont(), Color.RED);
+		connectionMessage = new Label("", connectionStyle);
+		connectionMessage.setPosition(20,Constants.VIEWPORT_HEIGHT-20);
+		connectionMessage.setFontScale(0.75f);
+		stage.addActor(connectionMessage);
+		
 		stage.addActor(connectionButton);
 		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 300);
 		stage.addActor(label);
@@ -67,7 +80,8 @@ public class MenuScreen implements Screen{
 				try {
 						if(firstConnection) {
 									if(pongGame.getData().checkConnection()) {
-										pongGame.setScreen(pongGame.getLoginScreen());
+										pongGame.setScreen(pongGame.getGameScreen()); 							//added to skip load screen, take out after
+										//pongGame.setScreen(pongGame.getLoginScreen());
 									}
 									else {
 										pongGame.setScreen(pongGame.getGameScreen());
@@ -160,7 +174,7 @@ public class MenuScreen implements Screen{
 		
 		
 		pongGame.getBatch().begin();
-		pongGame.getFont().draw(pongGame.getBatch(),connectionMessage,20,Constants.VIEWPORT_HEIGHT-20);
+		//pongGame.getFont().draw(pongGame.getBatch(),connectionMessage,20,Constants.VIEWPORT_HEIGHT-20); //change to label.
 		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 		pongGame.getBatch().end();
 		
@@ -211,14 +225,16 @@ public class MenuScreen implements Screen{
 	
 	private void makeConnection() throws SQLException {
 		pongGame.getData().makeConnection();
-		connectionMessage = "Connection to database successful";
+		//connectionMessage = "Connection to database successful";
+		connectionMessage.setText("Connection to database successful");
 		connectionButton.setVisible(false);
 		highScoreButton.setVisible(true);
 		firstConnection = true;
 	}
 	
 	private void showRetryConnection() {
-		connectionMessage = "Connection to database unsuccessful, you can play but your score wont be recorded";
+		//connectionMessage = "Connection to database unsuccessful, you can play but your score wont be recorded";
+		connectionMessage.setText("Connection to database unsuccessful, you can play but your score wont be recorded");
 		connectionButton.setVisible(true);
 		highScoreButton.setVisible(false);
 	}

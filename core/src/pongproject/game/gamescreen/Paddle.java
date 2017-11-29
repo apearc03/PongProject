@@ -1,11 +1,83 @@
 package pongproject.game.gamescreen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Paddle extends Rectangle{
+import pongproject.game.Constants;
 
-	public Paddle() {
-		// TODO Auto-generated constructor stub
+public abstract class Paddle extends Rectangle{ //possibly extend actor instead and add to stage.
+
+	private Texture paddleImage;
+	private Sprite paddleSprite;
+	
+	private float yVelocity;
+	
+	public Paddle(FileHandle paddle, float xCoordinate) {
+		
+		this.paddleImage = new Texture(paddle);
+		this.paddleSprite = new Sprite(paddleImage);
+		this.x = xCoordinate;
+		this.y = Constants.VIEWPORT_HEIGHT/2-paddleSprite.getHeight()/2;
+		this.paddleSprite.setX(x);
+		this.paddleSprite.setY(y);
+		//this.width = paddleSprite.getWidth();
+		this.width = 10;
+		this.height = paddleSprite.getHeight();
+		this.yVelocity = 0;
+	}
+	
+	
+	public void updatePosition(float yVelocity) {
+		
+		this.y += yVelocity;
+		this.paddleSprite.setY(y);
+		
+		
+	}
+	
+	public void checkOutOfBounds() {
+		
+		if(getyPosition()+getPaddleSprite().getHeight()>=Constants.VIEWPORT_HEIGHT) {
+			setyPosition(Constants.VIEWPORT_HEIGHT-this.paddleSprite.getHeight());
+		}
+		
+		if(getyPosition()<=0) {
+			setyPosition(0);
+		}
+	}
+	
+	
+	public void resetPaddle() {
+		setyPosition(Constants.VIEWPORT_HEIGHT/2-paddleSprite.getHeight()/2);
+	}
+	
+	
+	//getters and setters
+	
+
+	public Sprite getPaddleSprite() {
+		return paddleSprite;
+	}
+	
+	public float getyVelocity() {
+		return yVelocity;
+	}
+	
+	public void setyVelocity(float yVelocity) {
+		this.yVelocity = yVelocity;
+	}
+	
+	public float getyPosition() {
+		return y;
+	}
+	
+	public void setyPosition(float yPosition) {
+		this.y = yPosition;
+		this.paddleSprite.setY(yPosition);
 	}
 	
 }
+

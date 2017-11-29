@@ -27,6 +27,8 @@ public class Pong extends Game {
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private BitmapFont errorFont;
+	private BitmapFont loadFont;
+	
 	
 	private Skin skin;
 	
@@ -39,10 +41,26 @@ public class Pong extends Game {
 	
 	/*to do
 	 * 
+	 * Might need to change name of paddle velocity variable. I think its speed not velocity since x remains the same.
+	 * Menu and buttons are placed on screen Y coordinate with magic number, need to place according to screen size
 	 * 
+	 * Tested with delta a lot, seemed to make things worse
 	 * 
+	 * Once ai is done, make git commit
 	 * 
-	 * Next unit test will be a database unit test, add a row to database, select row from database, then remove row. Along with onscreen database connection message.
+	 * increase x velocity over time
+	 * Bug where if you hit ball with side of paddle, ball glitches
+	 * 
+	 * Remove this keyword from areas, probably not necessary.
+	 * 
+	 * Check if circle for ball is doable.
+	 * 
+	 * Idea for later on, allow paddle to move in confined area left and right
+	 * Remove Batch.draw in render methods when game is done.
+	 * Re do all text with hiero font creator.
+	 * 
+	 * Make without loading screen. Seems pointless unless the performance is bad.
+	 * 
 	 * 
 	 * 
 	 * 
@@ -53,6 +71,7 @@ public class Pong extends Game {
 	 * Vector for ball, position and velocity. Float for y position and float for paddles y velocity since it remains on same x coordinate.
 	 * When ball hits paddle. Create calculation from ball and paddles velocity.
 	 * 
+	 * Need to make assetmanager class also.
 	 * 
 	 * Have a play again method in the gameScreen. Prevents having to login each time.
 	 * 
@@ -63,6 +82,7 @@ public class Pong extends Game {
 	
 	@Override
 	public void create () {
+		
 		
 		
 	
@@ -80,6 +100,9 @@ public class Pong extends Game {
 		camera = new OrthographicCamera();
 		
 		batch = new SpriteBatch();
+		
+		loadFont = new BitmapFont(Gdx.files.internal("arial150.fnt"));
+		
 		
 		font = new BitmapFont();
 		font.getData().setScale(0.7f);
@@ -133,6 +156,10 @@ public class Pong extends Game {
 		return errorFont;
 	}
 	
+	public BitmapFont getLoadFont() {
+		return loadFont;
+	}
+	
 	public GameScreen getGameScreen() {
 		return gameScreen;
 	}
@@ -160,4 +187,6 @@ public class Pong extends Game {
 	public databaseManager getData() {
 		return data;
 	}
+	
+	
 }

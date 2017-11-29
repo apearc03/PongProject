@@ -2,10 +2,13 @@ package pongproject.game;
 
 public class Constants {
 
+	//maybe remove viewport width and height
+	
 	//Class for constant variable access 
 	public static final String title = "Pong";
-	public static final float VIEWPORT_HEIGHT = 480;
-	public static final float VIEWPORT_WIDTH = 720;
-	public static final int APP_HEIGHT = 480; //added in second iteration
-	public static final int APP_WIDTH = 720;
+	public static final int VIEWPORT_HEIGHT = 650;
+	public static final int VIEWPORT_WIDTH = 900;
+	public static final int FPS = 58;
+	public static final float MAX_X_VELOCITY = 10;
+
 }
