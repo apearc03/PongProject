@@ -1,7 +1,6 @@
 package pongproject.game.gamescreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 
 import pongproject.game.Constants;
 
@@ -18,6 +17,7 @@ public class PlayerPaddle extends Paddle{
 	
 		this.keyUp = kUp;
 		this.keyDown = kDown;
+		this.name = "the player";
 	}
 	
 
@@ -42,7 +42,6 @@ public class PlayerPaddle extends Paddle{
 		}
 		
 	}
-	
 
 
 }

@@ -1,6 +1,5 @@
 package pongproject.game.gamescreen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,6 +11,10 @@ public abstract class Paddle extends Rectangle{ //possibly extend actor instead 
 
 	private Texture paddleImage;
 	private Sprite paddleSprite;
+	protected String name;
+	
+	private int score;
+	
 	
 	private float yVelocity;
 	
@@ -27,6 +30,7 @@ public abstract class Paddle extends Rectangle{ //possibly extend actor instead 
 		this.width = 10;
 		this.height = paddleSprite.getHeight();
 		this.yVelocity = 0;
+		this.score = 0;
 	}
 	
 	
@@ -40,11 +44,11 @@ public abstract class Paddle extends Rectangle{ //possibly extend actor instead 
 	
 	public void checkOutOfBounds() {
 		
-		if(getyPosition()+getPaddleSprite().getHeight()>=Constants.VIEWPORT_HEIGHT) {
-			setyPosition(Constants.VIEWPORT_HEIGHT-this.paddleSprite.getHeight());
+		if(y+paddleSprite.getHeight()>=Constants.VIEWPORT_HEIGHT) {
+			setyPosition(Constants.VIEWPORT_HEIGHT-paddleSprite.getHeight());
 		}
 		
-		if(getyPosition()<=0) {
+		if(y<=0) {
 			setyPosition(0);
 		}
 	}
@@ -52,10 +56,21 @@ public abstract class Paddle extends Rectangle{ //possibly extend actor instead 
 	
 	public void resetPaddle() {
 		setyPosition(Constants.VIEWPORT_HEIGHT/2-paddleSprite.getHeight()/2);
+		
 	}
 	
+	public void resetScore() {
+		score = 0;
+	}
+	
+	public void incrementScore() {
+		score +=1;
+	}
 	
 	//getters and setters
+	public int getScore() {
+		return score;
+	}
 	
 
 	public Sprite getPaddleSprite() {
@@ -79,5 +94,8 @@ public abstract class Paddle extends Rectangle{ //possibly extend actor instead 
 		this.paddleSprite.setY(yPosition);
 	}
 	
+	public String getName() {
+		return name;
+	}
 }
 

@@ -22,7 +22,8 @@ public class GameScreen implements Screen{
 
 	private Stage stage;
 	private TextButton menuButton;
-	private Label label;
+	private TextButton playAgainButton;
+	
 	private Pong pongGame;
 
 	private float elapsed;
@@ -36,7 +37,8 @@ public class GameScreen implements Screen{
 	
 	private boolean isSelected; //testing purposes
 	
-	
+	private Label winner;
+	private Label scoreStored;
 	
 	
 	private GameController gameController;
@@ -82,17 +84,37 @@ public class GameScreen implements Screen{
 		
 		
 		
-		label = new Label("Game Screen", pongGame.getSkin());
+		playAgainButton = new TextButton("Play again", pongGame.getSkin());
+		playAgainButton.setVisible(false);
 		menuButton = new TextButton("Menu", pongGame.getSkin());
-
-		
-		
-		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 300);
-		stage.addActor(label);
-		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-(menuButton.getWidth()/2), 200);
+		menuButton.setVisible(false);
+	
+		playAgainButton.setPosition(Constants.VIEWPORT_WIDTH/2-playAgainButton.getWidth()/2, 250);
+		stage.addActor(playAgainButton);
+		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-menuButton.getWidth()/2, 200);
 		stage.addActor(menuButton);	
 		
 		
+		winner = new Label("", pongGame.getSkin());
+		winner.setPosition(Constants.VIEWPORT_WIDTH/2-100, Constants.VIEWPORT_HEIGHT-250);
+		winner.setVisible(false);
+		stage.addActor(winner);
+		
+		
+		scoreStored = new Label("", pongGame.getSkin());
+		
+		scoreStored.setVisible(false);
+		stage.addActor(scoreStored);
+		
+		
+		playAgainButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// TODO Auto-generated method stub
+				super.clicked(event, x, y);
+				pongGame.setScreen(pongGame.getGameScreen());
+			}
+		});
 		
 		menuButton.addListener(new ClickListener() {
 			@Override
@@ -100,6 +122,7 @@ public class GameScreen implements Screen{
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
 				pongGame.setScreen(pongGame.getMenuScreen());
+				
 			}
 		});
 		
@@ -110,6 +133,9 @@ public class GameScreen implements Screen{
 	
 	}
 
+	
+	
+	
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
@@ -163,9 +189,11 @@ public class GameScreen implements Screen{
 			
 		}
 		
+		
 		gameController.getComputerPadd().getPaddleSprite().draw(pongGame.getBatch());
 		gameController.getPlayerPadd().getPaddleSprite().draw(pongGame.getBatch());
-		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
+		pongGame.getSecondFont().draw(pongGame.getBatch(), "" + gameController.getComputerPadd().getScore(),Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
+		pongGame.getSecondFont().draw(pongGame.getBatch(), "" + gameController.getPlayerPadd().getScore(),Constants.VIEWPORT_WIDTH-Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
 		pongGame.getBatch().end();
 		
 		gameController.zeroPadVelocity();
@@ -194,12 +222,21 @@ public class GameScreen implements Screen{
 	public void hide() {
 		
 		gameController.resetGame();
+		gameController.resetScores();
+		
+		
+		winner.setVisible(false);
+		scoreStored.setVisible(false);
+		menuButton.setVisible(false);
+		playAgainButton.setVisible(false);
 		
 		isSelected = false;//testing purposes
 		
 		controlsFadeOut.reset();
 
 		playFadeOut.reset();
+		
+	
 
 	}
 
@@ -214,4 +251,28 @@ public class GameScreen implements Screen{
 		return isSelected;
 	}
 
+	
+	public void setWinnerText(String winnerText) {
+		winner.setText(winnerText);
+		winner.setVisible(true);
+	}
+
+	
+	public void setScoreStored(String score) {
+		scoreStored.setText(score);
+		scoreStored.setVisible(true);
+	}
+
+	public Label getScoreStored() {
+		return scoreStored;
+	}
+	
+	public TextButton getPlayAgainButton() {
+		return playAgainButton;
+	}
+	
+	public TextButton getMenuButton() {
+		return menuButton;
+	}
 }
+

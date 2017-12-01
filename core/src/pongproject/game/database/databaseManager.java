@@ -6,10 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Base64;
-
-
 
 import x.xyz;
 
@@ -19,18 +16,25 @@ import x.xyz;
 public class databaseManager {
 
 	private Connection conn; 
-	//private MysqlDataSource data;
-	private String accountUsername;
-	private Statement checkLoginStatement;
-	private String checkLoginQuery;
-	private ResultSet checkLoginRS;
+
+	private String accountUsername; //The name of the user.
+	
+
+	
 	
 	private PreparedStatement insertStatement;
 	private String insertQuery;
 	
 	
+	private PreparedStatement checkLoginStatement;
+	private String checkLoginQuery;
+	private ResultSet checkLoginRS;
+	
+	
 	private boolean check;
 	private boolean insert;
+	
+	
 	//Bad practice to include database details in source but here is my attempt at obfuscating login details
 	private xyz zxy = new xyz();
 	private byte[] z;
@@ -57,12 +61,13 @@ public class databaseManager {
 		 check = false;
 		 insert = false;
 		
+		 DriverManager.setLoginTimeout(2);
 	}
 	
 	
 	
 	
-	public void makeConnection() throws SQLException {
+	public void makeConnection() throws SQLException{
 
 		
 		conn = DriverManager.getConnection(i, o, u);
@@ -79,44 +84,52 @@ public class databaseManager {
 	}
 	
 	
+
+
+	
 	
 	public boolean checkLogin(String username, String password) throws SQLException {
-		String user;
-		int pass;
 		
+		
+		int pass;
 		int passHash = password.hashCode();
-		checkLoginStatement = conn.createStatement();
-		checkLoginQuery = "Select * from pong_users";
-		checkLoginRS = checkLoginStatement.executeQuery(checkLoginQuery);
+		
+		
+		
+		checkLoginQuery = "Select username, password from pong_users where username = ?";
+		checkLoginStatement = conn.prepareStatement(checkLoginQuery);
+		checkLoginStatement.setString(1, username);
+
+		checkLoginRS = checkLoginStatement.executeQuery();
+		
 		check = true;
 		
 		
-		while(checkLoginRS.next()){
-			user = checkLoginRS.getString("username");
+		if(checkLoginRS.first()) {
 			pass = checkLoginRS.getInt("password");
 			
-			if(username.equals(user)) {
-				
-				if(passHash == pass) {
-					System.out.println("Existing user");
-					accountUsername = username;
-					return true;
-				}
-				
+			if(passHash == pass) {
+				//existing account, both details correct
+				System.out.println("Existing user");
+				accountUsername = username;
+				return true;
+			}
+			else {
 				System.out.println("Username matches but not password, an error message has been returned");
 				return false;
 			}
-			
 		}
 		
-	
+		
 		
 		addAccount(username, password);
 		System.out.println("New user");
 		accountUsername = username;
 		return true;
 	}
-
+	
+	
+	
 	
 	private void addAccount(String username, String password ) throws SQLException {
 		
@@ -131,7 +144,9 @@ public class databaseManager {
 		insert = true;
 	}
 	
-	public void enterScore(String userName, int score) {
+	
+	//to do next
+	public void enterScore(String userName, String date, String result, int score ) {
 		
 	}
 	

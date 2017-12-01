@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import pongproject.game.Constants;
 import pongproject.game.Pong;
+import pongproject.game.loginscreen.LoginScreen;
 
 public class MenuScreen implements Screen{
 
@@ -24,25 +25,28 @@ public class MenuScreen implements Screen{
 	private Stage stage;
 	private TextButton gameButton;
 	private TextButton highScoreButton;
+	private TextButton loginButton;
 	private TextButton connectionButton;
 	private boolean isSelected; //testing purposes
 	private Pong pongGame;
+	private Label loggedInAs;
 	private Label connectionMessage;
 	private LabelStyle connectionStyle;
 	
-	//private String connectionMessage;
 	
 	
 	
 	
-	private boolean firstConnection;
+	
+	
+	
 	
 	
 	//Constructor initialises stage, table, widgets and input for the screen
 	public MenuScreen(final Pong pongGame) {
 		this.pongGame = pongGame;
 		
-	
+		
 		
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
 		
@@ -57,11 +61,15 @@ public class MenuScreen implements Screen{
 		connectionButton.setScale(0.5f);
 		
 		//connectionMessage = "";
-		connectionStyle = new LabelStyle(pongGame.getErrorFont(), Color.RED);
+		connectionStyle = new LabelStyle(pongGame.getSecondFont(), Color.WHITE);
 		connectionMessage = new Label("", connectionStyle);
 		connectionMessage.setPosition(20,Constants.VIEWPORT_HEIGHT-20);
 		connectionMessage.setFontScale(0.75f);
 		stage.addActor(connectionMessage);
+		
+		loggedInAs = new Label("", pongGame.getSkin());
+		loggedInAs.setPosition(20, 20);
+		stage.addActor(loggedInAs);
 		
 		stage.addActor(connectionButton);
 		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 300);
@@ -71,6 +79,12 @@ public class MenuScreen implements Screen{
 		highScoreButton.setPosition(Constants.VIEWPORT_WIDTH/2-(highScoreButton.getWidth()/2), 100);
 		stage.addActor(highScoreButton);
 		
+		loginButton = new TextButton("Login with a different account", pongGame.getSkin());
+		loginButton.setPosition(Constants.VIEWPORT_WIDTH/2-(loginButton.getWidth()/2), 150);
+		loginButton.setVisible(false);
+		stage.addActor(loginButton);
+		
+		
 		gameButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -78,10 +92,18 @@ public class MenuScreen implements Screen{
 				super.clicked(event, x, y);
 				
 				try {
-						if(firstConnection) {
+						if(pongGame.getFirstConnection()) {
 									if(pongGame.getData().checkConnection()) {
-										pongGame.setScreen(pongGame.getGameScreen()); 							//added to skip load screen, take out after
-										//pongGame.setScreen(pongGame.getLoginScreen());
+										
+										if(pongGame.getLoggedIn()) {
+											pongGame.setScreen(pongGame.getGameScreen()); 	
+										}
+										else {
+											//pongGame.setScreen(pongGame.getGameScreen()); //added to skip load screen, take out after
+											pongGame.setScreen(pongGame.getLoginScreen());
+										}
+										
+									
 									}
 									else {
 										pongGame.setScreen(pongGame.getGameScreen());
@@ -125,13 +147,23 @@ public class MenuScreen implements Screen{
 			
 		});
 		
+		loginButton.addListener(new ClickListener() {
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// TODO Auto-generated method stub
+				super.clicked(event, x, y);
+				pongGame.setScreen(pongGame.getLoginScreen());
+			}
+		});
+		
 		
 		try {
 			makeConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			showRetryConnection();
-			firstConnection = false;
+			pongGame.setFirstConnection(false);
 		}
 		
 		
@@ -148,7 +180,7 @@ public class MenuScreen implements Screen{
 		
 		
 		try {
-			if(firstConnection) {
+			if(pongGame.getFirstConnection()) {
 				if(!pongGame.getData().checkConnection()) {
 					showRetryConnection();
 				}
@@ -158,7 +190,9 @@ public class MenuScreen implements Screen{
 			e.printStackTrace();
 		}
 		
-		
+		if(pongGame.getLoggedIn()) {
+			loginButton.setVisible(true);
+		}
 	
 		
 	}
@@ -206,7 +240,7 @@ public class MenuScreen implements Screen{
 	public void dispose() {
 		stage.dispose();
 		try {
-			if(firstConnection) {
+			if(pongGame.getFirstConnection()) {
 				pongGame.getData().closeConnection();
 				}
 		}catch (SQLException e) {
@@ -225,20 +259,24 @@ public class MenuScreen implements Screen{
 	
 	private void makeConnection() throws SQLException {
 		pongGame.getData().makeConnection();
-		//connectionMessage = "Connection to database successful";
+	
 		connectionMessage.setText("Connection to database successful");
 		connectionButton.setVisible(false);
 		highScoreButton.setVisible(true);
-		firstConnection = true;
+		pongGame.setFirstConnection(true);
 	}
 	
 	private void showRetryConnection() {
-		//connectionMessage = "Connection to database unsuccessful, you can play but your score wont be recorded";
+	
 		connectionMessage.setText("Connection to database unsuccessful, you can play but your score wont be recorded");
 		connectionButton.setVisible(true);
 		highScoreButton.setVisible(false);
 	}
 	
+	
+	public void setLoggedInAs(String username) {
+		loggedInAs.setText("Logged in as " + username);
+	}
 	
 	
 }

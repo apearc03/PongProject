@@ -1,5 +1,10 @@
 package pongproject.game.gamescreen;
 
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import com.badlogic.gdx.Input.Keys;
 
 import pongproject.game.Constants;
@@ -16,12 +21,20 @@ public class GameController {
 	private float ballInterSect;
 	private float Normalized;
 	
-	public GameController(Pong pongGame, GameScreen screen) {
-		this.game = pongGame;
-		this.screen = screen;
-		this.ball = new Ball();
-		this.playerPadd = new PlayerPaddle(Keys.UP,Keys.DOWN);
-		this.computerPadd = new ComputerPaddle(ball);
+	private int gameScore; //Increment score throughout game somehow, number of paddle hits, score ratio etc. 
+	private DateFormat dateFormat;
+	private Date date;
+	
+	public GameController(final Pong pongGame, GameScreen gameScreen) {
+		game = pongGame;
+		screen = gameScreen;
+		ball = new Ball();
+		playerPadd = new PlayerPaddle(Keys.UP,Keys.DOWN);
+		computerPadd = new ComputerPaddle(ball);
+		
+		dateFormat = DateFormat.getDateInstance(3, Locale.UK);
+		date = new Date();
+		
 		
 	}
 	
@@ -30,25 +43,26 @@ public class GameController {
 	
 	
 	public void update() {
-		//added for test
+		
+		//added for testing
 		//getComputerPadd().moveCPUPaddle();
-		getComputerPadd().movePaddleToBall();
-		//--
-		getComputerPadd().checkOutOfBounds();
-		getPlayerPadd().movePaddle();
-		getPlayerPadd().checkOutOfBounds();
-		getBall().checkYOutOfBounds();
-		getBall().checkXOutOfBounds();
+		
+		
+		computerPadd.checkOutOfBounds();
+		playerPadd.movePaddle();
+		playerPadd.checkOutOfBounds();
+		
+		//ball stuff
+		checkYOutOfBounds();
+		checkXOutOfBounds();
 		checkForPlayerCollision();
 		checkForCPCollision();
-		
-		//disabled for testing
-		getBall().increaseXVeloverTime();
+		ball.increaseXVeloverTime();
 	
 		
-		getBall().updatePosition(getBall().getxVelocity(),getBall().getyVelocity());
-		getPlayerPadd().updatePosition(getPlayerPadd().getyVelocity());
-		
+		ball.updatePosition(getBall().getxVelocity(),getBall().getyVelocity());
+		playerPadd.updatePosition(getPlayerPadd().getyVelocity());
+		computerPadd.movePaddleToBall();
 		
 		//disabled
 		//getComputerPadd().updatePosition(getComputerPadd().getyVelocity());
@@ -59,7 +73,7 @@ public class GameController {
 	
 	public void startGame() {
 		
-		getBall().startBallMovement();
+		ball.startBallMovement();
 	}
 	
 	
@@ -77,47 +91,53 @@ public class GameController {
 	}
 	
 	public void resetGame() {
-		getComputerPadd().resetPaddle();
-		getPlayerPadd().resetPaddle();
+		computerPadd.resetPaddle();
+		playerPadd.resetPaddle();
 
-		getBall().setLastHitWasPLayer(false);
-		getBall().resetBall();
+		ball.setLastHitWasPLayer(false);
+		ball.resetBall();
 		
 	}
 	
+	public void resetScores() {
+		computerPadd.resetScore();
+		playerPadd.resetScore();
+		gameScore = 0;
+	}
+	
 	public void zeroPadVelocity() {
-		getComputerPadd().setyVelocity(0);
-		getPlayerPadd().setyVelocity(0);
+		computerPadd.setyVelocity(0);
+		playerPadd.setyVelocity(0);
 	}
 	
 	
 	public void checkForPlayerCollision() {
 		
-		if(getBall().overlaps(playerPadd)) {
+		if(ball.overlaps(playerPadd)) {
 			
-				ballInterSect = (getPlayerPadd().getY()+(getPlayerPadd().getHeight()/2))-(getBall().getY()+getBall().getHeight()/2);
-				Normalized = (ballInterSect/getPlayerPadd().getHeight())*-1;
+				ballInterSect = (playerPadd.getY()+(playerPadd.getHeight()/2))-(ball.getY()+ball.getHeight()/2);
+				Normalized = (ballInterSect/playerPadd.getHeight())*-1;
 		
 				//used to fix ball stuck glitch
-				if(getBall().getLastHitPlayer()) {
+				if(ball.getLastHitPlayer()) {
 
 					if(Normalized > 0) {
-						getBall().updatePosition(-5, 5);
+						ball.updatePosition(-5, 5);
 					}
 					else {
-						getBall().updatePosition(-5, -5);
+						ball.updatePosition(-5, -5);
 					}
 					
 				}
 
 				
 				//working code
-				getBall().setVelocity(getBall().getxVelocity()*-1, (Normalized*3.5f)*getBall().getxVelocity()/2);
+				ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*ball.getxVelocity()/2);
 				
 				
 				
 			
-				getBall().setLastHitWasPLayer(true);
+				ball.setLastHitWasPLayer(true);
 				
 			
 		
@@ -130,38 +150,162 @@ public class GameController {
 	
 	public void checkForCPCollision() {
 		
-		if(getBall().overlaps(computerPadd)) {
+		if(ball.overlaps(computerPadd)) {
 			
-			ballInterSect = (getComputerPadd().getY()+(getComputerPadd().getHeight()/2))-(getBall().getY()+getBall().getHeight()/2);
-			Normalized = (ballInterSect/getComputerPadd().getHeight())*-1;
+			ballInterSect = (computerPadd.getY()+(computerPadd.getHeight()/2))-(ball.getY()+ball.getHeight()/2);
+			Normalized = (ballInterSect/computerPadd.getHeight())*-1;
 	
 			//used to fix ball stuck glitch
-			if(!getBall().getLastHitPlayer()) {
+			if(!ball.getLastHitPlayer()) {
 
 				if(Normalized > 0) {
-					getBall().updatePosition(5, 5);
+					ball.updatePosition(5, 5);
 				}
 				else {
-					getBall().updatePosition(5, -5);
+					ball.updatePosition(5, -5);
 				}
 
 			}
 			
 			
 			//working code
-			getBall().setVelocity(getBall().getxVelocity()*-1, (Normalized*3.5f)*-getBall().getxVelocity()/2);
+			ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*-ball.getxVelocity()/2);
 			
 		
 			
 			//Computer hit the ball
-			getBall().setLastHitWasPLayer(false);
+			ball.setLastHitWasPLayer(false);
 			
 		
 		}
-		System.out.println(ball.getxVelocity());
+		//System.out.println(ball.getxVelocity());
 	}
 	
 	
 	
+	
+		public void checkXOutOfBounds() {
+			
+
+			if(ball.getX() <= 0) {
+				//ball.setVelocity(ball.getxVelocity()*-1, ball.getyVelocity());
+				//player scores
+				playerPadd.incrementScore();
+				
+				try {
+					checkForWinner(playerPadd);
+				} catch (SQLException e) {
+					screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-270);
+					screen.setScoreStored("There is no connection to the database so your score could not be stored");
+				}
+				
+				
+			}
+			
+			
+
+			if(ball.getX() + ball.getBallSprite().getWidth()>= Constants.VIEWPORT_WIDTH) {
+				//ball.setVelocity(ball.getxVelocity()*-1, ball.getyVelocity());
+				//computer scores
+				computerPadd.incrementScore();
+				
+				try {
+					checkForWinner(computerPadd);
+				} catch (SQLException e) {
+					screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-270);
+					screen.setScoreStored("There is no connection to the database so your score could not be stored");
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		
+		
+		
+		public void checkYOutOfBounds() {
+			
+			
+			
+			if(ball.getY() < 0) {
+				
+				ball.updatePosition(0, 5);
+				ball.setVelocity(ball.getxVelocity(), ball.getyVelocity()*-1);
+			
+				
+			}
+			
+			
+
+			if(ball.getY() + ball.getBallSprite().getHeight()> Constants.VIEWPORT_HEIGHT) {
+				
+				ball.updatePosition(0, -5);
+				ball.setVelocity(ball.getxVelocity(), ball.getyVelocity()*-1);
+				
+				
+			}
+			
+		}
+		
+		
+		public void checkForWinner(Paddle pad) throws SQLException {
+			
+			if(pad.getScore()==1) {//change to 5 after
+						resetGame();
+						screen.setWinnerText("The winner is " + pad.getName());
+					
+					
+					
+				
+					
+						
+						if(game.getFirstConnection()) {
+							game.getData().checkConnection();
+							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-145, Constants.VIEWPORT_HEIGHT-270);
+							screen.setScoreStored("Your score has been successfully stored");
+							
+							
+							//Need to create way to score the game and then add body to enterscore method
+							//insert score to database with  databaseManager.getAccountUsername()
+							
+									
+									if(pad.getClass().equals(playerPadd.getClass())) {
+										System.out.println("Player won");
+										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date), "Win", gameScore);
+									}
+									else {
+										System.out.println("Computer won");
+										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date), "Loss", gameScore);
+									}
+									
+						
+						}
+						else {
+							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-270);
+							screen.setScoreStored("There is no connection to the database so your score could not be stored");
+						}
+						
+				
+					
+				
+					
+					System.out.println("Winner method executed");
+					System.out.println(game.getData().getAccountUsername());
+					
+					
+					screen.getPlayAgainButton().setVisible(true);
+					screen.getMenuButton().setVisible(true);
+					
+					
+			
+			}
+			else {
+				resetGame();
+				ball.startBallMovement();
+			}
+			
+		}
 
 }

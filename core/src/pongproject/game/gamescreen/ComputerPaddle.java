@@ -3,18 +3,18 @@ package pongproject.game.gamescreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
-import pongproject.game.Constants;
-
 public class ComputerPaddle extends Paddle{
 
 	
 	private Ball gameBall;
-	private float difficulty;
+	private float difficulty; //lower the difficulty number to make harder
 	
 	public ComputerPaddle(Ball ball) {
 		super(Gdx.files.internal("paddle.png"), 50);
-		gameBall = ball;
-		difficulty =12.5f;
+		this.gameBall = ball;
+		this.difficulty =9.5f;
+		
+		this.name = "the computer";
 	}
 
 	
@@ -28,15 +28,11 @@ public class ComputerPaddle extends Paddle{
 	
 	public void movePaddleToBall() {
 		
-	
-		
-		
-		
-	
-		//This actually kinda works. Play with division. Lower number equals harder, 12.5 is pretty close to ideal difficulty.
 
+	
 		
-		//only react if the ball is moving to the paddle.
+
+	
 		
 		
 					
@@ -102,6 +98,6 @@ public class ComputerPaddle extends Paddle{
 	}
 	
 	
-	
+
 	
 }

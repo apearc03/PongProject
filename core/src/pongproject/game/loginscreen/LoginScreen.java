@@ -27,12 +27,14 @@ public class LoginScreen implements Screen {
 	private LabelStyle errorStyle;
 	private Stage stage;
 	private TextButton gameButton;
+	private TextButton menuButton;
 	private boolean isSelected;
 	private TextField userField;
 	private TextField passField;
+	
 
-	//private String userError;
-	//private String passError;
+
+	
 	
 	private String username;
 	private String password;
@@ -43,14 +45,10 @@ public class LoginScreen implements Screen {
 		
 		
 		
-		
 		//Perform database queries here
 		//if there are any exceptions, just set the screen back to the menu screen.
 		//constantly check connection status? if it drops, return to menu screen and display prompt saying connection lost.
 		
-		
-		//userError = "";
-		//passError = "";
 		
 		
 		
@@ -76,6 +74,7 @@ public class LoginScreen implements Screen {
 		userField.setMessageText("Username");
 		stage.addActor(userField);
 		
+		
 	
 		
 		passField = new TextField("", pongGame.getSkin());
@@ -86,7 +85,7 @@ public class LoginScreen implements Screen {
 		stage.addActor(passField);
 		
 		//added
-		errorStyle = new LabelStyle(pongGame.getErrorFont(), Color.RED);
+		errorStyle = new LabelStyle(pongGame.getSecondFont(), Color.RED);
 		userError = new Label("", errorStyle);
 		passError = new Label("", errorStyle);
 		userError.setPosition(Constants.VIEWPORT_WIDTH/2-userField.getWidth()/2,300);
@@ -96,16 +95,19 @@ public class LoginScreen implements Screen {
 		stage.addActor(passError);
 		
 		gameButton = new TextButton("Play", pongGame.getSkin());
-		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-(gameButton.getWidth()/2), 50);
+		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-(gameButton.getWidth()/2), 100);
 		stage.addActor(gameButton);	
+		
+		menuButton = new TextButton("Menu", pongGame.getSkin());
+		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-(menuButton.getWidth()/2), 50);
+		stage.addActor(menuButton);
 		
 		gameButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				
-				//userError = "";
-				//passError = "";
+				
 				
 				userError.setText("");
 				passError.setText("");
@@ -119,7 +121,11 @@ public class LoginScreen implements Screen {
 							try {
 									if(pongGame.getData().checkLogin(username, password)) {
 										//In the exception here check the connection, if no connection return to main menu
+										pongGame.setLoggedIn(true);
 										System.out.println("LOGIN SUCCESS");
+										userField.setText("");
+										passField.setText("");
+										pongGame.getMenuScreen().setLoggedInAs(pongGame.getData().getAccountUsername());
 										pongGame.setScreen(pongGame.getGameScreen());
 										
 									}
@@ -139,6 +145,16 @@ public class LoginScreen implements Screen {
 				
 			}
 		});
+		
+		menuButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// TODO Auto-generated method stub
+				super.clicked(event, x, y);
+				pongGame.setScreen(pongGame.getMenuScreen());
+			}
+		});
+		
 	}
 	
 	@Override
@@ -146,7 +162,7 @@ public class LoginScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		isSelected = true; //testing purposes
 		pongGame.getScreenTest().testScreens();
-		
+	
 	}
 
 	@Override
@@ -155,10 +171,9 @@ public class LoginScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 		
-		pongGame.getBatch().begin();	//should be able to remove this
+		pongGame.getBatch().begin();	
 		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
-		//pongGame.getErrorFont().draw(pongGame.getBatch(),userError,Constants.VIEWPORT_WIDTH/2-userField.getWidth()/2,300); 
-		//pongGame.getErrorFont().draw(pongGame.getBatch(),passError,Constants.VIEWPORT_WIDTH/2-passField.getWidth()/2,200);
+	
 		pongGame.getBatch().end();
 		
 	}
@@ -183,7 +198,8 @@ public class LoginScreen implements Screen {
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
+		userError.setText("");
+		passError.setText("");
 		
 	}
 
@@ -202,13 +218,13 @@ public class LoginScreen implements Screen {
 	private boolean validateUsername(String username){
 		
 		if(username.length()>20 || username.length() < 4) {
-			//userError = "Username must be between 4-20 characters in length";
+			
 			userError.setText("Username must be between 4-20 characters in length");
 			return false;
 		}
 		
 		if(!username.matches("[a-zA-Z0-9]*")) {
-			//userError = "Username must only contain letters and numbers";
+		
 			userError.setText("Username must only contain letters and numbers");
 			return false;
 		}
@@ -222,20 +238,20 @@ public class LoginScreen implements Screen {
 		
 
 		if(password.length()>20  || password.length() < 4) {
-			//passError = "Password must be between 4-20 characters in length";
+		
 			passError.setText("Password must be between 4-20 characters in length");
 			return false;
 		}
 
 		
 		if(!password.matches("[a-zA-Z0-9]*")) {
-			//passError = "Password must only contain letters and numbers";
+			
 			passError.setText("Password must only contain letters and numbers");
 			return false;
 		}
 		
 		if(password.equals(username)) {
-			//passError = "Password cannot be the same as your username";
+			
 			passError.setText("Password cannot be the same as your username");
 			return false;
 		}
@@ -245,4 +261,5 @@ public class LoginScreen implements Screen {
 	}
 	
 	
+
 }

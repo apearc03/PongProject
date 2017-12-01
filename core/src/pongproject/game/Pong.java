@@ -26,7 +26,7 @@ public class Pong extends Game {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private BitmapFont font;
-	private BitmapFont errorFont;
+	private BitmapFont secondFont;
 	private BitmapFont loadFont;
 	
 	
@@ -39,27 +39,28 @@ public class Pong extends Game {
 	
 	private  databaseManager data;
 	
+	private boolean firstConnection;
+	private boolean loggedIn;
+	
+	
 	/*to do
+	 * 
+	 *
 	 * 
 	 * Might need to change name of paddle velocity variable. I think its speed not velocity since x remains the same.
 	 * Menu and buttons are placed on screen Y coordinate with magic number, need to place according to screen size
 	 * 
 	 * Tested with delta a lot, seemed to make things worse
 	 * 
-	 * Once ai is done, make git commit
 	 * 
-	 * increase x velocity over time
-	 * Bug where if you hit ball with side of paddle, ball glitches
+	 *
+	 *Look into database indexing.
 	 * 
-	 * Remove this keyword from areas, probably not necessary.
-	 * 
-	 * Check if circle for ball is doable.
 	 * 
 	 * Idea for later on, allow paddle to move in confined area left and right
 	 * Remove Batch.draw in render methods when game is done.
 	 * Re do all text with hiero font creator.
 	 * 
-	 * Make without loading screen. Seems pointless unless the performance is bad.
 	 * 
 	 * 
 	 * 
@@ -70,10 +71,8 @@ public class Pong extends Game {
 	 * Use vectors for position and velocity. Rectangles for ball and paddles.
 	 * Vector for ball, position and velocity. Float for y position and float for paddles y velocity since it remains on same x coordinate.
 	 * When ball hits paddle. Create calculation from ball and paddles velocity.
+	 * .
 	 * 
-	 * Need to make assetmanager class also.
-	 * 
-	 * Have a play again method in the gameScreen. Prevents having to login each time.
 	 * 
 	 * 
 	 */
@@ -107,9 +106,9 @@ public class Pong extends Game {
 		font = new BitmapFont();
 		font.getData().setScale(0.7f);
 		
-		errorFont = new BitmapFont();
-		errorFont.getData().setScale(1f);
-		errorFont.setColor(Color.RED);
+		secondFont = new BitmapFont();
+		secondFont.getData().setScale(1f);
+		//errorFont.setColor(Color.RED);
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		
@@ -120,6 +119,7 @@ public class Pong extends Game {
 		
 		screenTest = new screenFunctionalityTest(this); //testing purposes
 		
+		loggedIn = false;
 		
 		this.setScreen(menuScreen);
 	}
@@ -152,8 +152,8 @@ public class Pong extends Game {
 		return font;
 	}
 	
-	public BitmapFont getErrorFont() {
-		return errorFont;
+	public BitmapFont getSecondFont() {
+		return secondFont;
 	}
 	
 	public BitmapFont getLoadFont() {
@@ -188,5 +188,19 @@ public class Pong extends Game {
 		return data;
 	}
 	
+	public boolean getLoggedIn(){
+		return loggedIn;
+	}
 	
+	public void setLoggedIn(boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
+	
+	public boolean getFirstConnection(){
+		return firstConnection;
+	}
+	
+	public void setFirstConnection(boolean firstConnection) {
+		this.firstConnection = firstConnection;
+	}
 }
