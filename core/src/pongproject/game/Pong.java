@@ -46,6 +46,7 @@ public class Pong extends Game {
 	/*to do
 	 * 
 	 *
+	 * Next do the highscore screen. Add index to the necessary columns in pong_scores. Might be username and scores so far. Username to get the players scores only. Score to get the highest scores? 
 	 * 
 	 * Might need to change name of paddle velocity variable. I think its speed not velocity since x remains the same.
 	 * Menu and buttons are placed on screen Y coordinate with magic number, need to place according to screen size
@@ -54,7 +55,6 @@ public class Pong extends Game {
 	 * 
 	 * 
 	 *
-	 *Look into database indexing.
 	 * 
 	 * 
 	 * Idea for later on, allow paddle to move in confined area left and right

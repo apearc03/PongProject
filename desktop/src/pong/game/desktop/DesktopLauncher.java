@@ -10,7 +10,11 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new Pong(), config);
-		config.width = Constants.APP_WIDTH;
-		config.height = Constants.APP_HEIGHT;
+		config.width = Constants.VIEWPORT_WIDTH;
+		config.height = Constants.VIEWPORT_HEIGHT;
+		config.foregroundFPS = Constants.FPS;
+		config.vSyncEnabled = true;
+	
+		
 	}
 }

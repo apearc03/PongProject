@@ -30,10 +30,12 @@ public class databaseManager {
 	private String checkLoginQuery;
 	private ResultSet checkLoginRS;
 	
+	private PreparedStatement insertScoreStatement;
+	private String insertScoreQuery;
 	
 	private boolean check;
 	private boolean insert;
-	
+	private boolean scoreInsert;
 	
 	//Bad practice to include database details in source but here is my attempt at obfuscating login details
 	private xyz zxy = new xyz();
@@ -145,9 +147,20 @@ public class databaseManager {
 	}
 	
 	
-	//to do next
-	public void enterScore(String userName, String date, String result, int score ) {
+	//have to change database to match this now, maybe use indexing
+	
+	public void enterScore(String userName, String date, String result, int score ) throws SQLException {
 		
+		insertScoreQuery = "insert into pong_scores (username, date, result, score) values (?,?,?,?)";
+		insertScoreStatement = conn.prepareStatement(insertScoreQuery);
+		insertScoreStatement.setString(1, userName);
+		insertScoreStatement.setString(2, date);
+		insertScoreStatement.setString(3,result);
+		insertScoreStatement.setInt(4, score);
+		
+		insertScoreStatement.executeUpdate();
+		System.out.println("Score entered into database");
+		scoreInsert = true;
 	}
 	
 	
@@ -158,6 +171,9 @@ public class databaseManager {
 		if(check) {
 			checkLoginStatement.close();
 			checkLoginRS.close();
+		}
+		if(scoreInsert) {
+			insertScoreStatement.close();
 		}
 		conn.close();
 	}

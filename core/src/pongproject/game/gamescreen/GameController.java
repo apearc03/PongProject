@@ -23,6 +23,7 @@ public class GameController {
 	
 	private int gameScore; //Increment score throughout game somehow, number of paddle hits, score ratio etc. 
 	private DateFormat dateFormat;
+	private DateFormat timeFormat;
 	private Date date;
 	
 	public GameController(final Pong pongGame, GameScreen gameScreen) {
@@ -33,8 +34,9 @@ public class GameController {
 		computerPadd = new ComputerPaddle(ball);
 		
 		dateFormat = DateFormat.getDateInstance(3, Locale.UK);
-		date = new Date();
+		timeFormat = DateFormat.getTimeInstance(2, Locale.UK);
 		
+		gameScore = 1000;
 		
 	}
 	
@@ -102,7 +104,7 @@ public class GameController {
 	public void resetScores() {
 		computerPadd.resetScore();
 		playerPadd.resetScore();
-		gameScore = 0;
+		gameScore = 1000;
 	}
 	
 	public void zeroPadVelocity() {
@@ -136,7 +138,8 @@ public class GameController {
 				
 				
 				
-			
+				gameScore+=5;
+				
 				ball.setLastHitWasPLayer(true);
 				
 			
@@ -153,6 +156,7 @@ public class GameController {
 		if(ball.overlaps(computerPadd)) {
 			
 			ballInterSect = (computerPadd.getY()+(computerPadd.getHeight()/2))-(ball.getY()+ball.getHeight()/2);
+			
 			Normalized = (ballInterSect/computerPadd.getHeight())*-1;
 	
 			//used to fix ball stuck glitch
@@ -169,9 +173,14 @@ public class GameController {
 			
 			
 			//working code
+			
 			ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*-ball.getxVelocity()/2);
 			
-		
+			//for scoring
+			if(gameScore > 10) {
+				gameScore -= 10;
+				
+			}
 			
 			//Computer hit the ball
 			ball.setLastHitWasPLayer(false);
@@ -179,18 +188,21 @@ public class GameController {
 		
 		}
 		//System.out.println(ball.getxVelocity());
+		
 	}
 	
 	
 	
 	
-		public void checkXOutOfBounds() {
+	public void checkXOutOfBounds() {
 			
 
 			if(ball.getX() <= 0) {
 				//ball.setVelocity(ball.getxVelocity()*-1, ball.getyVelocity());
 				//player scores
 				playerPadd.incrementScore();
+				
+				gameScore += 150;
 				
 				try {
 					checkForWinner(playerPadd);
@@ -209,11 +221,21 @@ public class GameController {
 				//computer scores
 				computerPadd.incrementScore();
 				
+				//for scoring
+				if(gameScore > 200) {
+					gameScore -= 200;
+					
+				}
+				
+				
 				try {
 					checkForWinner(computerPadd);
 				} catch (SQLException e) {
 					screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-270);
 					screen.setScoreStored("There is no connection to the database so your score could not be stored");
+					screen.getPlayAgainButton().setVisible(true);
+					screen.getMenuButton().setVisible(true);
+					
 				}
 				
 				
@@ -225,7 +247,7 @@ public class GameController {
 		
 		
 		
-		public void checkYOutOfBounds() {
+	public void checkYOutOfBounds() {
 			
 			
 			
@@ -247,37 +269,40 @@ public class GameController {
 				
 			}
 			
-		}
+	}
 		
 		
-		public void checkForWinner(Paddle pad) throws SQLException {
+	public void checkForWinner(Paddle pad) throws SQLException {
 			
-			if(pad.getScore()==1) {//change to 5 after
+			if(pad.getScore()==1) {//change to 3 after
 						resetGame();
 						screen.setWinnerText("The winner is " + pad.getName());
 					
 					
-					
+						
 				
 					
 						
 						if(game.getFirstConnection()) {
+							
 							game.getData().checkConnection();
 							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-145, Constants.VIEWPORT_HEIGHT-270);
 							screen.setScoreStored("Your score has been successfully stored");
 							
+							date = new Date();
 							
-							//Need to create way to score the game and then add body to enterscore method
-							//insert score to database with  databaseManager.getAccountUsername()
+							//Update database tables with indexes
 							
 									
 									if(pad.getClass().equals(playerPadd.getClass())) {
+										
 										System.out.println("Player won");
-										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date), "Win", gameScore);
+										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+" "+timeFormat.format(date), "Win", gameScore);
 									}
 									else {
 										System.out.println("Computer won");
-										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date), "Loss", gameScore);
+										
+										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+" "+timeFormat.format(date), "Loss", gameScore);
 									}
 									
 						
@@ -285,12 +310,15 @@ public class GameController {
 						else {
 							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-270);
 							screen.setScoreStored("There is no connection to the database so your score could not be stored");
+							screen.getPlayAgainButton().setVisible(true);
+							screen.getMenuButton().setVisible(true);
+							
 						}
 						
 				
 					
 				
-					
+					System.out.println(gameScore);
 					System.out.println("Winner method executed");
 					System.out.println(game.getData().getAccountUsername());
 					
@@ -306,6 +334,8 @@ public class GameController {
 				ball.startBallMovement();
 			}
 			
-		}
+	}
 
+	
+	
 }

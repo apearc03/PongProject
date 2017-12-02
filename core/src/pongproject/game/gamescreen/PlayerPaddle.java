@@ -28,7 +28,7 @@ public class PlayerPaddle extends Paddle{
 			
 		
 			
-			setyVelocity(5.0f);
+			setyVelocity(5);
 			
 		
 		
@@ -36,7 +36,7 @@ public class PlayerPaddle extends Paddle{
 		
 		if(Gdx.input.isKeyPressed(keyDown)) {
 			
-			setyVelocity(-5.0f);
+			setyVelocity(-5);
 	
 			
 		}

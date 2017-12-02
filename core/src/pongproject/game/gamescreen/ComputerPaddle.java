@@ -12,7 +12,7 @@ public class ComputerPaddle extends Paddle{
 	public ComputerPaddle(Ball ball) {
 		super(Gdx.files.internal("paddle.png"), 50);
 		this.gameBall = ball;
-		this.difficulty =9.5f;
+		this.difficulty = 10.5f;
 		
 		this.name = "the computer";
 	}
@@ -31,35 +31,7 @@ public class ComputerPaddle extends Paddle{
 
 	
 		
-
-	
-		
-		
-					
-					if(gameBall.getY()-getHeight()/2+gameBall.height/2>getY()) {
-						
-						//updatePosition(2);
-						updatePosition(((gameBall.getY()-getHeight()/2+gameBall.height/2)-getY())/difficulty);
-						
-						
-					}
-					else if(gameBall.getY()-getHeight()/2+gameBall.height/2<getY()) {
-						
-						//updatePosition(-2);
-						updatePosition(((gameBall.getY()-getHeight()/2+gameBall.height/2)-getY())/difficulty);
-					}
-					
-	
-		
-		
-		
-		
-		//float yDistance = (gameBall.getY()-getHeight()/2+gameBall.height/2)-getY();
-		
-		
-			//setyPosition(gameBall.getY()-this.getHeight()/2+gameBall.height/2);
-		
-		//float ballposition = gameBall.getY()-getHeight()/2+gameBall.height/2;
+		updatePosition(((gameBall.getY()-getHeight()/2+gameBall.height/2)-getY())/difficulty);
 		
 		
 		
@@ -74,14 +46,14 @@ public class ComputerPaddle extends Paddle{
 		
 		if(Gdx.input.isKeyPressed(Keys.W)) {
 				
-			setyVelocity(5.0f);
+			setyVelocity(5);
 
 		
 		}
 		
 		if(Gdx.input.isKeyPressed(Keys.S)) {
 			
-			setyVelocity(-5.0f);
+			setyVelocity(-5);
 		
 		}
 		
