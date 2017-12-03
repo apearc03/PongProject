@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import pongproject.game.Constants;
 import pongproject.game.Pong;
+import pongproject.game.tests.eventLogger;
 
 public class GameScreen implements Screen{
 
@@ -35,7 +36,7 @@ public class GameScreen implements Screen{
 	private Action playFadeOut;
 	private Action controlsFadeOut;
 	
-	private boolean isSelected; //testing purposes
+
 	
 	private Label winner;
 	private Label scoreStored;
@@ -139,7 +140,8 @@ public class GameScreen implements Screen{
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
-	
+		eventLogger.gameScreen();
+		
 		elapsed = 0;
 		
 		controls.setColor(Color.ORANGE);
@@ -148,10 +150,7 @@ public class GameScreen implements Screen{
 		play.setColor(Color.ORANGE);
 		play.addAction(playFadeOut);
 		
-		isSelected = true; //testing purposes
-		
-		
-		pongGame.getScreenTest().testScreens(); //testing
+	
 		
 		gameStarted = false;
 		
@@ -182,6 +181,7 @@ public class GameScreen implements Screen{
 			gameController.getBall().getBallSprite().draw(pongGame.getBatch());
 			
 			if(!gameStarted) {
+				eventLogger.gameStarted();
 				gameController.startGame();
 				gameStarted = true;
 			}
@@ -230,7 +230,7 @@ public class GameScreen implements Screen{
 		menuButton.setVisible(false);
 		playAgainButton.setVisible(false);
 		
-		isSelected = false;//testing purposes
+
 		
 		controlsFadeOut.reset();
 
@@ -246,10 +246,6 @@ public class GameScreen implements Screen{
 		
 	}
 	
-	public boolean isSelected() { //testing
-		
-		return isSelected;
-	}
 
 	
 	public void setWinnerText(String winnerText) {

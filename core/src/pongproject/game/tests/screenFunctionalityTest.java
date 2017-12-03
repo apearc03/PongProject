@@ -17,7 +17,7 @@ public class screenFunctionalityTest {
 	
 	
 
-	public void testScreens() {
+	/*public void testScreens() {
 
 		if(game.getMenuScreen().isSelected()) {
 			
@@ -41,7 +41,7 @@ public class screenFunctionalityTest {
 			
 			System.out.println("ERROR: No screen selected, this should not be possible");
 		}
-	}
+	}*/
 
 	
 	

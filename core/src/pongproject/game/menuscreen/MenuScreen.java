@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import pongproject.game.Constants;
 import pongproject.game.Pong;
 import pongproject.game.loginscreen.LoginScreen;
+import pongproject.game.tests.eventLogger;
 
 public class MenuScreen implements Screen{
 
@@ -29,7 +30,7 @@ public class MenuScreen implements Screen{
 	private TextButton highScoreButton;
 	private TextButton loginButton;
 	private TextButton connectionButton;
-	private boolean isSelected; //testing purposes
+	//testing purposes
 	private Pong pongGame;
 	private Label loggedInAs;
 	private Label connectionMessage;
@@ -115,8 +116,8 @@ public class MenuScreen implements Screen{
 							pongGame.setScreen(pongGame.getGameScreen());
 						}
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
+					eventLogger.databaseConnectionFailed();
 				}
 				//if connected to database, go to login screen. If not go to game screen.
 			}
@@ -177,8 +178,7 @@ public class MenuScreen implements Screen{
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
-		isSelected = true; //testing purposes
-		pongGame.getScreenTest().testScreens(); //testing
+		eventLogger.menuScreen();
 		
 		
 		try {
@@ -236,7 +236,7 @@ public class MenuScreen implements Screen{
 	}
 	@Override
 	public void hide() {
-		isSelected = false; //testing purposes
+	
 		
 	}
 	@Override
@@ -252,17 +252,15 @@ public class MenuScreen implements Screen{
 		}
 		
 	}
-	public boolean isSelected() { //testing
-		
-		return isSelected;
-	}
-	
+
 	
 
 	
 	private void makeConnection() throws SQLException {
 		pongGame.getData().makeConnection();
-	
+		
+		eventLogger.databaseConnectionMade();
+		
 		connectionMessage.setText("Connection to database successful");
 		connectionButton.setVisible(false);
 		highScoreButton.setVisible(true);

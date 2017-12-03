@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
 
+import pongproject.game.tests.eventLogger;
 import x.xyz;
 
 
@@ -112,20 +113,20 @@ public class databaseManager {
 			
 			if(passHash == pass) {
 				//existing account, both details correct
-				System.out.println("Existing user");
+				eventLogger.existingUser();
 				accountUsername = username;
 				return true;
 			}
 			else {
-				System.out.println("Username matches but not password, an error message has been returned");
+				eventLogger.usernameExists();
 				return false;
 			}
 		}
 		
 		
-		
+		eventLogger.newUser();
 		addAccount(username, password);
-		System.out.println("New user");
+		
 		accountUsername = username;
 		return true;
 	}
@@ -142,7 +143,7 @@ public class databaseManager {
 		insertStatement.setInt(2, password.hashCode());
 		
 		insertStatement.executeUpdate();
-		System.out.println("Values inserted");
+		
 		insert = true;
 	}
 	
@@ -159,7 +160,7 @@ public class databaseManager {
 		insertScoreStatement.setInt(4, score);
 		
 		insertScoreStatement.executeUpdate();
-		System.out.println("Score entered into database");
+		eventLogger.scoreEntered();
 		scoreInsert = true;
 	}
 	

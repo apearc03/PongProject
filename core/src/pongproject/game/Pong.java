@@ -19,7 +19,7 @@ import pongproject.game.tests.screenFunctionalityTest;
 
 public class Pong extends Game {
 	
-	private screenFunctionalityTest screenTest; //testing only
+
 	
 	
 	
@@ -117,7 +117,7 @@ public class Pong extends Game {
 		highScoreScreen = new HighScoreScreen(this);
 		loginScreen = new LoginScreen(this);
 		
-		screenTest = new screenFunctionalityTest(this); //testing purposes
+	 //testing purposes
 		
 		loggedIn = false;
 		
@@ -176,9 +176,7 @@ public class Pong extends Game {
 		return loginScreen;
 	}
 	
-	public screenFunctionalityTest getScreenTest() {
-		return screenTest;
-	}
+
 	
 	public Skin getSkin() {
 		return skin;

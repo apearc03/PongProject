@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input.Keys;
 
 import pongproject.game.Constants;
 import pongproject.game.Pong;
+import pongproject.game.tests.eventLogger;
 
 public class GameController {
 
@@ -132,7 +133,7 @@ public class GameController {
 					
 				}
 
-				
+				eventLogger.playerPaddleCollision();
 				//working code
 				ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*ball.getxVelocity()/2);
 				
@@ -171,7 +172,7 @@ public class GameController {
 
 			}
 			
-			
+			eventLogger.computerPaddleCollision();
 			//working code
 			
 			ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*-ball.getxVelocity()/2);
@@ -187,7 +188,7 @@ public class GameController {
 			
 		
 		}
-		//System.out.println(ball.getxVelocity());
+
 		
 	}
 	
@@ -201,7 +202,7 @@ public class GameController {
 				//ball.setVelocity(ball.getxVelocity()*-1, ball.getyVelocity());
 				//player scores
 				playerPadd.incrementScore();
-				
+				eventLogger.playerScored();
 				gameScore += 150;
 				
 				try {
@@ -220,7 +221,7 @@ public class GameController {
 				//ball.setVelocity(ball.getxVelocity()*-1, ball.getyVelocity());
 				//computer scores
 				computerPadd.incrementScore();
-				
+				eventLogger.computerScored();
 				//for scoring
 				if(gameScore > 200) {
 					gameScore -= 200;
@@ -296,13 +297,13 @@ public class GameController {
 									
 									if(pad.getClass().equals(playerPadd.getClass())) {
 										
-										System.out.println("Player won");
-										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+" "+timeFormat.format(date), "Win", gameScore);
+										eventLogger.playerWon();
+										//game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+" "+timeFormat.format(date), "Win", gameScore);
 									}
 									else {
-										System.out.println("Computer won");
 										
-										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+" "+timeFormat.format(date), "Loss", gameScore);
+										eventLogger.computerWon();
+										//game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+" "+timeFormat.format(date), "Loss", gameScore);
 									}
 									
 						
@@ -318,9 +319,7 @@ public class GameController {
 				
 					
 				
-					System.out.println(gameScore);
-					System.out.println("Winner method executed");
-					System.out.println(game.getData().getAccountUsername());
+				
 					
 					
 					screen.getPlayAgainButton().setVisible(true);

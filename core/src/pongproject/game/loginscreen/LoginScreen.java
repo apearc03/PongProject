@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import pongproject.game.Constants;
 import pongproject.game.Pong;
+import pongproject.game.tests.eventLogger;
 
 public class LoginScreen implements Screen {
 
@@ -28,7 +29,7 @@ public class LoginScreen implements Screen {
 	private Stage stage;
 	private TextButton gameButton;
 	private TextButton menuButton;
-	private boolean isSelected;
+	
 	private TextField userField;
 	private TextField passField;
 	
@@ -122,10 +123,11 @@ public class LoginScreen implements Screen {
 									if(pongGame.getData().checkLogin(username, password)) {
 										//In the exception here check the connection, if no connection return to main menu
 										pongGame.setLoggedIn(true);
-										System.out.println("LOGIN SUCCESS");
+										
 										userField.setText("");
 										passField.setText("");
 										pongGame.getMenuScreen().setLoggedInAs(pongGame.getData().getAccountUsername());
+										eventLogger.loginSuccess();
 										pongGame.setScreen(pongGame.getGameScreen());
 										
 									}
@@ -134,9 +136,10 @@ public class LoginScreen implements Screen {
 										//passError = "";
 										userError.setText("Username is taken or your password is incorrect");
 										passError.setText("");
+										
 									}
 								 } catch (SQLException e) {
-										System.out.println("DB LOGIN FAILED");
+										eventLogger.loginFailed();
 										pongGame.setScreen(pongGame.getMenuScreen());
 									 
 									 	
@@ -160,8 +163,8 @@ public class LoginScreen implements Screen {
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
-		isSelected = true; //testing purposes
-		pongGame.getScreenTest().testScreens();
+	
+		eventLogger.loginScreen();
 	
 	}
 
@@ -209,11 +212,6 @@ public class LoginScreen implements Screen {
 		
 	}
 
-	public boolean isSelected() { //testing
-		
-		return isSelected;
-	}
-	
 	
 	private boolean validateUsername(String username){
 		

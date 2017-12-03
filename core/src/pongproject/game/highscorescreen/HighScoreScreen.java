@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import pongproject.game.Constants;
 import pongproject.game.Pong;
+import pongproject.game.tests.eventLogger;
 
 public class HighScoreScreen implements Screen{
 
@@ -20,7 +21,16 @@ public class HighScoreScreen implements Screen{
 	private TextButton menuButton;
 	private Label label;
 	private Pong pongGame;
-	private boolean isSelected; //testing purposes
+
+	
+	
+	private TextButton orderByPlayerScore; //If pongGame.getLoggedIn = true, show this button. Otherwise set invisible
+	
+	//Default order should be top 15 scores? 
+	//Possible show win ratio of logged in player somehow? Not priority but added feature.			
+	
+
+	
 	
 	
 	public HighScoreScreen(final Pong pongGame) {
@@ -58,10 +68,8 @@ public class HighScoreScreen implements Screen{
 		
 		Gdx.input.setInputProcessor(stage);
 		
-		isSelected = true; //testing purposes
-		
-		pongGame.getScreenTest().testScreens(); //testing
-		
+
+		eventLogger.highScoreScreen();
 		
 	}
 
@@ -106,7 +114,7 @@ public class HighScoreScreen implements Screen{
 
 	@Override
 	public void hide() {
-		isSelected = false; //testing purposes
+
 	}
 
 	@Override
@@ -116,9 +124,6 @@ public class HighScoreScreen implements Screen{
 		
 	}
  
-	public boolean isSelected() { //testing
-		
-		return isSelected;
-	}
+
 	
 }
