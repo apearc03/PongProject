@@ -45,6 +45,31 @@ public class Pong extends Game {
 	
 	/*to do
 	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * Find way to display user win ratio. Display far top left.
+	 * Do it within the playerScores method in databaseManager or with the playerScores resultSet in the highScoreScreen.
+	 * If logged in, make it visible
+	 * 
+	 * 
+	 *
+	 * 
+	 * Need to redo all fonts, have separate bitMapFonts for each ranking.
+	 * Sort out spacing in scores.
+	 * Maybe have fonts in each class rather than using them from pongGame if necessary. Maybe used shared for efficiency. See what works.
+	 * 
+	 * 
+	 * 
+	 * In all the exceptions where I have just returned to the menuScreen. 
+	 * Maybe put a line of code after to set a label or similar on the menuScreen to show that there has been a loss of connection to database.
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 *
 	 * Next do the highscore screen. Add index to the necessary columns in pong_scores. Might be username and scores so far. Username to get the players scores only. Score to get the highest scores? 
 	 * 

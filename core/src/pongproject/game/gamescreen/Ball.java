@@ -18,7 +18,7 @@ public class Ball extends Rectangle {
 	
 	
 
-	//make singleton
+	
 	
 	public Ball() {
 		this.ballImage = new Texture(Gdx.files.internal("ball5.png"));
@@ -94,6 +94,10 @@ public class Ball extends Rectangle {
 	}
 	
 	public void updatePosition(float xVel, float yVel) {
+		
+		
+		
+		
 		
 		this.x += xVel;
 		this.y += yVel;

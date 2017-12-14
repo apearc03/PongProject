@@ -34,9 +34,24 @@ public class databaseManager {
 	private PreparedStatement insertScoreStatement;
 	private String insertScoreQuery;
 	
+	
+	private PreparedStatement returnScoresStatement;
+	private String returnScoresQuery;
+	
+	
+	private PreparedStatement playerScoreStatement;
+	private String playerScoreQuery;
+	
+	
 	private boolean check;
 	private boolean insert;
 	private boolean scoreInsert;
+	private boolean highScoresRetrieved;
+	private boolean playerScoresRetrieved;
+	
+	
+	
+	
 	
 	//Bad practice to include database details in source but here is my attempt at obfuscating login details
 	private xyz zxy = new xyz();
@@ -47,7 +62,9 @@ public class databaseManager {
 	private String i;
 	private String o;
 	private String u;
-
+	
+	
+	
 	
 	public databaseManager() throws SQLException{
 
@@ -63,7 +80,10 @@ public class databaseManager {
 		 
 		 check = false;
 		 insert = false;
-		
+		 scoreInsert = false;
+		 highScoresRetrieved = false;
+		 playerScoresRetrieved = false;
+		 
 		 DriverManager.setLoginTimeout(2);
 	}
 	
@@ -165,6 +185,44 @@ public class databaseManager {
 	}
 	
 	
+
+	
+	
+	public ResultSet HighScores() throws SQLException {
+		
+		
+		returnScoresQuery = "select * from pong_scores order by score desc limit 50";
+		returnScoresStatement = conn.prepareStatement(returnScoresQuery);
+	
+		
+		
+
+		eventLogger.highScoresLoaded();
+		highScoresRetrieved = true;
+		
+		
+		return returnScoresStatement.executeQuery();
+		
+	
+		
+	}
+	
+	
+	public ResultSet playerScores(String player) throws SQLException {
+		
+		playerScoreQuery = "select * from pong_scores where username = ? order by score desc";
+		playerScoreStatement = conn.prepareStatement(playerScoreQuery);
+		playerScoreStatement.setString(1, player);
+		
+		eventLogger.playerScoresLoaded();
+		playerScoresRetrieved = true;
+		
+		return playerScoreStatement.executeQuery();
+	}
+	
+	
+	
+	
 	public void closeConnection() throws SQLException {
 		if(insert) {
 			insertStatement.close();
@@ -176,8 +234,16 @@ public class databaseManager {
 		if(scoreInsert) {
 			insertScoreStatement.close();
 		}
+		if(highScoresRetrieved) {
+			returnScoresStatement.close();
+		}
+		if(playerScoresRetrieved) {
+			playerScoreStatement.close();
+		}
 		conn.close();
 	}
+	
+	
 	
 	
 	public String getAccountUsername() {

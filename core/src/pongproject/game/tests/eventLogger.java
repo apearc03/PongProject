@@ -3,9 +3,6 @@ package pongproject.game.tests;
 public abstract class eventLogger {
 
 	
-	private eventLogger() {
-		
-	}
 	
 	
 	public static void menuScreen() {
@@ -65,5 +62,10 @@ public abstract class eventLogger {
 	public static void usernameExists() {
 		System.out.println("User tried to login with a user that already exists. Could be the wrong password or new user.");
 	}
-	
+	public static void highScoresLoaded() {
+		System.out.println("Scores have been loaded from the database to the high score screen");
+	}
+	public static void playerScoresLoaded() {
+		System.out.println("Player only scores have been loaded from the database to the high score screen");
+	}
 }

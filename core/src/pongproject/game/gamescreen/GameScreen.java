@@ -180,6 +180,8 @@ public class GameScreen implements Screen{
 			
 			gameController.getBall().getBallSprite().draw(pongGame.getBatch());
 			
+			
+			
 			if(!gameStarted) {
 				eventLogger.gameStarted();
 				gameController.startGame();
