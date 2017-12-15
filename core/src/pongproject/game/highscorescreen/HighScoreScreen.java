@@ -29,11 +29,12 @@ public class HighScoreScreen implements Screen{
 	
 	private ResultSet scores;
 	private ResultSet playerScores;
-	
-
+	private ResultSet winRatio;
+	private String winRatioString;
 	
 	private boolean scoresAssigned;
 	private boolean playerScoresAssigned;
+
 	
 	private TextButton orderByPlayerScores; //If pongGame.getLoggedIn = true, show this button. Otherwise set invisible
 	private TextButton allPlayerScores;
@@ -53,8 +54,7 @@ public class HighScoreScreen implements Screen{
 	private BitmapFont HighScoreFont;
 	
 	
-	
-	//Possible show win ratio of logged in player somehow? Not priority but added feature.			
+		
 	
 
 	
@@ -70,38 +70,38 @@ public class HighScoreScreen implements Screen{
 		
 		
 		label = new Label("High Score Screen", pongGame.getSkin());
-		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), Constants.VIEWPORT_HEIGHT-100);
+		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), Constants.VIEWPORT_HEIGHT-75);
 		stage.addActor(label);
 		
 		
 		
 		menuButton = new TextButton("Menu", pongGame.getSkin());
-		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-(menuButton.getWidth()/2), 200);
+		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-(menuButton.getWidth()/2), 25);
 		stage.addActor(menuButton);	
 		
 
 		top10Scores = new TextButton("Top 10", pongGame.getSkin());
-		top10Scores.setPosition(Constants.VIEWPORT_WIDTH-250, Constants.VIEWPORT_HEIGHT-100);
+		top10Scores.setPosition(Constants.VIEWPORT_WIDTH-250, Constants.VIEWPORT_HEIGHT-75);
 		stage.addActor(top10Scores);
 		
 		top25Scores = new TextButton("Top 25", pongGame.getSkin());
-		top25Scores.setPosition(top10Scores.getX()+top25Scores.getWidth(), Constants.VIEWPORT_HEIGHT-100);
+		top25Scores.setPosition(top10Scores.getX()+top25Scores.getWidth(), Constants.VIEWPORT_HEIGHT-75);
 		stage.addActor(top25Scores);
 		
 		
 		top50Scores = new TextButton("Top 50", pongGame.getSkin());
-		top50Scores.setPosition(top25Scores.getX()+top50Scores.getWidth(), Constants.VIEWPORT_HEIGHT-100);
+		top50Scores.setPosition(top25Scores.getX()+top50Scores.getWidth(), Constants.VIEWPORT_HEIGHT-75);
 		stage.addActor(top50Scores);
 		
 		
 		
 		orderByPlayerScores = new TextButton("Logged in user", pongGame.getSkin());
-		orderByPlayerScores.setPosition(100, Constants.VIEWPORT_HEIGHT-100);
+		orderByPlayerScores.setPosition(100, Constants.VIEWPORT_HEIGHT-75);
 		stage.addActor(orderByPlayerScores);
 		orderByPlayerScores.setVisible(false);
 		
 		allPlayerScores = new TextButton("All users", pongGame.getSkin());
-		allPlayerScores.setPosition(orderByPlayerScores.getX()+allPlayerScores.getWidth()+orderByPlayerScores.getWidth()/2, Constants.VIEWPORT_HEIGHT-100);
+		allPlayerScores.setPosition(orderByPlayerScores.getX()+allPlayerScores.getWidth()+orderByPlayerScores.getWidth()/2, Constants.VIEWPORT_HEIGHT-75);
 		stage.addActor(allPlayerScores);
 		allPlayerScores.setVisible(false);
 		
@@ -191,6 +191,14 @@ public class HighScoreScreen implements Screen{
 						
 						playerScores = pongGame.getData().playerScores(pongGame.getData().getAccountUsername());
 						
+						
+						winRatio = pongGame.getData().winPercentage(pongGame.getData().getAccountUsername());
+						
+						if(winRatio.next()) {
+							winRatioString = String.format("%.0f%%",winRatio.getFloat(1)*100);
+
+						}
+						
 						playerScoresAssigned = true;
 					}	
 					
@@ -230,10 +238,15 @@ public class HighScoreScreen implements Screen{
 		pongGame.getBatch().begin();
 		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 		
+		if(pongGame.getLoggedIn()) {
+			
+			HighScoreFont.draw(pongGame.getBatch(), "Player win ratio: " + winRatioString, 100, Constants.VIEWPORT_HEIGHT-20);
+		}
 
 		try {
 			if(showPlayerScores) {
 				renderScores(numberOfRankings, scoreYDecrement, HighScoreFont, playerScores);
+				
 			}
 			else {
 				renderScores(numberOfRankings, scoreYDecrement, HighScoreFont, scores);
@@ -278,6 +291,7 @@ public class HighScoreScreen implements Screen{
 	@Override
 	public void dispose() {
 		stage.dispose();
+		HighScoreFont.dispose();
 		
 		try {
 			closeResultSets();
@@ -294,11 +308,12 @@ public class HighScoreScreen implements Screen{
 		}
 		if(playerScoresAssigned) {
 				playerScores.close();
+				winRatio.close();
 		}
 	}
 	
 	private void renderScores(int numberOfRanks, int yDecrement, BitmapFont font, ResultSet scoreSet) throws SQLException {
-		int y = 500;
+		int yStartHeight = 550;
 		int rank = 1;
 		int iterations = numberOfRanks;
 		
@@ -310,13 +325,13 @@ public class HighScoreScreen implements Screen{
 		
 		
 		
-		font.draw(pongGame.getBatch(), Integer.toString(rank), 100, y );
-		font.draw(pongGame.getBatch(), scoreSet.getString(1), 250, y );
-		font.draw(pongGame.getBatch(), scoreSet.getString(2), 400, y );
-		font.draw(pongGame.getBatch(), scoreSet.getString(3), 600, y );
-		font.draw(pongGame.getBatch(), Integer.toString(scoreSet.getInt(4)), 700, y );
+		font.draw(pongGame.getBatch(), Integer.toString(rank), 100, yStartHeight );
+		font.draw(pongGame.getBatch(), scoreSet.getString(1), 250, yStartHeight );
+		font.draw(pongGame.getBatch(), scoreSet.getString(2), 400, yStartHeight );
+		font.draw(pongGame.getBatch(), scoreSet.getString(3), 600, yStartHeight );
+		font.draw(pongGame.getBatch(), Integer.toString(scoreSet.getInt(4)), 700, yStartHeight );
 		
-		y-= yDecrement;
+		yStartHeight-= yDecrement;
 		rank++;
 		
 		iterations--;

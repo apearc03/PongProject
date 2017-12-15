@@ -138,8 +138,11 @@ public class GameController {
 				ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*ball.getxVelocity()/2);
 				
 				
+				if(!ball.getLastHitPlayer()) {
+					gameScore+=5;
+					eventLogger.updateScore(5);
+				}
 				
-				gameScore+=5;
 				
 				ball.setLastHitWasPLayer(true);
 				
@@ -178,9 +181,11 @@ public class GameController {
 			ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*-ball.getxVelocity()/2);
 			
 			//for scoring
-			if(gameScore > 10) {
-				gameScore -= 10;
-				
+			if(ball.getLastHitPlayer()) {
+				if(gameScore > 10) {
+					gameScore -= 10;
+					eventLogger.updateScore(-10);
+				}
 			}
 			
 			//Computer hit the ball
@@ -204,6 +209,7 @@ public class GameController {
 				playerPadd.incrementScore();
 				eventLogger.playerScored();
 				gameScore += 150;
+				eventLogger.updateScore(150);
 				
 				try {
 					checkForWinner(playerPadd);
@@ -225,7 +231,7 @@ public class GameController {
 				//for scoring
 				if(gameScore > 200) {
 					gameScore -= 200;
-					
+					eventLogger.updateScore(-200);
 				}
 				
 				
@@ -287,8 +293,8 @@ public class GameController {
 						if(game.getFirstConnection()) {
 							
 							game.getData().checkConnection();
-							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-145, Constants.VIEWPORT_HEIGHT-270);
-							screen.setScoreStored("Your score has been successfully stored");
+							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-165, Constants.VIEWPORT_HEIGHT-270);
+							screen.setScoreStored("Your score of " + gameScore + " has been successfully stored");
 							
 							date = new Date();
 							

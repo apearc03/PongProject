@@ -42,13 +42,16 @@ public class databaseManager {
 	private PreparedStatement playerScoreStatement;
 	private String playerScoreQuery;
 	
+	private PreparedStatement winRatioStatement;
+	private String winRatioQuery;
+	
 	
 	private boolean check;
 	private boolean insert;
 	private boolean scoreInsert;
 	private boolean highScoresRetrieved;
 	private boolean playerScoresRetrieved;
-	
+	private boolean winRatioRetrieved;
 	
 	
 	
@@ -83,6 +86,7 @@ public class databaseManager {
 		 scoreInsert = false;
 		 highScoresRetrieved = false;
 		 playerScoresRetrieved = false;
+		 winRatioRetrieved = false;
 		 
 		 DriverManager.setLoginTimeout(2);
 	}
@@ -210,7 +214,7 @@ public class databaseManager {
 	
 	public ResultSet playerScores(String player) throws SQLException {
 		
-		playerScoreQuery = "select * from pong_scores where username = ? order by score desc";
+		playerScoreQuery = "select * from pong_scores where username = ? order by score desc limit 50";
 		playerScoreStatement = conn.prepareStatement(playerScoreQuery);
 		playerScoreStatement.setString(1, player);
 		
@@ -220,7 +224,19 @@ public class databaseManager {
 		return playerScoreStatement.executeQuery();
 	}
 	
-	
+	public ResultSet winPercentage(String player) throws SQLException {
+		
+		winRatioQuery = "select sum(result = 'win')/count(*) from pong_scores where username = ?";
+		winRatioStatement = conn.prepareStatement(winRatioQuery);
+		winRatioStatement.setString(1, player);
+		
+		
+		
+		eventLogger.winRatioLoaded();
+		winRatioRetrieved = true;
+		
+		return winRatioStatement.executeQuery();
+	}
 	
 	
 	public void closeConnection() throws SQLException {
@@ -239,6 +255,9 @@ public class databaseManager {
 		}
 		if(playerScoresRetrieved) {
 			playerScoreStatement.close();
+		}
+		if(winRatioRetrieved) {
+			winRatioStatement.close();
 		}
 		conn.close();
 	}

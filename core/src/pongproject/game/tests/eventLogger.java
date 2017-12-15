@@ -63,9 +63,16 @@ public abstract class eventLogger {
 		System.out.println("User tried to login with a user that already exists. Could be the wrong password or new user.");
 	}
 	public static void highScoresLoaded() {
-		System.out.println("Scores have been loaded from the database to the high score screen");
+		System.out.println("Scores have been loaded from the database");
 	}
 	public static void playerScoresLoaded() {
-		System.out.println("Player only scores have been loaded from the database to the high score screen");
+		System.out.println("Player only scores have been loaded from the database");
+	}
+	public static void winRatioLoaded() {
+		System.out.println("Player win ratio has been loaded from the database");
+	}
+	
+	public static void updateScore(int change) {
+		System.out.println("Score changed by " + change);
 	}
 }

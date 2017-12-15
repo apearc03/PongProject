@@ -46,17 +46,19 @@ public class Pong extends Game {
 	/*to do
 	 * 
 	 * 
+	 *
 	 * 
 	 * 
 	 * 
 	 * Find way to display user win ratio. Display far top left.
-	 * Do it within the playerScores method in databaseManager or with the playerScores resultSet in the highScoreScreen.
+	 * Do it within the playerScores method in databaseManager or with the playerScores resultSet in the highScoreScreen. Or query database in playerScores method.
 	 * If logged in, make it visible
 	 * 
 	 * 
 	 *
 	 * 
 	 * Need to redo all fonts, have separate bitMapFonts for each ranking.
+	 * Remember to close all fonts in dispose methods after they are sorted.
 	 * Sort out spacing in scores.
 	 * Maybe have fonts in each class rather than using them from pongGame if necessary. Maybe used shared for efficiency. See what works.
 	 * 
@@ -67,7 +69,7 @@ public class Pong extends Game {
 	 * 
 	 * 
 	 * 
-	 * 
+	 * Remember to clear all scores from database before deployment, add dummy scores suitable for game mode of first to 2 or 3.
 	 * 
 	 * 
 	 *
