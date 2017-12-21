@@ -304,12 +304,12 @@ public class GameController {
 									if(pad.getClass().equals(playerPadd.getClass())) {
 										
 										eventLogger.playerWon();
-										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+" "+timeFormat.format(date), "Win", gameScore);
+										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+"    "+timeFormat.format(date), "Win", gameScore);
 									}
 									else {
 										
 										eventLogger.computerWon();
-										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+" "+timeFormat.format(date), "Loss", gameScore);
+										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+"    "+timeFormat.format(date), "Loss", gameScore);
 									}
 									
 						

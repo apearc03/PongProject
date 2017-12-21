@@ -192,7 +192,7 @@ public class databaseManager {
 
 	
 	
-	public ResultSet HighScores() throws SQLException {
+	public ResultSet highScores() throws SQLException {
 		
 		
 		returnScoresQuery = "select * from pong_scores order by score desc limit 50";

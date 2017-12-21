@@ -46,18 +46,12 @@ public class Pong extends Game {
 	/*to do
 	 * 
 	 * 
-	 *
+	 * Add music for screens. Sounds for button clicks. Sounds for all game events. Paddle hits, wall hits? , goal scores.
 	 * 
 	 * 
-	 * 
-	 * Find way to display user win ratio. Display far top left.
-	 * Do it within the playerScores method in databaseManager or with the playerScores resultSet in the highScoreScreen. Or query database in playerScores method.
-	 * If logged in, make it visible
-	 * 
-	 * 
-	 *
 	 * 
 	 * Need to redo all fonts, have separate bitMapFonts for each ranking.
+	 * Do fonts for titles of screens.
 	 * Remember to close all fonts in dispose methods after they are sorted.
 	 * Sort out spacing in scores.
 	 * Maybe have fonts in each class rather than using them from pongGame if necessary. Maybe used shared for efficiency. See what works.
@@ -89,18 +83,16 @@ public class Pong extends Game {
 	 * Re do all text with hiero font creator.
 	 * 
 	 * 
+	 * Remove empty pause, resume implementations if possible
 	 * 
 	 * 
 	 * 
-	 * After that work on gamescreen.
-	 * Start with some sort of countdown. Might need to do this in a newscreen. Try not to tho. Could be a method called in the show method.
-	 * Then position assets and move ball.
-	 * Use vectors for position and velocity. Rectangles for ball and paddles.
-	 * Vector for ball, position and velocity. Float for y position and float for paddles y velocity since it remains on same x coordinate.
-	 * When ball hits paddle. Create calculation from ball and paddles velocity.
-	 * .
+	 * If randomly spawned powerups for length of paddle are used. Make use of libgdx timer to set duration of powerup. Random java class to set positioning on the middle x axis.
+	 * 
+	 * If you do 2 player, try to just use gameScreen class but with a new twoPlayerGameController class. Show player controls differently
 	 * 
 	 * 
+	 * Tweak difficulty and max ball x velocity at the end
 	 * 
 	 */
 	

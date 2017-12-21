@@ -9,6 +9,6 @@ public class Constants {
 	public static final int VIEWPORT_HEIGHT = 650;
 	public static final int VIEWPORT_WIDTH = 900;
 	public static final int FPS = 58;
-	public static final float MAX_X_VELOCITY = 10;
+	public static final float MAX_X_VELOCITY = 8;
 
 }
