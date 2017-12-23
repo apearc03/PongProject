@@ -53,7 +53,8 @@ public class HighScoreScreen implements Screen{
 	
 	//will assign HighScoreFont to a new font in each button
 	private BitmapFont winPercentageFont;
-	private BitmapFont columnData;	
+	private BitmapFont columnData;
+	private final String[] titles = {"High Scores", "Rank", "Player", "Date & Time", "Result", "Score"};
 	private BitmapFont columnNames;
 
 	
@@ -62,24 +63,26 @@ public class HighScoreScreen implements Screen{
 	public HighScoreScreen(final Pong pongGame) {
 		this.pongGame = pongGame;
 		
-		winPercentageFont = new BitmapFont(Gdx.files.internal("calibri100.fnt"));
-		winPercentageFont.getData().setScale(0.18f);
+		winPercentageFont = new BitmapFont(Gdx.files.internal("arial50.fnt"));
+		winPercentageFont.getData().setScale(0.3f);
 		
-		columnData = new BitmapFont(Gdx.files.internal("calibri100.fnt"));
-		columnData.getData().setScale(0.2f);
+		columnData = new BitmapFont(Gdx.files.internal("arial50.fnt"));
 		
-		columnNames = new BitmapFont(Gdx.files.internal("calibri100.fnt"));
-		columnNames.getData().setScale(0.2f);
+		
+		columnNames = new BitmapFont(Gdx.files.internal("arial50.fnt"));
+		columnNames.getData().setScale(0.4f);
 	    
+		
+		
 		
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
 		
 		
 		
-		label = new Label("High Score Screen", pongGame.getSkin());
+		/* label = new Label("High Score Screen", pongGame.getSkin());
 		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), Constants.VIEWPORT_HEIGHT-60);
 		stage.addActor(label);
-		
+		*/
 		
 		
 		
@@ -127,10 +130,11 @@ public class HighScoreScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
-				scoreYDecrement = 55;
+				scoreYDecrement = 60;
 				numberOfRankings = 10;
 				
-				columnData.getData().setScale(0.2f);
+				
+				columnData.getData().setScale(0.34f);
 				//will assign HighScoreFont to a new font in each button
 			}
 		});
@@ -140,9 +144,10 @@ public class HighScoreScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
-				scoreYDecrement = 21;
+				scoreYDecrement = 23;
 				numberOfRankings = 25;
-				columnData.getData().setScale(0.15f);
+				
+				columnData.getData().setScale(0.3f);
 				//will assign HighScoreFont to a new font in each button
 			}
 		});
@@ -152,9 +157,10 @@ public class HighScoreScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
-				scoreYDecrement = 13;
+				scoreYDecrement = 14;
 				numberOfRankings = 40;
-				columnData.getData().setScale(0.12f);
+			
+				columnData.getData().setScale(0.25f);
 				//will assign HighScoreFont to a new font in each button
 			}
 		});
@@ -205,7 +211,7 @@ public class HighScoreScreen implements Screen{
 						winRatio = pongGame.getData().winPercentage(pongGame.getData().getAccountUsername());
 						
 						if(winRatio.next()) {
-							winRatioString = String.format("%.0f%%",winRatio.getFloat(1)*100);
+							winRatioString = "Player win percentage: " + String.format("%.0f%%",winRatio.getFloat(1)*100);
 
 						}
 						
@@ -222,10 +228,10 @@ public class HighScoreScreen implements Screen{
 		
 		showPlayerScores = false;
 		
-		scoreYDecrement = 55;
+		scoreYDecrement = 60;
 		numberOfRankings = 10;
 
-		columnData.getData().setScale(0.2f);	
+		columnData.getData().setScale(0.34f);	
 		
 	}
 
@@ -248,16 +254,18 @@ public class HighScoreScreen implements Screen{
 		pongGame.getBatch().begin();
 		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 		
-		columnNames.draw(pongGame.getBatch(), "Rank", 120, 560 );
-		columnNames.draw(pongGame.getBatch(), "Player", 270, 560 );
-		columnNames.draw(pongGame.getBatch(), "Date & Time", 395, 560 );
-		columnNames.draw(pongGame.getBatch(), "Result", 620, 560 );
-		columnNames.draw(pongGame.getBatch(), "Score", 720, 560 );
+		columnNames.draw(pongGame.getBatch(), titles[0], Constants.VIEWPORT_WIDTH/2-55, Constants.VIEWPORT_HEIGHT-40);
+		
+		columnNames.draw(pongGame.getBatch(), titles[1], 120, 610 );
+		columnNames.draw(pongGame.getBatch(), titles[2], 270, 610 );
+		columnNames.draw(pongGame.getBatch(), titles[3], 395, 610 );
+		columnNames.draw(pongGame.getBatch(), titles[4], 620, 610 );
+		columnNames.draw(pongGame.getBatch(), titles[5], 720, 610 );
 		
 		try {
 			
 			if(pongGame.getLoggedIn()) {
-				winPercentageFont.draw(pongGame.getBatch(), "Player win percentage: " + winRatioString, 100, Constants.VIEWPORT_HEIGHT-10);
+				winPercentageFont.draw(pongGame.getBatch(), winRatioString, 100, Constants.VIEWPORT_HEIGHT-10);
 			}
 			
 			
@@ -334,7 +342,7 @@ public class HighScoreScreen implements Screen{
 	}
 	
 	private void renderScores(int numberOfRanks, int yDecrement, BitmapFont font, ResultSet scoreSet) throws SQLException {
-		int yStartHeight = 530;
+		int yStartHeight = 580;
 		int rank = 1;
 		int iterations = numberOfRanks;
 		boolean grey = false;

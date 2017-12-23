@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -33,9 +34,9 @@ public class LoginScreen implements Screen {
 	private TextField userField;
 	private TextField passField;
 	
+	private BitmapFont titleFont;
 
-
-	
+	private String title =  "Enter your Login or register a new account";
 	
 	private String username;
 	private String password;
@@ -65,10 +66,13 @@ public class LoginScreen implements Screen {
 		
 		
 	
-		
+		/*
 		label = new Label("Enter your login details or register a new account", pongGame.getSkin());
 		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 350);
 		stage.addActor(label);
+		*/
+		titleFont = new BitmapFont(Gdx.files.internal("arial50.fnt"));
+		titleFont.getData().setScale(0.4f);
 		
 		userField = new TextField("", pongGame.getSkin());
 		userField.setPosition(Constants.VIEWPORT_WIDTH/2-(userField.getWidth()/2), 250);
@@ -174,7 +178,10 @@ public class LoginScreen implements Screen {
 		stage.act(delta);
 		stage.draw();
 		
-		pongGame.getBatch().begin();	
+		pongGame.getBatch().begin();
+		
+		titleFont.draw(pongGame.getBatch(), title, Constants.VIEWPORT_WIDTH/2-165, Constants.VIEWPORT_HEIGHT-300);
+		
 		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 	
 		pongGame.getBatch().end();

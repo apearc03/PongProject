@@ -6,9 +6,9 @@ public class Constants {
 	
 	//Class for constant variable access 
 	public static final String title = "Pong";
-	public static final int VIEWPORT_HEIGHT = 650;
+	public static final int VIEWPORT_HEIGHT = 700;
 	public static final int VIEWPORT_WIDTH = 900;
 	public static final int FPS = 58;
-	public static final float MAX_X_VELOCITY = 8;
+	public static final float MAX_X_VELOCITY = 7;
 
 }

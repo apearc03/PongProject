@@ -1,8 +1,6 @@
 package pongproject.game.menuscreen;
 
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,14 +9,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import pongproject.game.Constants;
 import pongproject.game.Pong;
-import pongproject.game.loginscreen.LoginScreen;
 import pongproject.game.tests.eventLogger;
 
 public class MenuScreen implements Screen{
@@ -30,7 +27,7 @@ public class MenuScreen implements Screen{
 	private TextButton highScoreButton;
 	private TextButton loginButton;
 	private TextButton connectionButton;
-	//testing purposes
+	
 	private Pong pongGame;
 	private Label loggedInAs;
 	private Label connectionMessage;
@@ -79,11 +76,12 @@ public class MenuScreen implements Screen{
 		stage.addActor(label);
 		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-(gameButton.getWidth()/2), 200);
 		stage.addActor(gameButton);	
-		highScoreButton.setPosition(Constants.VIEWPORT_WIDTH/2-(highScoreButton.getWidth()/2), 100);
+		
+		highScoreButton.setPosition(Constants.VIEWPORT_WIDTH/2-(highScoreButton.getWidth()/2), 150);
 		stage.addActor(highScoreButton);
 		
-		loginButton = new TextButton("Login with a different account", pongGame.getSkin());
-		loginButton.setPosition(Constants.VIEWPORT_WIDTH/2-(loginButton.getWidth()/2), 150);
+		loginButton = new TextButton("Change User", pongGame.getSkin());
+		loginButton.setPosition(Constants.VIEWPORT_WIDTH/2-(loginButton.getWidth()/2), 100);
 		loginButton.setVisible(false);
 		stage.addActor(loginButton);
 		

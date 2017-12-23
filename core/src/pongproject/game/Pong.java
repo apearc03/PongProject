@@ -4,7 +4,6 @@ import java.sql.SQLException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,7 +14,6 @@ import pongproject.game.gamescreen.GameScreen;
 import pongproject.game.highscorescreen.HighScoreScreen;
 import pongproject.game.loginscreen.LoginScreen;
 import pongproject.game.menuscreen.MenuScreen;
-import pongproject.game.tests.screenFunctionalityTest;
 
 public class Pong extends Game {
 	
@@ -61,6 +59,7 @@ public class Pong extends Game {
 	 * In all the exceptions where I have just returned to the menuScreen. 
 	 * Maybe put a line of code after to set a label or similar on the menuScreen to show that there has been a loss of connection to database.
 	 * 
+	 * User arial50 for all fonts and labels
 	 * 
 	 * 
 	 * Remember to clear all scores from database before deployment, add dummy scores suitable for game mode of first to 2 or 3.
@@ -75,7 +74,11 @@ public class Pong extends Game {
 	 * Tested with delta a lot, seemed to make things worse
 	 * 
 	 * 
-	 *
+	 * Change "Login with a different account" to maybe just "Login" Move to bottom under highscores
+	 * 
+	 * Add tab function to buttons?
+	 * 
+	 * Remove unused libraries from build path? Controllers etc
 	 * 
 	 * 
 	 * Idea for later on, allow paddle to move in confined area left and right
@@ -93,6 +96,9 @@ public class Pong extends Game {
 	 * 
 	 * 
 	 * Tweak difficulty and max ball x velocity at the end
+	 * 
+	 * 
+	 * On export "Extract required libraries into generated JAR"
 	 * 
 	 */
 	
@@ -119,7 +125,7 @@ public class Pong extends Game {
 		
 		batch = new SpriteBatch();
 		
-		loadFont = new BitmapFont(Gdx.files.internal("arial150.fnt"));
+		loadFont = new BitmapFont(Gdx.files.internal("arial50.fnt"));
 		
 		
 		font = new BitmapFont();

@@ -198,8 +198,8 @@ public class GameScreen implements Screen{
 		
 		gameController.getComputerPadd().getPaddleSprite().draw(pongGame.getBatch());
 		gameController.getPlayerPadd().getPaddleSprite().draw(pongGame.getBatch());
-		pongGame.getSecondFont().draw(pongGame.getBatch(), "" + gameController.getComputerPadd().getScore(),Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
-		pongGame.getSecondFont().draw(pongGame.getBatch(), "" + gameController.getPlayerPadd().getScore(),Constants.VIEWPORT_WIDTH-Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
+		pongGame.getSecondFont().draw(pongGame.getBatch(), Integer.toString(gameController.getComputerPadd().getScore()),Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
+		pongGame.getSecondFont().draw(pongGame.getBatch(), Integer.toString(gameController.getPlayerPadd().getScore()),Constants.VIEWPORT_WIDTH-Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
 		pongGame.getBatch().end();
 		
 		gameController.zeroPadVelocity();
