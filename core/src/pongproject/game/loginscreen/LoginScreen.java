@@ -6,7 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,7 +25,7 @@ import pongproject.game.tests.eventLogger;
 public class LoginScreen implements Screen {
 
 	private Pong pongGame;
-	private Label label;
+	private Label titleLabel;
 	private Label userError;
 	private Label passError;
 	private LabelStyle errorStyle;
@@ -34,12 +36,15 @@ public class LoginScreen implements Screen {
 	private TextField userField;
 	private TextField passField;
 	
-	private BitmapFont titleFont;
+	
 
-	private String title =  "Enter your Login or register a new account";
+	private String title;
 	
 	private String username;
 	private String password;
+	
+	private Texture background;
+	private Sprite backgroundSprite;
 	
 	public LoginScreen(final Pong pongGame) {
 		
@@ -62,20 +67,20 @@ public class LoginScreen implements Screen {
 		
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
 		
-
+		background = new Texture(Gdx.files.internal("loginBackground.jpg"));
+		backgroundSprite = new Sprite(background);
+		backgroundSprite.setSize(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
+		
+		title =  "Enter your login or register a new username";
+		
+		titleLabel = new Label(title, new LabelStyle(pongGame.getArialFour(),Color.WHITE));
+		titleLabel.setPosition(Constants.VIEWPORT_WIDTH/2-titleLabel.getWidth()/2, 600);
+		stage.addActor(titleLabel);
 		
 		
-	
-		/*
-		label = new Label("Enter your login details or register a new account", pongGame.getSkin());
-		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 350);
-		stage.addActor(label);
-		*/
-		titleFont = new BitmapFont(Gdx.files.internal("arial50.fnt"));
-		titleFont.getData().setScale(0.4f);
 		
 		userField = new TextField("", pongGame.getSkin());
-		userField.setPosition(Constants.VIEWPORT_WIDTH/2-(userField.getWidth()/2), 250);
+		userField.setPosition(Constants.VIEWPORT_WIDTH/2-userField.getWidth()/2, 450);
 		userField.setMessageText("Username");
 		stage.addActor(userField);
 		
@@ -83,28 +88,28 @@ public class LoginScreen implements Screen {
 	
 		
 		passField = new TextField("", pongGame.getSkin());
-		passField.setPosition(Constants.VIEWPORT_WIDTH/2-(passField.getWidth()/2), 150);
+		passField.setPosition(Constants.VIEWPORT_WIDTH/2-passField.getWidth()/2, 350);
 		passField.setPasswordMode(true);
 		passField.setPasswordCharacter('*');
 		passField.setMessageText("Password");
 		stage.addActor(passField);
 		
 		//added
-		errorStyle = new LabelStyle(pongGame.getSecondFont(), Color.RED);
+		errorStyle = new LabelStyle(pongGame.getArialThree(), Color.ORANGE);
 		userError = new Label("", errorStyle);
 		passError = new Label("", errorStyle);
-		userError.setPosition(Constants.VIEWPORT_WIDTH/2-userField.getWidth()/2,300);
-		passError.setPosition(Constants.VIEWPORT_WIDTH/2-passField.getWidth()/2, 200);
+		userError.setPosition(Constants.VIEWPORT_WIDTH/2-userField.getWidth()/2,500);
+		passError.setPosition(Constants.VIEWPORT_WIDTH/2-passField.getWidth()/2, 400);
 		
 		stage.addActor(userError);
 		stage.addActor(passError);
 		
 		gameButton = new TextButton("Play", pongGame.getSkin());
-		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-(gameButton.getWidth()/2), 100);
+		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-gameButton.getWidth()/2, 200);
 		stage.addActor(gameButton);	
 		
 		menuButton = new TextButton("Menu", pongGame.getSkin());
-		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-(menuButton.getWidth()/2), 50);
+		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-menuButton.getWidth()/2, 150);
 		stage.addActor(menuButton);
 		
 		gameButton.addListener(new ClickListener() {
@@ -132,12 +137,14 @@ public class LoginScreen implements Screen {
 										passField.setText("");
 										pongGame.getMenuScreen().setLoggedInAs(pongGame.getData().getAccountUsername());
 										eventLogger.loginSuccess();
+										pongGame.getButtonSound().play(pongGame.getButtonVolume());
 										pongGame.setScreen(pongGame.getGameScreen());
 										
 									}
 									else {
 										//userError = "Username is taken or your password is incorrect";
 										//passError = "";
+										pongGame.getButtonErrorSound().play(pongGame.getButtonVolume());
 										userError.setText("Username is taken or your password is incorrect");
 										passError.setText("");
 										
@@ -149,6 +156,9 @@ public class LoginScreen implements Screen {
 									 	
 								}
 				}
+				else {
+					pongGame.getButtonErrorSound().play(pongGame.getButtonVolume());
+				}
 				
 			}
 		});
@@ -158,6 +168,7 @@ public class LoginScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
+				pongGame.getBackButtonSound().play(pongGame.getButtonVolume());
 				pongGame.setScreen(pongGame.getMenuScreen());
 			}
 		});
@@ -175,17 +186,20 @@ public class LoginScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		stage.act(delta);
-		stage.draw();
+		
 		
 		pongGame.getBatch().begin();
 		
-		titleFont.draw(pongGame.getBatch(), title, Constants.VIEWPORT_WIDTH/2-165, Constants.VIEWPORT_HEIGHT-300);
+		backgroundSprite.draw(pongGame.getBatch());
 		
-		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
+		//pongGame.getArialFour().draw(pongGame.getBatch(), title, Constants.VIEWPORT_WIDTH/2-165, Constants.VIEWPORT_HEIGHT-300);
+		
+		//pongGame.getArialPointFour().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 	
 		pongGame.getBatch().end();
 		
+		stage.act(delta);
+		stage.draw();
 	}
 
 	@Override
@@ -215,6 +229,7 @@ public class LoginScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		background.dispose();
 		stage.dispose();
 		
 	}
@@ -222,9 +237,9 @@ public class LoginScreen implements Screen {
 	
 	private boolean validateUsername(String username){
 		
-		if(username.length()>20 || username.length() < 4) {
+		if(username.length()>10 || username.length() < 4) {
 			
-			userError.setText("Username must be between 4-20 characters in length");
+			userError.setText("Username must be between 4-10 characters in length");
 			return false;
 		}
 		
@@ -242,9 +257,9 @@ public class LoginScreen implements Screen {
 	private boolean validatePassword(String password) {
 		
 
-		if(password.length()>20  || password.length() < 4) {
+		if(password.length()>10  || password.length() < 4) {
 		
-			passError.setText("Password must be between 4-20 characters in length");
+			passError.setText("Password must be between 4-10 characters in length");
 			return false;
 		}
 

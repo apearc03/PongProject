@@ -10,7 +10,7 @@ public class ComputerPaddle extends Paddle{
 	private float difficulty; //lower the difficulty number to make harder
 	
 	public ComputerPaddle(Ball ball) {
-		super(Gdx.files.internal("paddle.png"), 50);
+		super(Gdx.files.internal("paddleGreen.png"), 50);
 		this.gameBall = ball;
 		this.difficulty = 10.5f;
 		

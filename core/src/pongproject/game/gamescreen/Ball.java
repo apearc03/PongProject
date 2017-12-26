@@ -21,7 +21,7 @@ public class Ball extends Rectangle {
 	
 	
 	public Ball() {
-		this.ballImage = new Texture(Gdx.files.internal("ball5.png"));
+		this.ballImage = new Texture(Gdx.files.internal("ballYellow.png"));
 		this.ballSprite = new Sprite(ballImage);
 		
 		this.x = Constants.VIEWPORT_WIDTH/2-ballSprite.getWidth()/2; 

@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -44,6 +46,8 @@ public class GameScreen implements Screen{
 	
 	private GameController gameController;
 
+	private Texture background;
+	private Sprite backgroundSprite;
 	
 	
 	public GameScreen(final Pong pongGame) {
@@ -51,14 +55,15 @@ public class GameScreen implements Screen{
 		
 		gameController = new GameController(pongGame, this);
 		
-	
-		
+		background = new Texture(Gdx.files.internal("gameBackground.jpg"));
+		backgroundSprite = new Sprite(background);
+		backgroundSprite.setSize(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
 		
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
 		
 		
 		
-		loadStyle = new LabelStyle(pongGame.getLoadFont(), Color.ORANGE);
+		loadStyle = new LabelStyle(pongGame.getArialOneFifty(), Color.ORANGE);
 		
 		
 		controlsFadeOut = Actions.fadeOut(5.0f);
@@ -97,7 +102,7 @@ public class GameScreen implements Screen{
 		
 		
 		winner = new Label("", pongGame.getSkin());
-		winner.setPosition(Constants.VIEWPORT_WIDTH/2-100, Constants.VIEWPORT_HEIGHT-250);
+		winner.setPosition(Constants.VIEWPORT_WIDTH/2-100, Constants.VIEWPORT_HEIGHT-150);
 		winner.setVisible(false);
 		stage.addActor(winner);
 		
@@ -113,6 +118,7 @@ public class GameScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
+				pongGame.getButtonSound().play(pongGame.getButtonVolume());
 				pongGame.setScreen(pongGame.getGameScreen());
 			}
 		});
@@ -122,6 +128,7 @@ public class GameScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
+				pongGame.getBackButtonSound().play(pongGame.getButtonVolume());
 				pongGame.setScreen(pongGame.getMenuScreen());
 				
 			}
@@ -167,15 +174,14 @@ public class GameScreen implements Screen{
 		//gameController.getPaddleLeft().movePaddle();
 		gameController.update();
 		
-		stage.act(delta);
-		stage.draw();
+		
 		
 		
 		
 	
 		pongGame.getBatch().begin();
 		
-		
+		backgroundSprite.draw(pongGame.getBatch());
 		
 		if(elapsed >= 60) {
 			
@@ -198,9 +204,12 @@ public class GameScreen implements Screen{
 		
 		gameController.getComputerPadd().getPaddleSprite().draw(pongGame.getBatch());
 		gameController.getPlayerPadd().getPaddleSprite().draw(pongGame.getBatch());
-		pongGame.getSecondFont().draw(pongGame.getBatch(), Integer.toString(gameController.getComputerPadd().getScore()),Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
-		pongGame.getSecondFont().draw(pongGame.getBatch(), Integer.toString(gameController.getPlayerPadd().getScore()),Constants.VIEWPORT_WIDTH-Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
+		pongGame.getArialFour().draw(pongGame.getBatch(), Integer.toString(gameController.getComputerPadd().getScore()),Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
+		pongGame.getArialFour().draw(pongGame.getBatch(), Integer.toString(gameController.getPlayerPadd().getScore()),Constants.VIEWPORT_WIDTH-Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
 		pongGame.getBatch().end();
+		
+		stage.act(delta);
+		stage.draw();
 		
 		gameController.zeroPadVelocity();
 		
@@ -248,6 +257,7 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void dispose() {
+		background.dispose();
 		stage.dispose();
 		
 	}

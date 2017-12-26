@@ -6,6 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -21,7 +24,7 @@ import pongproject.game.tests.eventLogger;
 public class MenuScreen implements Screen{
 
 
-	private Label label;
+
 	private Stage stage;
 	private TextButton gameButton;
 	private TextButton highScoreButton;
@@ -33,13 +36,18 @@ public class MenuScreen implements Screen{
 	private Label connectionMessage;
 	private LabelStyle connectionStyle;
 	
+	private BitmapFont authorFont;
+	private BitmapFont titleFont;
 	
+	private String title; 
+	private String author;
 	
+	private Label titleLabel;
+	private Label authorLabel;
 	
+	private Texture background;
 	
-	
-	
-	
+	private Sprite backgroundSprite;
 	
 	
 	//Constructor initialises stage, table, widgets and input for the screen
@@ -47,33 +55,63 @@ public class MenuScreen implements Screen{
 		this.pongGame = pongGame;
 		
 		
-		
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
 		
+		//move these below stage after
+		background = new Texture(Gdx.files.internal("menu.jpg"));
 		
-		label = new Label("Menu Screen", pongGame.getSkin());
+		
+		backgroundSprite = new Sprite(background);
+		backgroundSprite.setSize(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
+		
+		title = "Pong";
+		author = "By Alex Pearce";
+		
+		titleFont = new BitmapFont(Gdx.files.internal("arial150.fnt"));
+		titleFont.getData().setScale(0.6f);
+
+		
+		authorFont = new BitmapFont(Gdx.files.internal("arial150.fnt"));
+		authorFont.getData().setScale(0.3f);
+		
+		//authorFont.setUseIntegerPositions(false);
+		
+		authorLabel = new Label(author, new LabelStyle(authorFont,Color.WHITE));
+		authorLabel.setPosition(Constants.VIEWPORT_WIDTH/2-authorLabel.getWidth()/2, 500);
+		stage.addActor(authorLabel);
+		
+		titleLabel = new Label(title, new LabelStyle(titleFont,Color.WHITE));
+		titleLabel.setPosition(Constants.VIEWPORT_WIDTH/2-titleLabel.getWidth()/2, 550);
+		stage.addActor(titleLabel);
+		
+		
+	
+		
+		
+	
 		gameButton = new TextButton("Play", pongGame.getSkin());
 		highScoreButton = new TextButton("High Scores", pongGame.getSkin());
 		connectionButton = new TextButton("Retry Connection", pongGame.getSkin());
 		
-		connectionButton.setPosition(20, Constants.VIEWPORT_HEIGHT-50);
+		connectionButton.setPosition(20, Constants.VIEWPORT_HEIGHT-55);
 		connectionButton.setTransform(true);
-		connectionButton.setScale(0.5f);
+		connectionButton.setScale(0.75f);
 		
 		//connectionMessage = "";
-		connectionStyle = new LabelStyle(pongGame.getSecondFont(), Color.WHITE);
+		connectionStyle = new LabelStyle(pongGame.getArialTwoFive(), Color.WHITE);
+		
 		connectionMessage = new Label("", connectionStyle);
 		connectionMessage.setPosition(20,Constants.VIEWPORT_HEIGHT-20);
-		connectionMessage.setFontScale(0.75f);
+		
 		stage.addActor(connectionMessage);
 		
-		loggedInAs = new Label("", pongGame.getSkin());
+		loggedInAs = new Label("", connectionStyle);
 		loggedInAs.setPosition(20, 20);
+		
 		stage.addActor(loggedInAs);
 		
 		stage.addActor(connectionButton);
-		label.setPosition(Constants.VIEWPORT_WIDTH/2-(label.getWidth()/2), 300);
-		stage.addActor(label);
+	
 		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-(gameButton.getWidth()/2), 200);
 		stage.addActor(gameButton);	
 		
@@ -91,6 +129,8 @@ public class MenuScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
+				
+				pongGame.getButtonSound().play(pongGame.getButtonVolume());
 				
 				try {
 						if(pongGame.getFirstConnection()) {
@@ -127,7 +167,14 @@ public class MenuScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
+				
+				pongGame.getButtonSound().play(pongGame.getButtonVolume());
 				pongGame.setScreen(pongGame.getHighScoreScreen());
+				
+				
+				
+			
+				
 			}
 		});
 
@@ -154,6 +201,7 @@ public class MenuScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
+				pongGame.getButtonSound().play(pongGame.getButtonVolume());
 				pongGame.setScreen(pongGame.getLoginScreen());
 			}
 		});
@@ -209,8 +257,14 @@ public class MenuScreen implements Screen{
 		
 		
 		pongGame.getBatch().begin();
-		//pongGame.getFont().draw(pongGame.getBatch(),connectionMessage,20,Constants.VIEWPORT_HEIGHT-20); //change to label.
-		pongGame.getFont().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
+		
+		//pongGame.getBatch().draw(test, 0, 0);
+		
+		backgroundSprite.draw(pongGame.getBatch());
+	
+		
+		//pongGame.getArialPointFour().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
+		
 		pongGame.getBatch().end();
 		
 		stage.act(delta);
@@ -220,6 +274,8 @@ public class MenuScreen implements Screen{
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, false);
+		
+	
 
 	}
 	@Override
@@ -239,6 +295,10 @@ public class MenuScreen implements Screen{
 	}
 	@Override
 	public void dispose() {
+		background.dispose();
+		
+		titleFont.dispose();
+		authorFont.dispose();
 		stage.dispose();
 		try {
 			if(pongGame.getFirstConnection()) {
@@ -248,6 +308,7 @@ public class MenuScreen implements Screen{
 			
 			e.printStackTrace();
 		}
+		
 		
 	}
 

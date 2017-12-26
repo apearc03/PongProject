@@ -293,7 +293,7 @@ public class GameController {
 						if(game.getFirstConnection()) {
 							
 							game.getData().checkConnection();
-							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-165, Constants.VIEWPORT_HEIGHT-270);
+							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-165, Constants.VIEWPORT_HEIGHT-200);
 							screen.setScoreStored("Your score of " + gameScore + " has been successfully stored");
 							
 							date = new Date();
@@ -315,7 +315,7 @@ public class GameController {
 						
 						}
 						else {
-							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-270);
+							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-200);
 							screen.setScoreStored("There is no connection to the database so your score could not be stored");
 							screen.getPlayAgainButton().setVisible(true);
 							screen.getMenuButton().setVisible(true);

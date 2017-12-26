@@ -13,7 +13,7 @@ public class PlayerPaddle extends Paddle{
 	
 	
 	public PlayerPaddle(int kUp, int kDown) {
-		super(Gdx.files.internal("paddle.png"), Constants.VIEWPORT_WIDTH-50);
+		super(Gdx.files.internal("paddleGreen.png"), Constants.VIEWPORT_WIDTH-50);
 	
 		this.keyUp = kUp;
 		this.keyDown = kDown;

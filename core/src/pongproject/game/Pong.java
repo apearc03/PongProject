@@ -4,8 +4,13 @@ import java.sql.SQLException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -23,10 +28,12 @@ public class Pong extends Game {
 	
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private BitmapFont font;
-	private BitmapFont secondFont;
-	private BitmapFont loadFont;
-	
+
+
+	private BitmapFont arialTwoFive;
+	private BitmapFont arialOneFifty;
+	private BitmapFont arialFour;
+	private BitmapFont arialThree;
 	
 	private Skin skin;
 	
@@ -35,17 +42,32 @@ public class Pong extends Game {
 	private HighScoreScreen highScoreScreen;
 	private LoginScreen loginScreen;
 	
-	private  databaseManager data;
+	private databaseManager data;
+	
+	private AssetManager assetManager;  //Use to loads screen background images and all game screen sounds including victory sounds, score sounds, paddle hits, game music.
 	
 	private boolean firstConnection;
 	private boolean loggedIn;
+	
+	private Sound buttonSound;
+	private Sound backButtonSound;
+	private Sound buttonErrorSound;
+	private float buttonVolume;
+	
 	
 	
 	/*to do
 	 * 
 	 * 
-	 * Add music for screens. Sounds for button clicks. Sounds for all game events. Paddle hits, wall hits? , goal scores.
+	 * Add music for screens. Sounds for button clicks. Sounds for all game events. Paddle hits, wall hits? , goal scores, game completion.
 	 * 
+	 * To add background images, draw them first after the batch.begin call.
+	 * Dont include curved edges in background edges. Don't scale well. Colour and paste high res images into 1024 x 768 canvas?
+	 * 
+	 * 
+	 * Maybe use an AssetManager to load assets in previous screen.
+	 * 
+	 * Unload assets in hide() of each screen? AssetManager used to load BitmapFonts, textures, sound, skin and music
 	 * 
 	 * 
 	 * Need to redo all fonts, have separate bitMapFonts for each ranking.
@@ -65,8 +87,7 @@ public class Pong extends Game {
 	 * Remember to clear all scores from database before deployment, add dummy scores suitable for game mode of first to 2 or 3.
 	 * 
 	 * 
-	 *
-	 * Next do the highscore screen. Add index to the necessary columns in pong_scores. Might be username and scores so far. Username to get the players scores only. Score to get the highest scores? 
+	 * 
 	 * 
 	 * Might need to change name of paddle velocity variable. I think its speed not velocity since x remains the same.
 	 * Menu and buttons are placed on screen Y coordinate with magic number, need to place according to screen size
@@ -74,11 +95,10 @@ public class Pong extends Game {
 	 * Tested with delta a lot, seemed to make things worse
 	 * 
 	 * 
-	 * Change "Login with a different account" to maybe just "Login" Move to bottom under highscores
 	 * 
 	 * Add tab function to buttons?
 	 * 
-	 * Remove unused libraries from build path? Controllers etc
+
 	 * 
 	 * 
 	 * Idea for later on, allow paddle to move in confined area left and right
@@ -99,6 +119,9 @@ public class Pong extends Game {
 	 * 
 	 * 
 	 * On export "Extract required libraries into generated JAR"
+		Remove unused libraries from build path? Controllers etc
+	 * Being creating final Jar. Make a new project with only the required libraries and platform launchers.
+	 * 
 	 * 
 	 */
 	
@@ -119,20 +142,37 @@ public class Pong extends Game {
 		
 			
 		
+			
+		
 		Gdx.graphics.setTitle(Constants.title);
 		
 		camera = new OrthographicCamera();
 		
+		
 		batch = new SpriteBatch();
+
 		
-		loadFont = new BitmapFont(Gdx.files.internal("arial50.fnt"));
+		
+		arialTwoFive = new BitmapFont(Gdx.files.internal("arial50.fnt"));
+		arialTwoFive .getData().setScale(0.25f);
+		
+		arialOneFifty = new BitmapFont(Gdx.files.internal("arial150.fnt"));
 		
 		
-		font = new BitmapFont();
-		font.getData().setScale(0.7f);
+		arialThree = new BitmapFont(Gdx.files.internal("arial50.fnt"));
+		arialThree.getData().setScale(0.3f);
 		
-		secondFont = new BitmapFont();
-		secondFont.getData().setScale(1f);
+		arialFour = new BitmapFont(Gdx.files.internal("arial50.fnt"));
+		arialFour.getData().setScale(0.4f);
+		
+		
+		buttonSound = Gdx.audio.newSound(Gdx.files.internal("buttonSound.mp3"));	
+		backButtonSound = Gdx.audio.newSound(Gdx.files.internal("backButtonSound.mp3"));
+		buttonErrorSound = Gdx.audio.newSound(Gdx.files.internal("buttonError.mp3"));
+		buttonVolume = 0.2f;
+		
+		assetManager = new AssetManager();
+		
 		//errorFont.setColor(Color.RED);
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -154,7 +194,13 @@ public class Pong extends Game {
 	public void dispose() {
 		
 		super.dispose();
-		font.dispose();
+
+		arialFour.dispose();
+		arialTwoFive.dispose();
+		arialOneFifty.dispose();
+		buttonSound.dispose();
+		backButtonSound.dispose();
+		buttonErrorSound.dispose();
 		batch.dispose();
 		menuScreen.dispose();
 		gameScreen.dispose();
@@ -173,20 +219,43 @@ public class Pong extends Game {
 		return camera;
 	}
 	
-	public BitmapFont getFont() {
-		return font;
+
+	
+	public BitmapFont getArialTwoFive() {
+		return arialTwoFive;
 	}
 	
-	public BitmapFont getSecondFont() {
-		return secondFont;
+	public BitmapFont getArialOneFifty() {
+		return arialOneFifty;
 	}
 	
-	public BitmapFont getLoadFont() {
-		return loadFont;
+	public BitmapFont getArialThree() {
+		return arialThree;
+	}
+	
+	public BitmapFont getArialFour() {
+		return arialFour;
+	}
+	
+	
+	public Sound getButtonSound() {
+		return buttonSound;
+	}
+	
+	public Sound getBackButtonSound() {
+		return backButtonSound;
+	}
+	
+	public Sound getButtonErrorSound() {
+		return buttonErrorSound;
 	}
 	
 	public GameScreen getGameScreen() {
 		return gameScreen;
+	}
+	
+	public float getButtonVolume() {
+		return buttonVolume;
 	}
 	
 	public HighScoreScreen getHighScoreScreen() {
@@ -201,7 +270,6 @@ public class Pong extends Game {
 		return loginScreen;
 	}
 	
-
 	
 	public Skin getSkin() {
 		return skin;
