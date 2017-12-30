@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import pongproject.game.Constants;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
@@ -28,7 +27,7 @@ public class LoginScreen implements Screen {
 	private Label titleLabel;
 	private Label userError;
 	private Label passError;
-	private LabelStyle errorStyle;
+
 	private Stage stage;
 	private TextButton gameButton;
 	private TextButton menuButton;
@@ -46,7 +45,7 @@ public class LoginScreen implements Screen {
 	private Texture background;
 	private Sprite backgroundSprite;
 	
-	public LoginScreen(final Pong pongGame) {
+	public LoginScreen(final Pong pong) {
 		
 		
 		
@@ -60,27 +59,26 @@ public class LoginScreen implements Screen {
 		
 		
 		
-		this.pongGame = pongGame;
+		this.pongGame = pong;
 	
 		
 		
 		
-		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
+		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
 		
 		background = new Texture(Gdx.files.internal("loginBackground.jpg"));
 		backgroundSprite = new Sprite(background);
-		backgroundSprite.setSize(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
+		backgroundSprite.setSize(pongGame.getAppWidth(), pongGame.getAppHeight());
 		
 		title =  "Enter your login or register a new username";
-		
-		titleLabel = new Label(title, new LabelStyle(pongGame.getArialFour(),Color.WHITE));
-		titleLabel.setPosition(Constants.VIEWPORT_WIDTH/2-titleLabel.getWidth()/2, 600);
+		titleLabel = new Label(title, new LabelStyle(pongGame.getFont20(),Color.WHITE));
+		titleLabel.setPosition(pongGame.getAppWidth()/2-titleLabel.getWidth()/2, 600);
 		stage.addActor(titleLabel);
 		
 		
 		
 		userField = new TextField("", pongGame.getSkin());
-		userField.setPosition(Constants.VIEWPORT_WIDTH/2-userField.getWidth()/2, 450);
+		userField.setPosition(pongGame.getAppWidth()/2-userField.getWidth()/2, 450);
 		userField.setMessageText("Username");
 		stage.addActor(userField);
 		
@@ -88,28 +86,34 @@ public class LoginScreen implements Screen {
 	
 		
 		passField = new TextField("", pongGame.getSkin());
-		passField.setPosition(Constants.VIEWPORT_WIDTH/2-passField.getWidth()/2, 350);
+		passField.setPosition(pongGame.getAppWidth()/2-passField.getWidth()/2, 350);
 		passField.setPasswordMode(true);
 		passField.setPasswordCharacter('*');
 		passField.setMessageText("Password");
 		stage.addActor(passField);
 		
-		//added
-		errorStyle = new LabelStyle(pongGame.getArialThree(), Color.ORANGE);
-		userError = new Label("", errorStyle);
-		passError = new Label("", errorStyle);
-		userError.setPosition(Constants.VIEWPORT_WIDTH/2-userField.getWidth()/2,500);
-		passError.setPosition(Constants.VIEWPORT_WIDTH/2-passField.getWidth()/2, 400);
 		
+		
+		userError = new Label("", pongGame.getSkin());
+		userError.setColor(Color.ORANGE);
+		userError.setPosition(pongGame.getAppWidth()/2-userField.getWidth()/2,500);
 		stage.addActor(userError);
+		
+		passError = new Label("", pongGame.getSkin());
+		passError.setColor(Color.ORANGE);
+		passError.setPosition(pongGame.getAppWidth()/2-passField.getWidth()/2, 400);
 		stage.addActor(passError);
 		
+	
+		
 		gameButton = new TextButton("Play", pongGame.getSkin());
-		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-gameButton.getWidth()/2, 200);
+		gameButton.setSize(100, 30);
+		gameButton.setPosition(pongGame.getAppWidth()/2-gameButton.getWidth()/2, 200);
 		stage.addActor(gameButton);	
 		
 		menuButton = new TextButton("Menu", pongGame.getSkin());
-		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-menuButton.getWidth()/2, 150);
+		menuButton.setSize(100, 30);
+		menuButton.setPosition(pongGame.getAppWidth()/2-menuButton.getWidth()/2, 150);
 		stage.addActor(menuButton);
 		
 		gameButton.addListener(new ClickListener() {

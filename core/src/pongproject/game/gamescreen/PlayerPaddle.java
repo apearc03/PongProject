@@ -1,8 +1,7 @@
 package pongproject.game.gamescreen;
 
 import com.badlogic.gdx.Gdx;
-
-import pongproject.game.Constants;
+import com.badlogic.gdx.audio.Sound;
 
 public class PlayerPaddle extends Paddle{
 	
@@ -11,13 +10,23 @@ public class PlayerPaddle extends Paddle{
 	private int keyUp;
 	private int keyDown;
 	
+	private Sound playerScore;
+	private Sound playerWin;
+	private Sound playerHit;
+
+	
 	
 	public PlayerPaddle(int kUp, int kDown) {
-		super(Gdx.files.internal("paddleGreen.png"), Constants.VIEWPORT_WIDTH-50);
+		
+		super(Gdx.files.internal("paddleGreen.png"), 1024-50);
 	
 		this.keyUp = kUp;
 		this.keyDown = kDown;
 		this.name = "the player";
+		
+		this.playerScore = Gdx.audio.newSound(Gdx.files.internal("playerScores.mp3"));
+		this.playerWin = Gdx.audio.newSound(Gdx.files.internal("player wins.mp3"));
+		this.playerHit = Gdx.audio.newSound(Gdx.files.internal("playerHitsBall.mp3"));
 	}
 	
 
@@ -40,6 +49,31 @@ public class PlayerPaddle extends Paddle{
 	
 			
 		}
+		
+	}
+
+
+
+	@Override
+	public Sound scoreSound() {
+	
+		return playerScore;
+	}
+
+
+
+	@Override
+	public Sound hitSound() {
+		
+		return playerHit;
+	}
+
+
+
+	@Override
+	public Sound victorySound() {
+
+		return playerWin;
 		
 	}
 

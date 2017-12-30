@@ -5,15 +5,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-import pongproject.game.Constants;
-
 public class Ball extends Rectangle {
 
 	private Texture ballImage;
 	private Sprite ballSprite;
 	private float xVelocity;
 	private float yVelocity;
-
+	private final float maxXVelocity;
+	
+	private final float appWidth;
+	private final float appHeight;
+	
 	private boolean lastHitWasPLayer;
 	
 	
@@ -24,9 +26,12 @@ public class Ball extends Rectangle {
 		this.ballImage = new Texture(Gdx.files.internal("ballYellow.png"));
 		this.ballSprite = new Sprite(ballImage);
 		
-		this.x = Constants.VIEWPORT_WIDTH/2-ballSprite.getWidth()/2; 
+		appWidth = 1024;
+		appHeight = 768;
 		
-		this.y = Constants.VIEWPORT_HEIGHT/2-ballSprite.getHeight()/2;
+		this.x = appWidth/2-ballSprite.getWidth()/2; 
+		
+		this.y = appHeight/2-ballSprite.getHeight()/2;
 	
 		this.ballSprite.setX(x);
 		this.ballSprite.setY(y);
@@ -35,6 +40,7 @@ public class Ball extends Rectangle {
 		this.width = ballSprite.getWidth();
 		this.height = ballSprite.getHeight();
 		this.lastHitWasPLayer = false;
+		this.maxXVelocity = 7;
 	
 	}
 	
@@ -54,7 +60,7 @@ public class Ball extends Rectangle {
 		
 		//working code
 		
-		if(xVelocity<Constants.MAX_X_VELOCITY && xVelocity>-Constants.MAX_X_VELOCITY) {
+		if(xVelocity<maxXVelocity && xVelocity>-maxXVelocity) {
 			setxVelocity(xVelocity*1.0005f);
 		}
 	
@@ -84,9 +90,9 @@ public class Ball extends Rectangle {
 	
 	public void resetBall() {
 		
-		this.x = Constants.VIEWPORT_WIDTH/2-ballSprite.getWidth()/2;
+		this.x = appWidth/2-ballSprite.getWidth()/2;
 		
-		this.y = Constants.VIEWPORT_HEIGHT/2-ballSprite.getHeight()/2;
+		this.y = appHeight/2-ballSprite.getHeight()/2;
 
 		this.xVelocity = 0;
 		this.yVelocity = 0;

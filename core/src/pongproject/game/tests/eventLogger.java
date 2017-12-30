@@ -9,8 +9,13 @@ public abstract class eventLogger {
 		System.out.println("Menu screen");
 	}
 	public static void loginScreen() {
-		System.out.println("login screen");
+		System.out.println("Login screen");
 	}
+	
+	public static void settingsScreen() {
+		System.out.println("Settings screen");
+	}
+	
 	public static void highScoreScreen() {
 		System.out.println("High Score screen");
 	}

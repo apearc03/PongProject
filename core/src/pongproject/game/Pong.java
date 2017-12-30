@@ -4,14 +4,14 @@ import java.sql.SQLException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import pongproject.game.database.databaseManager;
@@ -19,6 +19,7 @@ import pongproject.game.gamescreen.GameScreen;
 import pongproject.game.highscorescreen.HighScoreScreen;
 import pongproject.game.loginscreen.LoginScreen;
 import pongproject.game.menuscreen.MenuScreen;
+import pongproject.game.settingsscreen.SettingsScreen;
 
 public class Pong extends Game {
 	
@@ -30,10 +31,8 @@ public class Pong extends Game {
 	private SpriteBatch batch;
 
 
-	private BitmapFont arialTwoFive;
-	private BitmapFont arialOneFifty;
-	private BitmapFont arialFour;
-	private BitmapFont arialThree;
+
+	
 	
 	private Skin skin;
 	
@@ -41,10 +40,12 @@ public class Pong extends Game {
 	private GameScreen gameScreen;
 	private HighScoreScreen highScoreScreen;
 	private LoginScreen loginScreen;
+	private SettingsScreen settingsScreen;
 	
 	private databaseManager data;
 	
-	private AssetManager assetManager;  //Use to loads screen background images and all game screen sounds including victory sounds, score sounds, paddle hits, game music.
+	private Music music[] = new Music[2];
+
 	
 	private boolean firstConnection;
 	private boolean loggedIn;
@@ -54,34 +55,47 @@ public class Pong extends Game {
 	private Sound buttonErrorSound;
 	private float buttonVolume;
 	
+	private int appHeight;
+	private int appWidth;
 	
+	private FreeTypeFontGenerator generator;
 	
+	private BitmapFont font16;
+	private FreeTypeFontParameter parameter16;
+	private BitmapFont font14;
+	private FreeTypeFontParameter parameter14;
+	private BitmapFont font12;
+	private FreeTypeFontParameter parameter12;
+	
+	private BitmapFont font20; 
+	private FreeTypeFontParameter parameter20;
+	
+	private BitmapFont font100;
+	private FreeTypeFontParameter parameter100;
 	/*to do
 	 * 
 	 * 
-	 * Add music for screens. Sounds for button clicks. Sounds for all game events. Paddle hits, wall hits? , goal scores, game completion.
+
+	 * Change all fonts to open sans ttf if possible.
 	 * 
-	 * To add background images, draw them first after the batch.begin call.
-	 * Dont include curved edges in background edges. Don't scale well. Colour and paste high res images into 1024 x 768 canvas?
+	 * Next functionality should be an options/settings screen or popup. Will include sound volume, music mute. Resolution options. Difficulty setting. Have controls shown. Picture of up/down key?
+
 	 * 
 	 * 
-	 * Maybe use an AssetManager to load assets in previous screen.
+	 * Then remake project for different platforms.
 	 * 
-	 * Unload assets in hide() of each screen? AssetManager used to load BitmapFonts, textures, sound, skin and music
+	 * When remaking project for deployment, remove eventLogger class for all. Remove database functionality for android. Remove necessary functionality for html.
 	 * 
 	 * 
 	 * Need to redo all fonts, have separate bitMapFonts for each ranking.
 	 * Do fonts for titles of screens.
 	 * Remember to close all fonts in dispose methods after they are sorted.
-	 * Sort out spacing in scores.
-	 * Maybe have fonts in each class rather than using them from pongGame if necessary. Maybe used shared for efficiency. See what works.
 	 * 
 	 * 
 	 * 
 	 * In all the exceptions where I have just returned to the menuScreen. 
 	 * Maybe put a line of code after to set a label or similar on the menuScreen to show that there has been a loss of connection to database.
 	 * 
-	 * User arial50 for all fonts and labels
 	 * 
 	 * 
 	 * Remember to clear all scores from database before deployment, add dummy scores suitable for game mode of first to 2 or 3.
@@ -102,7 +116,6 @@ public class Pong extends Game {
 	 * 
 	 * 
 	 * Idea for later on, allow paddle to move in confined area left and right
-	 * Remove Batch.draw in render methods when game is done.
 	 * Re do all text with hiero font creator.
 	 * 
 	 * 
@@ -144,26 +157,53 @@ public class Pong extends Game {
 		
 			
 		
-		Gdx.graphics.setTitle(Constants.title);
+		Gdx.graphics.setTitle("Pong");
 		
 		camera = new OrthographicCamera();
 		
 		
 		batch = new SpriteBatch();
 
+		appWidth = 1024;
+		appHeight = 768;
 		
 		
-		arialTwoFive = new BitmapFont(Gdx.files.internal("arial50.fnt"));
-		arialTwoFive .getData().setScale(0.25f);
-		
-		arialOneFifty = new BitmapFont(Gdx.files.internal("arial150.fnt"));
 		
 		
-		arialThree = new BitmapFont(Gdx.files.internal("arial50.fnt"));
-		arialThree.getData().setScale(0.3f);
+		music[0] = Gdx.audio.newMusic(Gdx.files.internal("music2.ogg"));
+		music[1] = Gdx.audio.newMusic(Gdx.files.internal("music.ogg"));
 		
-		arialFour = new BitmapFont(Gdx.files.internal("arial50.fnt"));
-		arialFour.getData().setScale(0.4f);
+		
+		generator = new FreeTypeFontGenerator(Gdx.files.internal("openSans.ttf"));
+		
+		
+		parameter16 = new FreeTypeFontParameter();
+		parameter16.size = 16;
+		font16 = generator.generateFont(parameter16);
+		font16.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+		
+		parameter14 = new FreeTypeFontParameter();
+		parameter14.size = 14;
+		font14 = generator.generateFont(parameter14);
+		font14.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+		
+		parameter12 = new FreeTypeFontParameter();
+		parameter12.size = 12;
+		font12 = generator.generateFont(parameter12);
+		font12.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+		parameter20 = new FreeTypeFontParameter();
+		parameter20.size = 20;
+		font20 = generator.generateFont(parameter20);
+		font20.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+		
+		parameter100 = new FreeTypeFontParameter();
+		parameter100.size = 100;
+		font100 = generator.generateFont(parameter100);
+		font100.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		
 		buttonSound = Gdx.audio.newSound(Gdx.files.internal("buttonSound.mp3"));	
@@ -171,7 +211,7 @@ public class Pong extends Game {
 		buttonErrorSound = Gdx.audio.newSound(Gdx.files.internal("buttonError.mp3"));
 		buttonVolume = 0.2f;
 		
-		assetManager = new AssetManager();
+	
 		
 		//errorFont.setColor(Color.RED);
 		
@@ -181,12 +221,19 @@ public class Pong extends Game {
 		gameScreen = new GameScreen(this);
 		highScoreScreen = new HighScoreScreen(this);
 		loginScreen = new LoginScreen(this);
+		settingsScreen = new SettingsScreen(this);
 		
 	 //testing purposes
 		
 		loggedIn = false;
 		
+		//this.setScreen(menuScreen);
 		this.setScreen(menuScreen);
+		
+		
+		music[0].play();
+		music[0].setVolume(buttonVolume);
+		music[0].setLooping(true);
 	}
 
 	//Disposes of resources on game exit
@@ -194,10 +241,15 @@ public class Pong extends Game {
 	public void dispose() {
 		
 		super.dispose();
-
-		arialFour.dispose();
-		arialTwoFive.dispose();
-		arialOneFifty.dispose();
+		generator.dispose();
+		font100.dispose();
+		font20.dispose();
+		font16.dispose();
+		font14.dispose();
+		font12.dispose();
+		music[0].dispose();
+		music[1].dispose();
+		
 		buttonSound.dispose();
 		backButtonSound.dispose();
 		buttonErrorSound.dispose();
@@ -205,6 +257,7 @@ public class Pong extends Game {
 		menuScreen.dispose();
 		gameScreen.dispose();
 		highScoreScreen.dispose();
+		settingsScreen.dispose();
 		loginScreen.dispose();
 	
 	}
@@ -219,24 +272,35 @@ public class Pong extends Game {
 		return camera;
 	}
 	
+	public int getAppWidth() {
+		return appWidth;
+	}
+	
+	public int getAppHeight() {
+		return appHeight;
+	}
+	
 
 	
-	public BitmapFont getArialTwoFive() {
-		return arialTwoFive;
+	public BitmapFont getFont100() {
+		return font100;
 	}
 	
-	public BitmapFont getArialOneFifty() {
-		return arialOneFifty;
+	public BitmapFont getFont20() {
+		return font20;
 	}
 	
-	public BitmapFont getArialThree() {
-		return arialThree;
+	public BitmapFont getFont16() {
+		return font16;
 	}
 	
-	public BitmapFont getArialFour() {
-		return arialFour;
+	public BitmapFont getFont14() {
+		return font14;
 	}
 	
+	public BitmapFont getFont12() {
+		return font12;
+	}
 	
 	public Sound getButtonSound() {
 		return buttonSound;
@@ -270,6 +334,9 @@ public class Pong extends Game {
 		return loginScreen;
 	}
 	
+	public SettingsScreen getSettingsScreen() {
+		return settingsScreen;
+	}
 	
 	public Skin getSkin() {
 		return skin;
@@ -294,4 +361,9 @@ public class Pong extends Game {
 	public void setFirstConnection(boolean firstConnection) {
 		this.firstConnection = firstConnection;
 	}
+	
+	public Music[] getMusic() {
+		return music;
+	}
+
 }

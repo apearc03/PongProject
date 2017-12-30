@@ -87,8 +87,9 @@ public class databaseManager {
 		 highScoresRetrieved = false;
 		 playerScoresRetrieved = false;
 		 winRatioRetrieved = false;
-		 
+		
 		 DriverManager.setLoginTimeout(2);
+		 
 	}
 	
 	
@@ -98,7 +99,7 @@ public class databaseManager {
 
 		
 		conn = DriverManager.getConnection(i, o, u);
-
+		
 		
 
 		    

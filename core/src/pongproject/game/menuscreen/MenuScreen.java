@@ -1,5 +1,6 @@
 package pongproject.game.menuscreen;
 
+import java.awt.DisplayMode;
 import java.sql.SQLException;
 
 import com.badlogic.gdx.Gdx;
@@ -17,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import pongproject.game.Constants;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
@@ -30,17 +30,15 @@ public class MenuScreen implements Screen{
 	private TextButton highScoreButton;
 	private TextButton loginButton;
 	private TextButton connectionButton;
+	private TextButton settingsButton;
 	
 	private Pong pongGame;
 	private Label loggedInAs;
 	private Label connectionMessage;
-	private LabelStyle connectionStyle;
-	
-	private BitmapFont authorFont;
-	private BitmapFont titleFont;
-	
-	private String title; 
-	private String author;
+	private LabelStyle messageStyle;
+
+	private final String title; 
+	private final String author;
 	
 	private Label titleLabel;
 	private Label authorLabel;
@@ -51,75 +49,87 @@ public class MenuScreen implements Screen{
 	
 	
 	//Constructor initialises stage, table, widgets and input for the screen
-	public MenuScreen(final Pong pongGame) {
-		this.pongGame = pongGame;
+	public MenuScreen(final Pong pong) {
+		this.pongGame = pong;
 		
 		
-		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
+		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
 		
-		//move these below stage after
+		
+		
+		
+		
 		background = new Texture(Gdx.files.internal("menu.jpg"));
 		
 		
 		backgroundSprite = new Sprite(background);
-		backgroundSprite.setSize(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
+		backgroundSprite.setSize(pongGame.getAppWidth(), pongGame.getAppHeight());
 		
 		title = "Pong";
 		author = "By Alex Pearce";
 		
-		titleFont = new BitmapFont(Gdx.files.internal("arial150.fnt"));
-		titleFont.getData().setScale(0.6f);
+		
+	
+		
 
 		
-		authorFont = new BitmapFont(Gdx.files.internal("arial150.fnt"));
-		authorFont.getData().setScale(0.3f);
 		
-		//authorFont.setUseIntegerPositions(false);
 		
-		authorLabel = new Label(author, new LabelStyle(authorFont,Color.WHITE));
-		authorLabel.setPosition(Constants.VIEWPORT_WIDTH/2-authorLabel.getWidth()/2, 500);
+		authorLabel = new Label(author, new LabelStyle(pongGame.getFont20(),Color.WHITE));
+		authorLabel.setPosition(pongGame.getAppWidth()/2-authorLabel.getWidth()/2, 500);
 		stage.addActor(authorLabel);
 		
-		titleLabel = new Label(title, new LabelStyle(titleFont,Color.WHITE));
-		titleLabel.setPosition(Constants.VIEWPORT_WIDTH/2-titleLabel.getWidth()/2, 550);
+		titleLabel = new Label(title, new LabelStyle(pongGame.getFont100(),Color.WHITE));
+		titleLabel.setPosition(pongGame.getAppWidth()/2-titleLabel.getWidth()/2, 550);
 		stage.addActor(titleLabel);
 		
 		
-	
-		
-		
-	
 		gameButton = new TextButton("Play", pongGame.getSkin());
-		highScoreButton = new TextButton("High Scores", pongGame.getSkin());
-		connectionButton = new TextButton("Retry Connection", pongGame.getSkin());
-		
-		connectionButton.setPosition(20, Constants.VIEWPORT_HEIGHT-55);
-		connectionButton.setTransform(true);
-		connectionButton.setScale(0.75f);
-		
-		//connectionMessage = "";
-		connectionStyle = new LabelStyle(pongGame.getArialTwoFive(), Color.WHITE);
-		
-		connectionMessage = new Label("", connectionStyle);
-		connectionMessage.setPosition(20,Constants.VIEWPORT_HEIGHT-20);
-		
-		stage.addActor(connectionMessage);
-		
-		loggedInAs = new Label("", connectionStyle);
-		loggedInAs.setPosition(20, 20);
-		
-		stage.addActor(loggedInAs);
-		
-		stage.addActor(connectionButton);
-	
-		gameButton.setPosition(Constants.VIEWPORT_WIDTH/2-(gameButton.getWidth()/2), 200);
+		gameButton.setSize(100, 30);
+		gameButton.setPosition(pongGame.getAppWidth()/2-(gameButton.getWidth()/2), 300);
 		stage.addActor(gameButton);	
 		
-		highScoreButton.setPosition(Constants.VIEWPORT_WIDTH/2-(highScoreButton.getWidth()/2), 150);
+		settingsButton = new TextButton("Settings", pongGame.getSkin());
+		settingsButton.setSize(100, 30);
+		settingsButton.setPosition(pongGame.getAppWidth()/2-(settingsButton.getWidth()/2), 250);
+		stage.addActor(settingsButton);
+	
+		
+		
+		highScoreButton = new TextButton("High Scores", pongGame.getSkin());
+		highScoreButton.setSize(100, 30);
+		highScoreButton.setPosition(pongGame.getAppWidth()/2-(highScoreButton.getWidth()/2), 200);
 		stage.addActor(highScoreButton);
 		
+		
+		
+		connectionButton = new TextButton("Retry Connection", pongGame.getSkin());
+		connectionButton.setPosition(20, pongGame.getAppHeight()-55);
+		connectionButton.setTransform(true);
+		connectionButton.setScale(0.75f);
+		stage.addActor(connectionButton);
+		
+		
+		messageStyle = new LabelStyle(pongGame.getFont14(), Color.WHITE);
+		
+		connectionMessage = new Label("", messageStyle);
+		connectionMessage.setPosition(20,pongGame.getAppHeight()-20);
+		stage.addActor(connectionMessage);
+		
+		loggedInAs = new Label("", messageStyle);
+		loggedInAs.setPosition(20, 20);
+		stage.addActor(loggedInAs);
+		
+		
+		
+
+		
+		
+	
+		
 		loginButton = new TextButton("Change User", pongGame.getSkin());
-		loginButton.setPosition(Constants.VIEWPORT_WIDTH/2-(loginButton.getWidth()/2), 100);
+		loginButton.setSize(100, 30);
+		loginButton.setPosition(pongGame.getAppWidth()/2-(loginButton.getWidth()/2), 150);
 		loginButton.setVisible(false);
 		stage.addActor(loginButton);
 		
@@ -152,12 +162,25 @@ public class MenuScreen implements Screen{
 						}
 						else {
 							pongGame.setScreen(pongGame.getGameScreen());
+							
+							
 						}
 				} catch (SQLException e) {
 					
 					eventLogger.databaseConnectionFailed();
 				}
 				//if connected to database, go to login screen. If not go to game screen.
+			}
+		});
+		
+		
+		settingsButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// TODO Auto-generated method stub
+				super.clicked(event, x, y);
+				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.setScreen(pongGame.getSettingsScreen());
 			}
 		});
 		
@@ -207,6 +230,8 @@ public class MenuScreen implements Screen{
 		});
 		
 		
+		
+		//makes the connection to the database
 		try {
 			makeConnection();
 		} catch (SQLException e) {
@@ -297,8 +322,7 @@ public class MenuScreen implements Screen{
 	public void dispose() {
 		background.dispose();
 		
-		titleFont.dispose();
-		authorFont.dispose();
+
 		stage.dispose();
 		try {
 			if(pongGame.getFirstConnection()) {
@@ -328,7 +352,7 @@ public class MenuScreen implements Screen{
 	
 	private void showRetryConnection() {
 	
-		connectionMessage.setText("Connection to database unsuccessful, you can play but your score wont be recorded");
+		connectionMessage.setText("Connection to database unsuccessful, your score wont be recorded");
 		connectionButton.setVisible(true);
 		highScoreButton.setVisible(false);
 	}

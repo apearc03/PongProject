@@ -5,15 +5,16 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 
-import pongproject.game.Constants;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
 public class GameController {
 
-	private Pong game;
+	private Pong pongGame;
 	private GameScreen screen;
 	private PlayerPaddle playerPadd;
 	private ComputerPaddle computerPadd;
@@ -27,8 +28,12 @@ public class GameController {
 	private DateFormat timeFormat;
 	private Date date;
 	
-	public GameController(final Pong pongGame, GameScreen gameScreen) {
-		game = pongGame;
+	
+	private Sound wallHit;
+	
+	
+	public GameController(final Pong Game, GameScreen gameScreen) {
+		pongGame = Game;
 		screen = gameScreen;
 		ball = new Ball();
 		playerPadd = new PlayerPaddle(Keys.UP,Keys.DOWN);
@@ -38,6 +43,8 @@ public class GameController {
 		timeFormat = DateFormat.getTimeInstance(2, Locale.UK);
 		
 		gameScore = 1000;
+
+		wallHit = Gdx.audio.newSound(Gdx.files.internal("wallHit.mp3"));
 		
 	}
 	
@@ -123,7 +130,9 @@ public class GameController {
 		
 				//used to fix ball stuck glitch
 				if(ball.getLastHitPlayer()) {
-
+					
+					
+					
 					if(Normalized > 0) {
 						ball.updatePosition(-5, 5);
 					}
@@ -134,11 +143,14 @@ public class GameController {
 				}
 
 				eventLogger.playerPaddleCollision();
-				//working code
+
 				ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*ball.getxVelocity()/2);
 				
 				
 				if(!ball.getLastHitPlayer()) {
+					
+					playerPadd.hitSound().play(pongGame.getButtonVolume());
+					
 					gameScore+=5;
 					eventLogger.updateScore(5);
 				}
@@ -165,7 +177,9 @@ public class GameController {
 	
 			//used to fix ball stuck glitch
 			if(!ball.getLastHitPlayer()) {
-
+				
+				
+				
 				if(Normalized > 0) {
 					ball.updatePosition(5, 5);
 				}
@@ -176,12 +190,16 @@ public class GameController {
 			}
 			
 			eventLogger.computerPaddleCollision();
+
 			//working code
 			
 			ball.setVelocity(ball.getxVelocity()*-1, (Normalized*3.5f)*-ball.getxVelocity()/2);
 			
 			//for scoring
 			if(ball.getLastHitPlayer()) {
+				
+				computerPadd.hitSound().play(pongGame.getButtonVolume());
+				
 				if(gameScore > 10) {
 					gameScore -= 10;
 					eventLogger.updateScore(-10);
@@ -212,9 +230,13 @@ public class GameController {
 				eventLogger.updateScore(150);
 				
 				try {
-					checkForWinner(playerPadd);
+					
+					if(!checkForWinner(playerPadd)) {
+						playerPadd.scoreSound().play(pongGame.getButtonVolume());
+					}
+					
 				} catch (SQLException e) {
-					screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-270);
+					screen.getScoreStored().setPosition(pongGame.getAppWidth()/2-230, pongGame.getAppHeight()-270);
 					screen.setScoreStored("There is no connection to the database so your score could not be stored");
 				}
 				
@@ -223,7 +245,7 @@ public class GameController {
 			
 			
 
-			if(ball.getX() + ball.getBallSprite().getWidth()>= Constants.VIEWPORT_WIDTH) {
+			if(ball.getX() + ball.getBallSprite().getWidth()>= pongGame.getAppWidth()) {
 				//ball.setVelocity(ball.getxVelocity()*-1, ball.getyVelocity());
 				//computer scores
 				computerPadd.incrementScore();
@@ -236,9 +258,13 @@ public class GameController {
 				
 				
 				try {
-					checkForWinner(computerPadd);
+					
+					if(!checkForWinner(computerPadd)) {
+						computerPadd.scoreSound().play(pongGame.getButtonVolume());
+					}
+					
 				} catch (SQLException e) {
-					screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-270);
+					screen.getScoreStored().setPosition(pongGame.getAppWidth()/2-230, pongGame.getAppHeight()-270);
 					screen.setScoreStored("There is no connection to the database so your score could not be stored");
 					screen.getPlayAgainButton().setVisible(true);
 					screen.getMenuButton().setVisible(true);
@@ -263,37 +289,38 @@ public class GameController {
 				ball.updatePosition(0, 5);
 				ball.setVelocity(ball.getxVelocity(), ball.getyVelocity()*-1);
 			
-				
+				wallHit.play(0.1f);
 			}
 			
 			
 
-			if(ball.getY() + ball.getBallSprite().getHeight()> Constants.VIEWPORT_HEIGHT) {
+			if(ball.getY() + ball.getBallSprite().getHeight()> pongGame.getAppHeight()) {
 				
 				ball.updatePosition(0, -5);
 				ball.setVelocity(ball.getxVelocity(), ball.getyVelocity()*-1);
 				
-				
+				wallHit.play(pongGame.getButtonVolume());
 			}
 			
 	}
 		
 		
-	public void checkForWinner(Paddle pad) throws SQLException {
+	private boolean checkForWinner(Paddle pad) throws SQLException {
 			
 			if(pad.getScore()==1) {//change to 3 after
 						resetGame();
+						
 						screen.setWinnerText("The winner is " + pad.getName());
 					
+						pad.victorySound().play(pongGame.getButtonVolume());
+						
+						
 					
 						
-				
-					
-						
-						if(game.getFirstConnection()) {
+						if(pongGame.getFirstConnection()) {
 							
-							game.getData().checkConnection();
-							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-165, Constants.VIEWPORT_HEIGHT-200);
+							pongGame.getData().checkConnection();
+							screen.getScoreStored().setPosition(pongGame.getAppWidth()/2-165, pongGame.getAppHeight()-200);
 							screen.setScoreStored("Your score of " + gameScore + " has been successfully stored");
 							
 							date = new Date();
@@ -304,18 +331,18 @@ public class GameController {
 									if(pad.getClass().equals(playerPadd.getClass())) {
 										
 										eventLogger.playerWon();
-										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+"    "+timeFormat.format(date), "Win", gameScore);
+										pongGame.getData().enterScore(pongGame.getData().getAccountUsername(), dateFormat.format(date)+"    "+timeFormat.format(date), "Win", gameScore);
 									}
 									else {
 										
 										eventLogger.computerWon();
-										game.getData().enterScore(game.getData().getAccountUsername(), dateFormat.format(date)+"    "+timeFormat.format(date), "Loss", gameScore);
+										pongGame.getData().enterScore(pongGame.getData().getAccountUsername(), dateFormat.format(date)+"    "+timeFormat.format(date), "Loss", gameScore);
 									}
 									
 						
 						}
 						else {
-							screen.getScoreStored().setPosition(Constants.VIEWPORT_WIDTH/2-230, Constants.VIEWPORT_HEIGHT-200);
+							screen.getScoreStored().setPosition(pongGame.getAppWidth()/2-230, pongGame.getAppHeight()-200);
 							screen.setScoreStored("There is no connection to the database so your score could not be stored");
 							screen.getPlayAgainButton().setVisible(true);
 							screen.getMenuButton().setVisible(true);
@@ -331,16 +358,27 @@ public class GameController {
 					screen.getPlayAgainButton().setVisible(true);
 					screen.getMenuButton().setVisible(true);
 					
-					
+					return true;
 			
 			}
 			else {
 				resetGame();
 				ball.startBallMovement();
+				return false;
 			}
 			
 	}
 
-	
+	public void disposeGameSounds() {
+		
+		playerPadd.hitSound().dispose();
+		playerPadd.scoreSound().dispose();
+		playerPadd.victorySound().dispose();
+		computerPadd.hitSound().dispose();
+		computerPadd.scoreSound().dispose();
+		computerPadd.victorySound().dispose();
+		wallHit.dispose();
+		
+	}
 	
 }

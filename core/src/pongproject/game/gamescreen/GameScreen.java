@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import pongproject.game.Constants;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
@@ -50,35 +49,34 @@ public class GameScreen implements Screen{
 	private Sprite backgroundSprite;
 	
 	
-	public GameScreen(final Pong pongGame) {
-		this.pongGame = pongGame;
+	public GameScreen(final Pong pong) {
+		this.pongGame = pong;
+		
+		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
 		
 		gameController = new GameController(pongGame, this);
 		
 		background = new Texture(Gdx.files.internal("gameBackground.jpg"));
 		backgroundSprite = new Sprite(background);
-		backgroundSprite.setSize(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
-		
-		stage = new Stage(new StretchViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, pongGame.getCamera()));
+		backgroundSprite.setSize(pongGame.getAppWidth(), pongGame.getAppHeight());
 		
 		
 		
-		loadStyle = new LabelStyle(pongGame.getArialOneFifty(), Color.ORANGE);
+		
+		
+		loadStyle = new LabelStyle(pongGame.getFont100(), Color.ORANGE);
 		
 		
 		controlsFadeOut = Actions.fadeOut(5.0f);
 		controls = new Label("Use the up and down arrow keys to move", pongGame.getSkin());
 		controls.setScale(2.0f);
-		controls.setPosition(Constants.VIEWPORT_WIDTH/2-controls.getWidth()/2, Constants.VIEWPORT_HEIGHT-controls.getHeight());
-		
+		controls.setPosition(pongGame.getAppWidth()/2-controls.getWidth()/2, pongGame.getAppHeight()-controls.getHeight());
 		stage.addActor(controls);
 		
 		
 		playFadeOut = Actions.fadeOut(1.0f);
 		play = new Label("PLAY!", loadStyle);
-		play.setPosition(Constants.VIEWPORT_WIDTH/2-play.getWidth()/2, Constants.VIEWPORT_HEIGHT/2-play.getHeight()/2);
-		
-		
+		play.setPosition(pongGame.getAppWidth()/2-play.getWidth()/2, pongGame.getAppHeight()/2-play.getHeight()/2);
 		stage.addActor(play);
 		
 		
@@ -91,24 +89,26 @@ public class GameScreen implements Screen{
 		
 		
 		playAgainButton = new TextButton("Play again", pongGame.getSkin());
+		playAgainButton.setSize(100, 30);
 		playAgainButton.setVisible(false);
-		menuButton = new TextButton("Menu", pongGame.getSkin());
-		menuButton.setVisible(false);
-	
-		playAgainButton.setPosition(Constants.VIEWPORT_WIDTH/2-playAgainButton.getWidth()/2, 250);
+		playAgainButton.setPosition(pongGame.getAppWidth()/2-playAgainButton.getWidth()/2, 300);
 		stage.addActor(playAgainButton);
-		menuButton.setPosition(Constants.VIEWPORT_WIDTH/2-menuButton.getWidth()/2, 200);
+		
+		
+		menuButton = new TextButton("Menu", pongGame.getSkin());
+		menuButton.setSize(100, 30);
+		menuButton.setVisible(false);
+		menuButton.setPosition(pongGame.getAppWidth()/2-menuButton.getWidth()/2, 250);
 		stage.addActor(menuButton);	
 		
 		
 		winner = new Label("", pongGame.getSkin());
-		winner.setPosition(Constants.VIEWPORT_WIDTH/2-100, Constants.VIEWPORT_HEIGHT-150);
+		winner.setPosition(pongGame.getAppWidth()/2-100, pongGame.getAppHeight()-150);
 		winner.setVisible(false);
 		stage.addActor(winner);
 		
 		
 		scoreStored = new Label("", pongGame.getSkin());
-		
 		scoreStored.setVisible(false);
 		stage.addActor(scoreStored);
 		
@@ -149,6 +149,12 @@ public class GameScreen implements Screen{
 		Gdx.input.setInputProcessor(stage);
 		eventLogger.gameScreen();
 		
+		
+		pongGame.getMusic()[0].pause();
+		pongGame.getMusic()[1].play();
+		pongGame.getMusic()[1].setLooping(true);
+		pongGame.getMusic()[1].setVolume(pongGame.getButtonVolume());
+		
 		elapsed = 0;
 		
 		controls.setColor(Color.ORANGE);
@@ -157,7 +163,7 @@ public class GameScreen implements Screen{
 		play.setColor(Color.ORANGE);
 		play.addAction(playFadeOut);
 		
-	
+		
 		
 		gameStarted = false;
 		
@@ -204,8 +210,8 @@ public class GameScreen implements Screen{
 		
 		gameController.getComputerPadd().getPaddleSprite().draw(pongGame.getBatch());
 		gameController.getPlayerPadd().getPaddleSprite().draw(pongGame.getBatch());
-		pongGame.getArialFour().draw(pongGame.getBatch(), Integer.toString(gameController.getComputerPadd().getScore()),Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
-		pongGame.getArialFour().draw(pongGame.getBatch(), Integer.toString(gameController.getPlayerPadd().getScore()),Constants.VIEWPORT_WIDTH-Constants.VIEWPORT_WIDTH/3,Constants.VIEWPORT_HEIGHT-50);
+		pongGame.getFont16().draw(pongGame.getBatch(), Integer.toString(gameController.getComputerPadd().getScore()),pongGame.getAppWidth()/3,pongGame.getAppHeight()-50);
+		pongGame.getFont16().draw(pongGame.getBatch(), Integer.toString(gameController.getPlayerPadd().getScore()),pongGame.getAppWidth()-pongGame.getAppWidth()/3,pongGame.getAppHeight()-50);
 		pongGame.getBatch().end();
 		
 		stage.act(delta);
@@ -236,9 +242,14 @@ public class GameScreen implements Screen{
 	@Override
 	public void hide() {
 		
+		pongGame.getMusic()[0].play();
+		pongGame.getMusic()[1].pause();
+		
 		gameController.resetGame();
 		gameController.resetScores();
 		
+		gameController.getPlayerPadd().victorySound().stop();
+		gameController.getComputerPadd().victorySound().stop();
 		
 		winner.setVisible(false);
 		scoreStored.setVisible(false);
@@ -259,7 +270,7 @@ public class GameScreen implements Screen{
 	public void dispose() {
 		background.dispose();
 		stage.dispose();
-		
+		gameController.disposeGameSounds();
 	}
 	
 
