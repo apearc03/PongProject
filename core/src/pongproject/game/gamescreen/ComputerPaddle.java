@@ -14,7 +14,7 @@ public class ComputerPaddle extends Paddle{
 	private Sound cpWin;
 	
 	public ComputerPaddle(Ball ball) {
-		super(Gdx.files.internal("paddleGreen.png"), 50);
+		super(Gdx.files.internal("paddleGreenCP.png"), 50);
 		this.gameBall = ball;
 		this.difficulty = 10.5f;
 		

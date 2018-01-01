@@ -23,7 +23,7 @@ public class GameController {
 	private float ballInterSect;
 	private float Normalized;
 	
-	private int gameScore; //Increment score throughout game somehow, number of paddle hits, score ratio etc. 
+	private int gameScore; 
 	private DateFormat dateFormat;
 	private DateFormat timeFormat;
 	private Date date;
@@ -42,7 +42,7 @@ public class GameController {
 		dateFormat = DateFormat.getDateInstance(3, Locale.UK);
 		timeFormat = DateFormat.getTimeInstance(2, Locale.UK);
 		
-		gameScore = 1000;
+		gameScore = 2000;
 
 		wallHit = Gdx.audio.newSound(Gdx.files.internal("wallHit.mp3"));
 		
@@ -112,7 +112,8 @@ public class GameController {
 	public void resetScores() {
 		computerPadd.resetScore();
 		playerPadd.resetScore();
-		gameScore = 1000;
+		
+		gameScore = 2000;
 	}
 	
 	public void zeroPadVelocity() {
@@ -321,6 +322,9 @@ public class GameController {
 							
 							pongGame.getData().checkConnection();
 							screen.getScoreStored().setPosition(pongGame.getAppWidth()/2-165, pongGame.getAppHeight()-200);
+							
+							gameScore -= Math.round(computerPadd.getDifficulty())*50; //Adjusts score dependent on difficulty
+							
 							screen.setScoreStored("Your score of " + gameScore + " has been successfully stored");
 							
 							date = new Date();

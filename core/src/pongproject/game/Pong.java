@@ -80,10 +80,10 @@ public class Pong extends Game {
 	/*to do
 	 * 
 	 * 
+	 * Add background to settings screen
 	 * 
-	 * Next functionality should be an options/settings screen or popup. Will include sound volume, music mute. Resolution options. Difficulty setting. Have controls shown. Picture of up/down key?
-
 	 * 
+	 * Change scores formula to account for difficulty?
 	 * 
 	 * Then remake project for different platforms.
 	 * 

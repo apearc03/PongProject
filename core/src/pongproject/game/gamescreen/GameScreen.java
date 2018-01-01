@@ -2,6 +2,7 @@ package pongproject.game.gamescreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -157,6 +158,7 @@ public class GameScreen implements Screen{
 		
 		elapsed = 0;
 		
+		controls.setText("Use the " + Keys.toString(gameController.getPlayerPadd().getKeyUp()) + " and " + Keys.toString(gameController.getPlayerPadd().getKeyDown())  + " keys to move");
 		controls.setColor(Color.ORANGE);
 		controls.addAction(controlsFadeOut);
 		

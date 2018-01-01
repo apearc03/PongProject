@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -47,7 +49,9 @@ public class SettingsScreen implements Screen {
 	
 	private Label controlsError;
 	
+	private String up;
 	private TextButton upChange;
+	private String down;
 	private TextButton downChange;
 	
 
@@ -65,7 +69,8 @@ public class SettingsScreen implements Screen {
 	private Slider volumeSlider;
 	private SelectBox<String> resolutionBox;
 	
-
+	private Texture background;
+	private Sprite backgroundSprite;
 	
 
 	public SettingsScreen(final Pong pong) {
@@ -74,7 +79,9 @@ public class SettingsScreen implements Screen {
 		
 		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
 		
-		
+		background = new Texture(Gdx.files.internal("settings4.jpg"));
+		backgroundSprite = new Sprite(background);
+		backgroundSprite.setSize(pongGame.getAppWidth(), pongGame.getAppHeight());
 		
 		titleLabel = new Label("Settings", new LabelStyle(pongGame.getFont20(), Color.WHITE));
 		titleLabel.setPosition(pongGame.getAppWidth()/2-titleLabel.getWidth()/2, 700);
@@ -127,14 +134,16 @@ public class SettingsScreen implements Screen {
 		controlsDown.setPosition(500, 355);
 		stage.addActor(controlsDown);
 		
+		up = "Change Up key";
 		
-		
-		upChange = new TextButton("Change up key", pongGame.getSkin());
+		upChange = new TextButton(up, pongGame.getSkin());
 		upChange.setPosition(650, 385);
 		upChange.setSize(140, 30);
 		stage.addActor(upChange);
 		
-		downChange = new TextButton("Change down key", pongGame.getSkin());
+		down = "Change Down key";
+		
+		downChange = new TextButton(down, pongGame.getSkin());
 		downChange.setPosition(650, 355);
 		downChange.setSize(140, 30);
 		stage.addActor(downChange);
@@ -205,7 +214,7 @@ public class SettingsScreen implements Screen {
 					controlsUp.setText("Up = " + Keys.toString(keycode) + " Key");
 				}
 				stage.removeListener(this);
-				upChange.setText("Change up key");
+				upChange.setText(up);
 				return super.keyDown(event, keycode);
 			}
 		};
@@ -223,7 +232,7 @@ public class SettingsScreen implements Screen {
 					controlsDown.setText("Down = " + Keys.toString(keycode) + " Key");
 				}
 				stage.removeListener(this);
-				downChange.setText("Change down key");
+				downChange.setText(down);
 				return super.keyDown(event, keycode);
 			}
 			
@@ -235,8 +244,9 @@ public class SettingsScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
+					pongGame.getButtonSound().play(pongGame.getButtonVolume());
 					upChange.setText("Press a Key");
-					downChange.setText("Change down key");
+					downChange.setText(down);
 					controlsError.setVisible(false);
 					
 					stage.addListener(upListener);
@@ -254,8 +264,9 @@ public class SettingsScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
+				pongGame.getButtonSound().play(pongGame.getButtonVolume());
 				downChange.setText("Press a key");
-				upChange.setText("Change up key");
+				upChange.setText(up);
 				controlsError.setVisible(false);
 				
 				stage.addListener(downListener);
@@ -281,9 +292,8 @@ public class SettingsScreen implements Screen {
 		
 		
 		pongGame.getBatch().begin();
-		pongGame.getFont14().draw(pongGame.getBatch(), String.format("%.0f%%",volumeSlider.getValue()*100), 650, 540);
-		//pongGame.getFont16().draw(pongGame.getBatch(), Keys.toString(pongGame.getGameScreen().getGameController().getPlayerPadd().getKeyUp()) , 600, 402);
-		//pongGame.getFont16().draw(pongGame.getBatch(), Keys.toString(pongGame.getGameScreen().getGameController().getPlayerPadd().getKeyDown()) , 600, 373);
+		backgroundSprite.draw(pongGame.getBatch());
+		pongGame.getFont14().draw(pongGame.getBatch(), String.format("%.0f%%",volumeSlider.getValue()*100), 651, 540);
 		pongGame.getBatch().end();
 		
 		stage.act(delta);
@@ -321,6 +331,7 @@ public class SettingsScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		background.dispose();
 		stage.dispose();
 		
 	}
@@ -370,8 +381,8 @@ public class SettingsScreen implements Screen {
 		controlsError.setVisible(false);
 		stage.removeListener(upListener);
 		stage.removeListener(downListener);
-		upChange.setText("Change up key");
-		downChange.setText("Change down key");
+		upChange.setText(up);
+		downChange.setText(down);
 	}
 	
 }
