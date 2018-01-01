@@ -50,34 +50,9 @@ public class ComputerPaddle extends Paddle{
 	}
 	
 	
-	//for testing
-	
-	public void moveCPUPaddle() {
-		
-		if(Gdx.input.isKeyPressed(Keys.W)) {
-				
-			setyVelocity(5);
 
-		
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.S)) {
-			
-			setyVelocity(-5);
-		
-		}
-		
-	}
 	
 	
-	
-	public float getDifficulty() {
-		return difficulty;
-	}
-	
-	public void setDifficulty(float difficulty) {
-		this.difficulty = difficulty;
-	}
 
 
 	@Override
@@ -100,7 +75,16 @@ public class ComputerPaddle extends Paddle{
 		return cpWin;
 	}
 	
+	//Getters and setters
 	
+	public float getDifficulty() {
+		return difficulty;
+	}
+	
+	public void setDifficulty(float difficulty) {
+		this.difficulty = difficulty;
+	}
+
 
 	
 }

@@ -50,6 +50,7 @@ public class Pong extends Game {
 	private boolean firstConnection;
 	private boolean loggedIn;
 	
+	
 	private Sound buttonSound;
 	private Sound backButtonSound;
 	private Sound buttonErrorSound;
@@ -57,6 +58,8 @@ public class Pong extends Game {
 	
 	private int appHeight;
 	private int appWidth;
+	
+	
 	
 	private FreeTypeFontGenerator generator;
 	
@@ -72,11 +75,11 @@ public class Pong extends Game {
 	
 	private BitmapFont font100;
 	private FreeTypeFontParameter parameter100;
+	
+	
 	/*to do
 	 * 
 	 * 
-
-	 * Change all fonts to open sans ttf if possible.
 	 * 
 	 * Next functionality should be an options/settings screen or popup. Will include sound volume, music mute. Resolution options. Difficulty setting. Have controls shown. Picture of up/down key?
 
@@ -96,7 +99,7 @@ public class Pong extends Game {
 	 * In all the exceptions where I have just returned to the menuScreen. 
 	 * Maybe put a line of code after to set a label or similar on the menuScreen to show that there has been a loss of connection to database.
 	 * 
-	 * 
+	 * Application currently uses freetype font library.
 	 * 
 	 * Remember to clear all scores from database before deployment, add dummy scores suitable for game mode of first to 2 or 3.
 	 * 
@@ -112,11 +115,6 @@ public class Pong extends Game {
 	 * 
 	 * Add tab function to buttons?
 	 * 
-
-	 * 
-	 * 
-	 * Idea for later on, allow paddle to move in confined area left and right
-	 * Re do all text with hiero font creator.
 	 * 
 	 * 
 	 * Remove empty pause, resume implementations if possible
@@ -320,6 +318,10 @@ public class Pong extends Game {
 	
 	public float getButtonVolume() {
 		return buttonVolume;
+	}
+	
+	public void setButtonVolume(float buttonVolume) {
+		this.buttonVolume = buttonVolume;
 	}
 	
 	public HighScoreScreen getHighScoreScreen() {

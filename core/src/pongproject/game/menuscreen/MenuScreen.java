@@ -27,10 +27,12 @@ public class MenuScreen implements Screen{
 
 	private Stage stage;
 	private TextButton gameButton;
+	private TextButton settingsButton;
 	private TextButton highScoreButton;
 	private TextButton loginButton;
+	private TextButton exitButton;
 	private TextButton connectionButton;
-	private TextButton settingsButton;
+
 	
 	private Pong pongGame;
 	private Label loggedInAs;
@@ -46,12 +48,14 @@ public class MenuScreen implements Screen{
 	private Texture background;
 	
 	private Sprite backgroundSprite;
+
 	
 	
 	//Constructor initialises stage, table, widgets and input for the screen
 	public MenuScreen(final Pong pong) {
 		this.pongGame = pong;
 		
+
 		
 		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
 		
@@ -95,6 +99,8 @@ public class MenuScreen implements Screen{
 		stage.addActor(settingsButton);
 	
 		
+	
+		
 		
 		highScoreButton = new TextButton("High Scores", pongGame.getSkin());
 		highScoreButton.setSize(100, 30);
@@ -110,6 +116,21 @@ public class MenuScreen implements Screen{
 		stage.addActor(connectionButton);
 		
 		
+
+		
+		loginButton = new TextButton("Change User", pongGame.getSkin());
+		loginButton.setSize(100, 30);
+		loginButton.setPosition(pongGame.getAppWidth()/2-(loginButton.getWidth()/2), 150);
+		loginButton.setVisible(false);
+		stage.addActor(loginButton);
+		
+		
+		exitButton = new TextButton("Exit", pongGame.getSkin());
+		exitButton.setSize(100, 30);
+		exitButton.setPosition(pongGame.getAppWidth()/2-(exitButton.getWidth()/2), 100);
+		stage.addActor(exitButton);
+		
+		
 		messageStyle = new LabelStyle(pongGame.getFont14(), Color.WHITE);
 		
 		connectionMessage = new Label("", messageStyle);
@@ -119,19 +140,6 @@ public class MenuScreen implements Screen{
 		loggedInAs = new Label("", messageStyle);
 		loggedInAs.setPosition(20, 20);
 		stage.addActor(loggedInAs);
-		
-		
-		
-
-		
-		
-	
-		
-		loginButton = new TextButton("Change User", pongGame.getSkin());
-		loginButton.setSize(100, 30);
-		loginButton.setPosition(pongGame.getAppWidth()/2-(loginButton.getWidth()/2), 150);
-		loginButton.setVisible(false);
-		stage.addActor(loginButton);
 		
 		
 		gameButton.addListener(new ClickListener() {
@@ -230,6 +238,17 @@ public class MenuScreen implements Screen{
 		});
 		
 		
+		exitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// TODO Auto-generated method stub
+				super.clicked(event, x, y);
+				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				Gdx.app.exit();
+				//System.exit(0);
+			}
+		});
+		
 		
 		//makes the connection to the database
 		try {
@@ -250,6 +269,8 @@ public class MenuScreen implements Screen{
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
 		eventLogger.menuScreen();
+		
+		
 		
 		
 		try {
@@ -288,7 +309,6 @@ public class MenuScreen implements Screen{
 		backgroundSprite.draw(pongGame.getBatch());
 	
 		
-		//pongGame.getArialPointFour().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 		
 		pongGame.getBatch().end();
 		

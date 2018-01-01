@@ -54,8 +54,7 @@ public class GameController {
 	
 	public void update() {
 		
-		//added for testing
-		//getComputerPadd().moveCPUPaddle();
+		
 		
 		
 		computerPadd.checkOutOfBounds();
@@ -84,6 +83,7 @@ public class GameController {
 	public void startGame() {
 		
 		ball.startBallMovement();
+		
 	}
 	
 	
@@ -307,7 +307,7 @@ public class GameController {
 		
 	private boolean checkForWinner(Paddle pad) throws SQLException {
 			
-			if(pad.getScore()==1) {//change to 3 after
+			if(pad.getScore()==2) {//change to 3 after
 						resetGame();
 						
 						screen.setWinnerText("The winner is " + pad.getName());

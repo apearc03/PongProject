@@ -77,5 +77,24 @@ public class PlayerPaddle extends Paddle{
 		
 	}
 
+	
+	//Getters and setters
+	
+	public int getKeyUp() {
+		return keyUp;
+	}
+	
+	public void setKeyUp(int keyUp) {
+		this.keyUp = keyUp;
+	}
+	
+	
+	public int getKeyDown() {
+		return keyDown;
+	}
+	
 
+	public void setKeyDown(int keyDown) {
+		this.keyDown = keyDown;
+	}
 }

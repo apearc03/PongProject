@@ -53,7 +53,6 @@ public class LoginScreen implements Screen {
 		
 		//Perform database queries here
 		//if there are any exceptions, just set the screen back to the menu screen.
-		//constantly check connection status? if it drops, return to menu screen and display prompt saying connection lost.
 		
 		
 		
@@ -86,7 +85,7 @@ public class LoginScreen implements Screen {
 	
 		
 		passField = new TextField("", pongGame.getSkin());
-		passField.setPosition(pongGame.getAppWidth()/2-passField.getWidth()/2, 350);
+		passField.setPosition(pongGame.getAppWidth()/2-passField.getWidth()/2, 375);
 		passField.setPasswordMode(true);
 		passField.setPasswordCharacter('*');
 		passField.setMessageText("Password");
@@ -101,19 +100,19 @@ public class LoginScreen implements Screen {
 		
 		passError = new Label("", pongGame.getSkin());
 		passError.setColor(Color.ORANGE);
-		passError.setPosition(pongGame.getAppWidth()/2-passField.getWidth()/2, 400);
+		passError.setPosition(pongGame.getAppWidth()/2-passField.getWidth()/2, 425);
 		stage.addActor(passError);
 		
 	
 		
 		gameButton = new TextButton("Play", pongGame.getSkin());
 		gameButton.setSize(100, 30);
-		gameButton.setPosition(pongGame.getAppWidth()/2-gameButton.getWidth()/2, 200);
+		gameButton.setPosition(pongGame.getAppWidth()/2-gameButton.getWidth()/2, 300);
 		stage.addActor(gameButton);	
 		
 		menuButton = new TextButton("Menu", pongGame.getSkin());
 		menuButton.setSize(100, 30);
-		menuButton.setPosition(pongGame.getAppWidth()/2-menuButton.getWidth()/2, 150);
+		menuButton.setPosition(pongGame.getAppWidth()/2-menuButton.getWidth()/2, 250);
 		stage.addActor(menuButton);
 		
 		gameButton.addListener(new ClickListener() {

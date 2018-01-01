@@ -269,8 +269,9 @@ public class GameScreen implements Screen{
 	@Override
 	public void dispose() {
 		background.dispose();
-		stage.dispose();
 		gameController.disposeGameSounds();
+		stage.dispose();
+		
 	}
 	
 
@@ -296,6 +297,10 @@ public class GameScreen implements Screen{
 	
 	public TextButton getMenuButton() {
 		return menuButton;
+	}
+	
+	public GameController getGameController() {
+		return gameController;
 	}
 }
 
