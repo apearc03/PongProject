@@ -371,7 +371,7 @@ public class SettingsScreen implements Screen {
 		stage.removeListener(upListener);
 		stage.removeListener(downListener);
 		upChange.setText("Change up key");
-		downChange.setText("Change a key");
+		downChange.setText("Change down key");
 	}
 	
 }
