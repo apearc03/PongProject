@@ -20,14 +20,21 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
+/**
+ * 
+ * @author Alex Pearce
+ *
+ */
 public class GameScreen implements Screen{
 
-
+	private Pong pongGame;
 	private Stage stage;
+	
+	//Game screen elements declared
 	private TextButton menuButton;
 	private TextButton playAgainButton;
 	
-	private Pong pongGame;
+
 
 	private float elapsed;
 	private boolean gameStarted;
@@ -43,15 +50,22 @@ public class GameScreen implements Screen{
 	private Label winner;
 	private Label scoreStored;
 	
-	
+	//GameController instance
 	private GameController gameController;
 
 	private Texture background;
 	private Sprite backgroundSprite;
 	
 	
+	/**
+	 * 
+	 * GameScreen constructor initializes variables, objects and adds listeners to buttons
+	 * 
+	 * @param pong
+	 */
 	public GameScreen(final Pong pong) {
-		this.pongGame = pong;
+		
+		pongGame = pong;
 		
 		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
 		
@@ -119,7 +133,7 @@ public class GameScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				pongGame.setScreen(pongGame.getGameScreen());
 			}
 		});
@@ -129,7 +143,7 @@ public class GameScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
-				pongGame.getBackButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getBackButtonSound().play(pongGame.getGlobalVolume());
 				pongGame.setScreen(pongGame.getMenuScreen());
 				
 			}
@@ -143,8 +157,10 @@ public class GameScreen implements Screen{
 	}
 
 	
-	
-	
+	/**
+	 * 
+	 * Show method called when this screen is selected. Starts the game music and sets the elements to their starting positions
+	 */
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
@@ -154,7 +170,7 @@ public class GameScreen implements Screen{
 		pongGame.getMusic()[0].pause();
 		pongGame.getMusic()[1].play();
 		pongGame.getMusic()[1].setLooping(true);
-		pongGame.getMusic()[1].setVolume(pongGame.getButtonVolume());
+		pongGame.getMusic()[1].setVolume(pongGame.getGlobalVolume());
 		
 		elapsed = 0;
 		
@@ -171,6 +187,11 @@ public class GameScreen implements Screen{
 		
 	}
 
+	/**
+	 * 
+	 * Called every frame to update the game objects. Their new position and state is drawn to the screen.
+	 * 
+	 */
 	@Override
 	public void render(float delta) {
 		
@@ -179,7 +200,7 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		
-		//gameController.getPaddleLeft().movePaddle();
+	
 		gameController.update();
 		
 		
@@ -191,7 +212,7 @@ public class GameScreen implements Screen{
 		
 		backgroundSprite.draw(pongGame.getBatch());
 		
-		if(elapsed >= 60) {
+		if(elapsed >= 60) { //If elapsed is more than 60. Draw the ball and start the game.
 			
 			gameController.getBall().getBallSprite().draw(pongGame.getBatch());
 			
@@ -223,24 +244,29 @@ public class GameScreen implements Screen{
 		
 	}
 
+	/**
+	 * Called whenever the screen is re-sized
+	 * 
+	 */
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, false);
 		
 	}
 
+	//Empty implemented methods from Screen interface
+	
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 
+	
+	/**
+	 * Called when the screen is hidden. Resets the game state.
+	 * 
+	 */
 	@Override
 	public void hide() {
 		
@@ -268,6 +294,10 @@ public class GameScreen implements Screen{
 
 	}
 
+	/**
+	 * Disposes of all the game resources
+	 * 
+	 */
 	@Override
 	public void dispose() {
 		background.dispose();
@@ -277,18 +307,30 @@ public class GameScreen implements Screen{
 	}
 	
 
-	
+	/**
+	 * 
+	 * Sets the winner text label
+	 * 
+	 * @param winnerText
+	 */
 	public void setWinnerText(String winnerText) {
 		winner.setText(winnerText);
 		winner.setVisible(true);
 	}
 
-	
+	/**
+	 * 
+	 * Sets the score stored text label
+	 * 
+	 * @param score
+	 */
 	public void setScoreStored(String score) {
 		scoreStored.setText(score);
 		scoreStored.setVisible(true);
 	}
 
+	//Getter methods
+	
 	public Label getScoreStored() {
 		return scoreStored;
 	}

@@ -1,6 +1,5 @@
 package pongproject.game.menuscreen;
 
-import java.awt.DisplayMode;
 import java.sql.SQLException;
 
 import com.badlogic.gdx.Gdx;
@@ -8,7 +7,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,11 +19,19 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
+
+/**
+ * 
+ * @author Alex Pearce
+ *
+ */
 public class MenuScreen implements Screen{
 
 
-
+	//Stage instance to display all scene2d actors
 	private Stage stage;
+	
+	//Necessary text buttons
 	private TextButton gameButton;
 	private TextButton settingsButton;
 	private TextButton highScoreButton;
@@ -33,8 +39,10 @@ public class MenuScreen implements Screen{
 	private TextButton exitButton;
 	private TextButton connectionButton;
 
-	
+	//References the Pong class. The class where the application started.
 	private Pong pongGame;
+	
+	//Labels to display text on the screen.
 	private Label loggedInAs;
 	private Label connectionMessage;
 	private LabelStyle messageStyle;
@@ -45,22 +53,22 @@ public class MenuScreen implements Screen{
 	private Label titleLabel;
 	private Label authorLabel;
 	
+	//Background image texture and sprite
 	private Texture background;
 	
 	private Sprite backgroundSprite;
 
 	
 	
-	//Constructor initialises stage, table, widgets and input for the screen
+	/**
+	 * Constructor initializes all instance variables.
+	 * @param pong
+	 */
 	public MenuScreen(final Pong pong) {
-		this.pongGame = pong;
 		
-
+		pongGame = pong;
 		
 		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
-		
-		
-		
 		
 		
 		background = new Texture(Gdx.files.internal("menu.jpg"));
@@ -73,12 +81,6 @@ public class MenuScreen implements Screen{
 		author = "By Alex Pearce";
 		
 		
-	
-		
-
-		
-		
-		
 		authorLabel = new Label(author, new LabelStyle(pongGame.getFont20(),Color.WHITE));
 		authorLabel.setPosition(pongGame.getAppWidth()/2-authorLabel.getWidth()/2, 500);
 		stage.addActor(authorLabel);
@@ -87,6 +89,8 @@ public class MenuScreen implements Screen{
 		titleLabel.setPosition(pongGame.getAppWidth()/2-titleLabel.getWidth()/2, 550);
 		stage.addActor(titleLabel);
 		
+		
+		//All buttons initialized. Their positions and size are set. They are then added to the stage.
 		
 		gameButton = new TextButton("Play", pongGame.getSkin());
 		gameButton.setSize(100, 30);
@@ -98,9 +102,6 @@ public class MenuScreen implements Screen{
 		settingsButton.setPosition(pongGame.getAppWidth()/2-(settingsButton.getWidth()/2), 250);
 		stage.addActor(settingsButton);
 	
-		
-	
-		
 		
 		highScoreButton = new TextButton("High Scores", pongGame.getSkin());
 		highScoreButton.setSize(100, 30);
@@ -142,23 +143,25 @@ public class MenuScreen implements Screen{
 		stage.addActor(loggedInAs);
 		
 		
-		gameButton.addListener(new ClickListener() {
+		//Click listeners added to buttons. The Listener clicked method will execute when the button is clicked.
+		
+		gameButton.addListener(new ClickListener() { //Anonymous ClickListener created.
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+				
 				super.clicked(event, x, y);
 				
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume()); //Plays the button sound
 				
 				try {
 						if(pongGame.getFirstConnection()) {
-									if(pongGame.getData().checkConnection()) {
+									if(pongGame.getData().checkConnection()) { //If a first connection has been made, check the connection is still working.
 										
 										if(pongGame.getLoggedIn()) {
-											pongGame.setScreen(pongGame.getGameScreen()); 	
+											pongGame.setScreen(pongGame.getGameScreen()); 	//If the user is logged in. Skip login screen.
 										}
 										else {
-											//pongGame.setScreen(pongGame.getGameScreen()); //added to skip load screen, take out after
+											
 											pongGame.setScreen(pongGame.getLoginScreen());
 										}
 										
@@ -177,7 +180,7 @@ public class MenuScreen implements Screen{
 					
 					eventLogger.databaseConnectionFailed();
 				}
-				//if connected to database, go to login screen. If not go to game screen.
+				
 			}
 		});
 		
@@ -185,9 +188,9 @@ public class MenuScreen implements Screen{
 		settingsButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+				
 				super.clicked(event, x, y);
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				pongGame.setScreen(pongGame.getSettingsScreen());
 			}
 		});
@@ -196,10 +199,10 @@ public class MenuScreen implements Screen{
 		highScoreButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+				
 				super.clicked(event, x, y);
 				
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				pongGame.setScreen(pongGame.getHighScoreScreen());
 				
 				
@@ -213,12 +216,12 @@ public class MenuScreen implements Screen{
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+			
 				super.clicked(event, x, y);
 				try {
 					makeConnection();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+					
 					showRetryConnection();
 				}
 			}
@@ -230,9 +233,9 @@ public class MenuScreen implements Screen{
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+			
 				super.clicked(event, x, y);
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				pongGame.setScreen(pongGame.getLoginScreen());
 			}
 		});
@@ -241,20 +244,20 @@ public class MenuScreen implements Screen{
 		exitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+				
 				super.clicked(event, x, y);
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				Gdx.app.exit();
-				//System.exit(0);
+			
 			}
 		});
 		
 		
-		//makes the connection to the database
+		//Attempts to make a connection to the database
 		try {
 			makeConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			showRetryConnection();
 			pongGame.setFirstConnection(false);
 		}
@@ -264,7 +267,9 @@ public class MenuScreen implements Screen{
 
 	
 
-	//This method is called when the screen is selected
+	/**
+	 * This method is called once every time the Menu screen is set as the current screen. Sets is as the input processor and checks the database connection state.
+	 */
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
@@ -293,18 +298,16 @@ public class MenuScreen implements Screen{
 	
 	
 	
-	//Method repeatedly called to render and update screen
+	/**
+	 * Render is called to display every frame. I have set the default fore-ground FPS to 58 so this method should be called approximately 58 times per second.
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		
-	
-		
-		
 		pongGame.getBatch().begin();
 		
-		//pongGame.getBatch().draw(test, 0, 0);
+		
 		
 		backgroundSprite.draw(pongGame.getBatch());
 	
@@ -316,28 +319,31 @@ public class MenuScreen implements Screen{
 		stage.draw();
 		
 	}
+	
+	
+	/**
+	 * Adjusts the stage viewport size when the window is size is changed
+	 */
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, false);
-		
-	
+		stage.getViewport().update(width, height, false); 
+
 
 	}
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void hide() {
 	
-		
-	}
+	
+	//Methods that are required to be implemented by the Screen interface but are unused.
+	@Override
+	public void pause() {}
+	@Override
+	public void resume() {}
+	@Override
+	public void hide() {}
+	
+	
+	/**
+	 * Releases any resources when the game exits. This is called within Pong.dispose
+	 */
 	@Override
 	public void dispose() {
 		background.dispose();
@@ -358,7 +364,11 @@ public class MenuScreen implements Screen{
 
 	
 
-	
+	/**
+	 * This calls the makeConnection method of the databaseManager and manipulates the Menu screen display dependent on there being a connection or not.
+	 * 
+	 * @throws SQLException
+	 */
 	private void makeConnection() throws SQLException {
 		pongGame.getData().makeConnection();
 		
@@ -370,6 +380,9 @@ public class MenuScreen implements Screen{
 		pongGame.setFirstConnection(true);
 	}
 	
+	/**
+	 * This method is called if there is no connection. The retry connection button is made visible.
+	 */
 	private void showRetryConnection() {
 	
 		connectionMessage.setText("Connection to database unsuccessful, your score wont be recorded");
@@ -377,7 +390,11 @@ public class MenuScreen implements Screen{
 		highScoreButton.setVisible(false);
 	}
 	
-	
+	/**
+	 * Sets the label to show the current logged in user.
+	 * 
+	 * @param username
+	 */
 	public void setLoggedInAs(String username) {
 		loggedInAs.setText("Logged in as " + username);
 	}

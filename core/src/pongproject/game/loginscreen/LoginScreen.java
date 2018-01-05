@@ -7,7 +7,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,22 +20,31 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
+/**
+ * 
+ * @author Alex Pearce
+ *
+ */
+
 public class LoginScreen implements Screen {
 
+	
+	//Game and Stage created
 	private Pong pongGame;
+	private Stage stage;
+	
+	//Required Labels and TextFields
 	private Label titleLabel;
 	private Label userError;
 	private Label passError;
 
-	private Stage stage;
 	private TextButton gameButton;
 	private TextButton menuButton;
-	
 	private TextField userField;
 	private TextField passField;
 	
 	
-
+	//Strings and background declaration
 	private String title;
 	
 	private String username;
@@ -45,22 +53,18 @@ public class LoginScreen implements Screen {
 	private Texture background;
 	private Sprite backgroundSprite;
 	
+	
+	/**
+	 * Constructor used to initialize stage elements.
+	 * 
+	 * @param pong
+	 */
 	public LoginScreen(final Pong pong) {
 		
 		
 		
-		
-		
-		//Perform database queries here
-		//if there are any exceptions, just set the screen back to the menu screen.
-		
-		
-		
-		
-		
-		this.pongGame = pong;
+		pongGame = pong;
 	
-		
 		
 		
 		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
@@ -115,6 +119,8 @@ public class LoginScreen implements Screen {
 		menuButton.setPosition(pongGame.getAppWidth()/2-menuButton.getWidth()/2, 250);
 		stage.addActor(menuButton);
 		
+		//Button listeners added
+		
 		gameButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -130,24 +136,23 @@ public class LoginScreen implements Screen {
 				password = passField.getText();
 				
 				
-				if(validatePassword(password)&validateUsername(username)) {
+				if(validatePassword(password)&validateUsername(username)) { //If the password and username values are valid return true
 							try {
-									if(pongGame.getData().checkLogin(username, password)) {
-										//In the exception here check the connection, if no connection return to main menu
+									if(pongGame.getData().checkLogin(username, password)) { //Checks the database for a username and password match
+										
 										pongGame.setLoggedIn(true);
 										
 										userField.setText("");
 										passField.setText("");
 										pongGame.getMenuScreen().setLoggedInAs(pongGame.getData().getAccountUsername());
 										eventLogger.loginSuccess();
-										pongGame.getButtonSound().play(pongGame.getButtonVolume());
+										pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 										pongGame.setScreen(pongGame.getGameScreen());
 										
 									}
-									else {
-										//userError = "Username is taken or your password is incorrect";
-										//passError = "";
-										pongGame.getButtonErrorSound().play(pongGame.getButtonVolume());
+									else { //Username is taken or the password is wrong
+									
+										pongGame.getButtonErrorSound().play(pongGame.getGlobalVolume());
 										userError.setText("Username is taken or your password is incorrect");
 										passError.setText("");
 										
@@ -160,7 +165,7 @@ public class LoginScreen implements Screen {
 								}
 				}
 				else {
-					pongGame.getButtonErrorSound().play(pongGame.getButtonVolume());
+					pongGame.getButtonErrorSound().play(pongGame.getGlobalVolume());
 				}
 				
 			}
@@ -171,13 +176,16 @@ public class LoginScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
-				pongGame.getBackButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getBackButtonSound().play(pongGame.getGlobalVolume());
 				pongGame.setScreen(pongGame.getMenuScreen());
 			}
 		});
 		
 	}
 	
+	/**
+	 * Called every time the screen is shown. Sets the screen as the input processor.
+	 */
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
@@ -186,6 +194,9 @@ public class LoginScreen implements Screen {
 	
 	}
 
+	/**
+	 * Called every frame. Renders Stage actors and background art
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -195,34 +206,31 @@ public class LoginScreen implements Screen {
 		
 		backgroundSprite.draw(pongGame.getBatch());
 		
-		//pongGame.getArialFour().draw(pongGame.getBatch(), title, Constants.VIEWPORT_WIDTH/2-165, Constants.VIEWPORT_HEIGHT-300);
-		
-		//pongGame.getArialPointFour().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
-	
 		pongGame.getBatch().end();
 		
 		stage.act(delta);
 		stage.draw();
 	}
 
+	/**
+	 * Called when the window is re-sized
+	 */
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, false);
 		
 	}
 
+	//Methods that are required to be implemented by the Screen interface but are unused.
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 
+	/**
+	 * Called when the screen is navigated away from. Removes errors
+	 */
 	@Override
 	public void hide() {
 		userError.setText("");
@@ -230,6 +238,9 @@ public class LoginScreen implements Screen {
 		
 	}
 
+	/**
+	 * Method called when the application exits to release resources.
+	 */
 	@Override
 	public void dispose() {
 		background.dispose();
@@ -237,7 +248,13 @@ public class LoginScreen implements Screen {
 		
 	}
 
-	
+	/**
+	 * 
+	 * Method designed to validate the username against certain conditions
+	 * 
+	 * @param username
+	 * @return a boolean that represents a valid username or not
+	 */
 	private boolean validateUsername(String username){
 		
 		if(username.length()>10 || username.length() < 4) {
@@ -257,6 +274,12 @@ public class LoginScreen implements Screen {
 		return true;
 	}
 	
+	/**
+	 * Method designed to validate the password against certain conditions
+	 * 
+	 * @param password
+	 * @return a boolean representing a valid password or not
+	 */
 	private boolean validatePassword(String password) {
 		
 

@@ -3,19 +3,30 @@ package pongproject.game.gamescreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * 
+ * @author Alex
+ *
+ */
 public class PlayerPaddle extends Paddle{
 	
-	//Need to change this direction number based on the movement input
 	
+	//Variables for input
 	private int keyUp;
 	private int keyDown;
 	
+	//Variables for sounds
 	private Sound playerScore;
 	private Sound playerWin;
 	private Sound playerHit;
 
 	
-	
+	/**
+	 * Constructor initializes controls and sounds associated with this paddle
+	 * 
+	 * @param kUp
+	 * @param kDown
+	 */
 	public PlayerPaddle(int kUp, int kDown) {
 		
 		super(Gdx.files.internal("paddleGreen.png"), 1024-50);
@@ -31,29 +42,29 @@ public class PlayerPaddle extends Paddle{
 	
 
 	
+	/**
+	 * 
+	 * Set's the Y velocity in a direction depedent on the input
+	 * 
+	 */
 	public void movePaddle() {
 		
 		if(Gdx.input.isKeyPressed(keyUp)) {
-			
-		
-			
-			setyVelocity(5);
-			
-		
-		
+				
+			setyVelocity(4);
+
 		}
 		
 		if(Gdx.input.isKeyPressed(keyDown)) {
 			
-			setyVelocity(-5);
-	
+			setyVelocity(-4);
 			
 		}
 		
 	}
 
-
-
+	//Getter and Setter methods
+	
 	@Override
 	public Sound scoreSound() {
 	
@@ -76,9 +87,6 @@ public class PlayerPaddle extends Paddle{
 		return playerWin;
 		
 	}
-
-	
-	//Getters and setters
 	
 	public int getKeyUp() {
 		return keyUp;

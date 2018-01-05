@@ -8,11 +8,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -22,15 +19,23 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
+/**
+ * 
+ * @author Alex Pearce
+ *
+ */
+
+
+
+
 public class HighScoreScreen implements Screen{
-
-
-	private Stage stage;
-	private TextButton menuButton;
 	
+	//Pong and Stage instance
 	private Pong pongGame;
-
+	private Stage stage;
 	
+
+	//ResultSets to store database query results
 	private ResultSet scores;
 	private ResultSet playerScores;
 	private ResultSet winPercentage;
@@ -40,7 +45,9 @@ public class HighScoreScreen implements Screen{
 	private boolean playerScoresAssigned;
 
 	
-	private TextButton orderByPlayerScores; //If pongGame.getLoggedIn = true, show this button. Otherwise set invisible
+	//Required textbuttons
+	private TextButton menuButton;
+	private TextButton orderByPlayerScores; 
 	private TextButton allPlayerScores;
 	
 	
@@ -52,11 +59,8 @@ public class HighScoreScreen implements Screen{
 	private int numberOfRankings;
 
 	private boolean showPlayerScores;
-	
-	
-	
-	
-
+		
+	//Fonts, titles and backgrounds for screen rendering
 	private BitmapFont renderFont;
 	
 	private final String[] titles = {"High Scores", "Rank", "Player", "Date & Time", "Result", "Score"};
@@ -64,9 +68,13 @@ public class HighScoreScreen implements Screen{
 	private Texture background;
 	private Sprite backgroundSprite;
 	
-	
+	/**
+	 * Constructor initializes all required instances and variables. Adds clickListeners to buttons.
+	 * 
+	 * @param pong
+	 */
 	public HighScoreScreen(final Pong pong) {
-		this.pongGame = pong;
+		pongGame = pong;
 		
 		stage = new Stage(new StretchViewport(pongGame.getAppWidth(), pongGame.getAppHeight(), pongGame.getCamera()));
 		
@@ -115,70 +123,71 @@ public class HighScoreScreen implements Screen{
 		menuButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+			
 				super.clicked(event, x, y);
-				pongGame.getBackButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getBackButtonSound().play(pongGame.getGlobalVolume());
 				pongGame.setScreen(pongGame.getMenuScreen());
 			}
 		});
 		
 		
+		//Ranking buttons work by changing the font, Y coodinate spacing and number of rankings.
+		
 		top10Scores.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+				
 				super.clicked(event, x, y);
 				
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				scoreYDecrement = 60;
 				numberOfRankings = 10;
 				
 				
 				renderFont = pongGame.getFont16();
-				//renderFont = columnData10;
-				//will assign HighScoreFont to a new font in each button
+			
 			}
 		});
 		
 		top25Scores.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+			
 				super.clicked(event, x, y);
 				
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				scoreYDecrement = 23;
 				numberOfRankings = 25;
 				
 				renderFont = pongGame.getFont14();
-				//renderFont = columnData25;
-				//will assign HighScoreFont to a new font in each button
+			
 			}
 		});
 		
 		top40Scores.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+
 				super.clicked(event, x, y);
 				
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				scoreYDecrement = 14;
 				numberOfRankings = 40;
 			
 				renderFont = pongGame.getFont12();
-				//renderFont = columnData40;
+	
 				
 			}
 		});
 		
+		//Orders by the logged in player or by all scores
 		
 		orderByPlayerScores.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+	
 				super.clicked(event, x, y);
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				showPlayerScores = true;
 			}
 		});
@@ -187,9 +196,9 @@ public class HighScoreScreen implements Screen{
 		allPlayerScores.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+				
 				super.clicked(event, x, y);
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				showPlayerScores = false;
 			}
 		});
@@ -198,17 +207,22 @@ public class HighScoreScreen implements Screen{
 		
 	}
 
+	
+	/**
+	 * Method called as soon as the screen is set to the current screen.
+	 * 
+	 */
 	@Override
 	public void show() {
 		
 		Gdx.input.setInputProcessor(stage);
 		eventLogger.highScoreScreen();
 		
-			try {
+			try { //Attemps to get the highScore data.
 				scores = pongGame.getData().highScores();
 				scoresAssigned = true;
 				
-					if(pongGame.getLoggedIn()) {
+					if(pongGame.getLoggedIn()) {  //If a player is logged in then show the extra buttons and win percentage.
 						orderByPlayerScores.setVisible(true);
 						allPlayerScores.setVisible(true);
 						
@@ -225,7 +239,7 @@ public class HighScoreScreen implements Screen{
 						playerScoresAssigned = true;
 					}	
 					
-			} catch (SQLException e) {
+			} catch (SQLException e) { //If there is an exception then set the screen back to the menu
 				
 				pongGame.setScreen(pongGame.getMenuScreen());
 				
@@ -244,26 +258,21 @@ public class HighScoreScreen implements Screen{
 	}
 
 	
-	
+	/**
+	 * Render called every frame. Approximately 58 times per second. Draws all titles, buttons and highscores to the screen. 
+	 * 
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		
-		
-		
-		
-		
-		
-		
-	
 	
 		pongGame.getBatch().begin();
-		//pongGame.getArialPointFour().draw(pongGame.getBatch(), "FPS: "+ Gdx.graphics.getFramesPerSecond(),20,50);
 		
 		backgroundSprite.draw(pongGame.getBatch());
 		
-		//change to ttf
+
 		pongGame.getFont20().draw(pongGame.getBatch(), titles[0], 425, pongGame.getAppHeight()-40);
 		
 		pongGame.getFont20().draw(pongGame.getBatch(), titles[1], 135, 660 );
@@ -294,7 +303,7 @@ public class HighScoreScreen implements Screen{
 			
 		} catch (SQLException e) {
 			
-			//do something useful here
+			
 			pongGame.setScreen(pongGame.getMenuScreen());
 		}
 		
@@ -307,31 +316,34 @@ public class HighScoreScreen implements Screen{
 	}
 
 	
-	
+	/**
+	 * Called when the screen is re-sized
+	 */
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, false);
 		
 	}
 
+	//Empty implemented methods
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 
+	/**
+	 * Called whenever the screen is hidden
+	 */
 	@Override
 	public void hide() {
 		pongGame.getFont16().setColor(Color.WHITE);
 		
 	}
 
+	/**
+	 * Called on application exit to release resources
+	 */
 	@Override
 	public void dispose() {
 		stage.dispose();
@@ -346,7 +358,11 @@ public class HighScoreScreen implements Screen{
 		
 	}
  
-	
+	/**
+	 * Closes the result set instances.
+	 * 
+	 * @throws SQLException
+	 */
 	private void closeResultSets() throws SQLException {
 		if(scoresAssigned) {
 				scores.close();
@@ -357,6 +373,16 @@ public class HighScoreScreen implements Screen{
 		}
 	}
 	
+	/**
+	 * 
+	 * Method implemented to be called in the above render method. Loops through the result sets and draws the scores to the screen in the correct position.
+	 * 
+	 * @param numberOfRanks
+	 * @param yDecrement
+	 * @param font
+	 * @param scoreSet
+	 * @throws SQLException
+	 */
 	private void renderScores(int numberOfRanks, int yDecrement, BitmapFont font, ResultSet scoreSet) throws SQLException {
 		int yStartHeight = 610;
 		int rank = 1;

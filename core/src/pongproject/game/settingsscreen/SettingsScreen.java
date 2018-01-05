@@ -20,22 +20,28 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import pongproject.game.Pong;
 import pongproject.game.tests.eventLogger;
 
-
+/**
+ * 
+ * @author Alex Pearce
+ *
+ */
 
 public class SettingsScreen implements Screen {
 
-	
-	
+	//Pong and Stage instance
+	private Pong pongGame;
+	private Stage stage;
 
 
 	
 	
-	 //Add background art
-	
+	 
+	//Variables used to store settings	
 	private String selectedDifficulty;
 	private Float selectedVolume;
 	private String selectedResolution;
 	
+	//Labels ands buttons declared
 	private Label titleLabel;
 	private LabelStyle settingsStyle;
 	private Label difficultyLabel;
@@ -54,17 +60,14 @@ public class SettingsScreen implements Screen {
 	private String down;
 	private TextButton downChange;
 	
-
-	
 	private InputListener upListener;
 	private InputListener downListener;
 	
+
 	private TextButton menuButton;
 	private TextButton applyButton;
-	private Stage stage;
-	private Pong pongGame;
 
-
+	//Settings selection widgets and background instance declared.
 	private SelectBox<String> difficultyBox;
 	private Slider volumeSlider;
 	private SelectBox<String> resolutionBox;
@@ -73,6 +76,12 @@ public class SettingsScreen implements Screen {
 	private Sprite backgroundSprite;
 	
 
+	
+	/**
+	 * All declared variables are initialized in the constructor. Listeners added to buttons.
+	 * 
+	 * @param pong
+	 */
 	public SettingsScreen(final Pong pong) {
 
 		pongGame = pong;
@@ -108,7 +117,7 @@ public class SettingsScreen implements Screen {
 		
 		volumeSlider = new Slider(0, 1f, 0.1f, false, pongGame.getSkin());
 		volumeSlider.setPosition(500, 525);
-		volumeSlider.setValue(pongGame.getButtonVolume());
+		volumeSlider.setValue(pongGame.getGlobalVolume());
 		stage.addActor(volumeSlider);
 		
 		selectedVolume = volumeSlider.getValue();
@@ -126,25 +135,25 @@ public class SettingsScreen implements Screen {
 		selectedResolution = resolutionBox.getSelected();
 		
 		
-		controlsUp = new Label("Up = " + Keys.toString(pongGame.getGameScreen().getGameController().getPlayerPadd().getKeyUp()) + " Key", settingsStyle);
+		controlsUp = new Label("Up Movement = " + Keys.toString(pongGame.getGameScreen().getGameController().getPlayerPadd().getKeyUp()) + " Key", settingsStyle);
 		controlsUp.setPosition(500, 385);
 		stage.addActor(controlsUp);
 		
-		controlsDown = new Label("Down = " + Keys.toString(pongGame.getGameScreen().getGameController().getPlayerPadd().getKeyDown()) + " Key", settingsStyle);
+		controlsDown = new Label("Down Movement = " + Keys.toString(pongGame.getGameScreen().getGameController().getPlayerPadd().getKeyDown()) + " Key", settingsStyle);
 		controlsDown.setPosition(500, 355);
 		stage.addActor(controlsDown);
 		
 		up = "Change Up key";
 		
 		upChange = new TextButton(up, pongGame.getSkin());
-		upChange.setPosition(650, 385);
+		upChange.setPosition(820, 385);
 		upChange.setSize(140, 30);
 		stage.addActor(upChange);
 		
 		down = "Change Down key";
 		
 		downChange = new TextButton(down, pongGame.getSkin());
-		downChange.setPosition(650, 355);
+		downChange.setPosition(820, 355);
 		downChange.setSize(140, 30);
 		stage.addActor(downChange);
 		
@@ -170,25 +179,29 @@ public class SettingsScreen implements Screen {
 		applyButton.setPosition(pongGame.getAppWidth()/2-applyButton.getWidth()/2, 250);
 		stage.addActor(applyButton);
 		
+		
+		
 		menuButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+			
 				super.clicked(event, x, y);
-				pongGame.getBackButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getBackButtonSound().play(pongGame.getGlobalVolume());
 				pongGame.setScreen(pongGame.getMenuScreen());
 				
 			}
 		});
 		
+		
+		//Adds a click listener to the apply button. Applies changes to the selected options.
 		applyButton.addListener(new ClickListener() {
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+			
 				super.clicked(event, x, y);
-				//Apply changes to resolution, difficulty etc
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				
 				setDifficulty(difficultyBox.getSelected());
 				setVolume(volumeSlider.getValue());
@@ -201,7 +214,7 @@ public class SettingsScreen implements Screen {
 			}
 		});
 		
-		
+		//Listener used to change the up key input
 		upListener = new InputListener() {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
@@ -211,7 +224,7 @@ public class SettingsScreen implements Screen {
 				}
 				else {
 					pongGame.getGameScreen().getGameController().getPlayerPadd().setKeyUp(keycode);
-					controlsUp.setText("Up = " + Keys.toString(keycode) + " Key");
+					controlsUp.setText("Up Movement = " + Keys.toString(keycode) + " Key");
 				}
 				stage.removeListener(this);
 				upChange.setText(up);
@@ -229,7 +242,7 @@ public class SettingsScreen implements Screen {
 				}
 				else {
 					pongGame.getGameScreen().getGameController().getPlayerPadd().setKeyDown(keycode);
-					controlsDown.setText("Down = " + Keys.toString(keycode) + " Key");
+					controlsDown.setText("Down Movement = " + Keys.toString(keycode) + " Key");
 				}
 				stage.removeListener(this);
 				downChange.setText(down);
@@ -238,13 +251,14 @@ public class SettingsScreen implements Screen {
 			
 		};
 		
+		//Listener added to textButton to execute code when clicked
 		upChange.addListener(new ClickListener() {
 			
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+		
 				super.clicked(event, x, y);
-					pongGame.getButtonSound().play(pongGame.getButtonVolume());
+					pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 					upChange.setText("Press a Key");
 					downChange.setText(down);
 					controlsError.setVisible(false);
@@ -262,9 +276,9 @@ public class SettingsScreen implements Screen {
 		downChange.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// TODO Auto-generated method stub
+	
 				super.clicked(event, x, y);
-				pongGame.getButtonSound().play(pongGame.getButtonVolume());
+				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				downChange.setText("Press a key");
 				upChange.setText(up);
 				controlsError.setVisible(false);
@@ -277,6 +291,10 @@ public class SettingsScreen implements Screen {
 	}
 	
 	
+	/**
+	 * Method called every time the screen is shown. Sets the screen to take input.
+	 * 
+	 */
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
@@ -284,6 +302,10 @@ public class SettingsScreen implements Screen {
 		eventLogger.settingsScreen();
 	}
 
+	/**
+	 * 
+	 * Render called up to 58 times per second during the current screen. 
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -301,24 +323,25 @@ public class SettingsScreen implements Screen {
 		
 	}
 
+	/**
+	 * Called whenever the screen is re-sized
+	 */
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, false);
 		
 	}
 
+	//Empty implemented methods
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 
+	/**
+	 * Called whenever the screen is hidden. Sets the difficulties back to their previous state if apply has not been clicked
+	 */
 	@Override
 	public void hide() {
 		
@@ -329,6 +352,10 @@ public class SettingsScreen implements Screen {
 		resetControlButtons();
 	}
 
+	/**
+	 * 
+	 * Called to dispose of resources
+	 */
 	@Override
 	public void dispose() {
 		background.dispose();
@@ -336,7 +363,11 @@ public class SettingsScreen implements Screen {
 		
 	}
 
-	
+	/**
+	 * Called within the apply click listener to set the difficulty
+	 * 
+	 * @param diff
+	 */
 	private void setDifficulty(String diff) {
 		
 		if(diff.equals("Easy")) {
@@ -352,12 +383,26 @@ public class SettingsScreen implements Screen {
 
 	}
 	
+	
+	/**
+	 * 
+	 * Called to set the global volume dependent on the slider value
+	 * 
+	 * @param vol
+	 */
 	private void setVolume(float vol) {
 		
-		pongGame.setButtonVolume(vol);
+		pongGame.setGlobalVolume(vol);
 		pongGame.getMusic()[0].setVolume(vol);
 	}
 	
+	
+	/**
+	 * 
+	 * Called to set the graphics resolution dependent on the selected setting
+	 * 
+	 * @param res
+	 */
 	
 	private void setResolution(String res) {
 		
@@ -377,6 +422,11 @@ public class SettingsScreen implements Screen {
 		
 	}
 	
+	/**
+	 * 
+	 * Resets the control change button states back to default
+	 * 
+	 */
 	private void resetControlButtons() {
 		controlsError.setVisible(false);
 		stage.removeListener(upListener);

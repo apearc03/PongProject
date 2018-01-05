@@ -11,18 +11,28 @@ import java.util.Base64;
 import pongproject.game.tests.eventLogger;
 import x.xyz;
 
+/**
+ * 
+ * Class for all database connectivity
+ * 
+ * @author Alex Pearce
+ *
+ */
 
 
 
 public class databaseManager {
 
+	//Connection instance declared
 	private Connection conn; 
 
-	private String accountUsername; //The name of the user.
+	
+	
+	private String accountUsername; 
 	
 
 	
-	
+	//Statements and Strings representing queries 
 	private PreparedStatement insertStatement;
 	private String insertQuery;
 	
@@ -45,6 +55,7 @@ public class databaseManager {
 	private PreparedStatement winRatioStatement;
 	private String winRatioQuery;
 	
+	//Booleans to check which database queries have been executed
 	
 	private boolean check;
 	private boolean insert;
@@ -56,7 +67,7 @@ public class databaseManager {
 	
 	
 	
-	//Bad practice to include database details in source but here is my attempt at obfuscating login details
+	//Variables to obfuscate database login details
 	private xyz zxy = new xyz();
 	private byte[] z;
 	private byte[] x;
@@ -68,7 +79,11 @@ public class databaseManager {
 	
 	
 	
-	
+	/**
+	 * Constructor initializes required variables
+	 * 
+	 * @throws SQLException
+	 */
 	public databaseManager() throws SQLException{
 
 		z = Base64.getDecoder().decode(zxy.x());
@@ -88,34 +103,51 @@ public class databaseManager {
 		 playerScoresRetrieved = false;
 		 winRatioRetrieved = false;
 		
-		 DriverManager.setLoginTimeout(2);
+		 DriverManager.setLoginTimeout(2); //Sets the amount of time before the DriverManager stops trying to connect. In this case. Two seconds.
 		 
 	}
 	
 	
 	
-	
+	/**
+	 * 
+	 * Attempts to make a connection to the database
+	 * 
+	 * @throws SQLException
+	 */
 	public void makeConnection() throws SQLException{
 
 		
 		conn = DriverManager.getConnection(i, o, u);
 		
-		
-
 		    
 	}
 	
 	
+	/**
+	 * Checks if the connection is still valid. Times out after two seconds
+	 * 
+	 * @return a boolean representing a valid connection
+	 * @throws SQLException
+	 */
 	public boolean checkConnection() throws SQLException {
 		
-		return conn.isValid(1);
+		return conn.isValid(2);
 	}
 	
 	
 
 
 	
-	
+	/**
+	 * 
+	 * Checks if the username and password exist within the database
+	 * 
+	 * @param username
+	 * @param password
+	 * @return a boolean representing a successful login or not
+	 * @throws SQLException
+	 */
 	public boolean checkLogin(String username, String password) throws SQLException {
 		
 		
@@ -124,11 +156,11 @@ public class databaseManager {
 		
 		
 		
-		checkLoginQuery = "Select username, password from pong_users where username = ?";
+		checkLoginQuery = "Select username, password from pong_users where username = ?"; //Query assigned to String 
 		checkLoginStatement = conn.prepareStatement(checkLoginQuery);
 		checkLoginStatement.setString(1, username);
 
-		checkLoginRS = checkLoginStatement.executeQuery();
+		checkLoginRS = checkLoginStatement.executeQuery(); //Executes the query
 		
 		check = true;
 		
@@ -136,8 +168,8 @@ public class databaseManager {
 		if(checkLoginRS.first()) {
 			pass = checkLoginRS.getInt("password");
 			
-			if(passHash == pass) {
-				//existing account, both details correct
+			if(passHash == pass) { //Existing account, both details are correct
+				
 				eventLogger.existingUser();
 				accountUsername = username;
 				return true;
@@ -158,11 +190,18 @@ public class databaseManager {
 	
 	
 	
-	
+	/**
+	 * 
+	 * If the account details entered are not in use then create a new account.
+	 * 
+	 * @param username
+	 * @param password
+	 * @throws SQLException
+	 */
 	private void addAccount(String username, String password ) throws SQLException {
 		
-		//If validated insert the username and password into the pong_user database
-		insertQuery = "insert into pong_users (username, password) values (?,?)";
+		
+		insertQuery = "insert into pong_users (username, password) values (?,?)"; //Inserts the new username and password into the database.
 		insertStatement = conn.prepareStatement(insertQuery);
 		insertStatement.setString(1, username);
 		insertStatement.setInt(2, password.hashCode());
@@ -173,8 +212,17 @@ public class databaseManager {
 	}
 	
 	
-	//have to change database to match this now, maybe use indexing
 	
+	/**
+	 * 
+	 * Method to enter the score into the database. Uses an insert query.
+	 * 
+	 * @param userName
+	 * @param date
+	 * @param result
+	 * @param score
+	 * @throws SQLException
+	 */
 	public void enterScore(String userName, String date, String result, int score ) throws SQLException {
 		
 		insertScoreQuery = "insert into pong_scores (username, date, result, score) values (?,?,?,?)";
@@ -192,15 +240,18 @@ public class databaseManager {
 	
 
 	
-	
+	/**
+	 * Method to return the top 50 high scores.
+	 * 
+	 * @return a ResultSet containing the SQL query records
+	 * @throws SQLException
+	 */
 	public ResultSet highScores() throws SQLException {
 		
 		
 		returnScoresQuery = "select * from pong_scores order by score desc limit 50";
 		returnScoresStatement = conn.prepareStatement(returnScoresQuery);
-	
-		
-		
+
 
 		eventLogger.highScoresLoaded();
 		highScoresRetrieved = true;
@@ -212,7 +263,13 @@ public class databaseManager {
 		
 	}
 	
-	
+	/**
+	 * Gets all the highScores of the logged in player.
+	 * 
+	 * @param player
+	 * @return a ResultSet containing the player high scores
+	 * @throws SQLException
+	 */
 	public ResultSet playerScores(String player) throws SQLException {
 		
 		playerScoreQuery = "select * from pong_scores where username = ? order by score desc limit 50";
@@ -225,13 +282,19 @@ public class databaseManager {
 		return playerScoreStatement.executeQuery();
 	}
 	
+	/**
+	 * 
+	 * Gets the logged in player's win percentage
+	 * 
+	 * @param player
+	 * @return A ResultSet containing the player win percentage
+	 * @throws SQLException
+	 */
 	public ResultSet winPercentage(String player) throws SQLException {
 		
 		winRatioQuery = "select sum(result = 'win')/count(*) from pong_scores where username = ?";
 		winRatioStatement = conn.prepareStatement(winRatioQuery);
 		winRatioStatement.setString(1, player);
-		
-		
 		
 		eventLogger.winRatioLoaded();
 		winRatioRetrieved = true;
@@ -239,7 +302,12 @@ public class databaseManager {
 		return winRatioStatement.executeQuery();
 	}
 	
-	
+	/**
+	 * 
+	 * Closes all the statements used though out the application life cycle as well as the connection
+	 * 
+	 * @throws SQLException
+	 */
 	public void closeConnection() throws SQLException {
 		if(insert) {
 			insertStatement.close();
@@ -265,7 +333,9 @@ public class databaseManager {
 	
 	
 	
-	
+	/**
+	 * Getter for the account username
+	 */
 	public String getAccountUsername() {
 		return accountUsername;
 	}

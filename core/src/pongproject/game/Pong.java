@@ -21,18 +21,20 @@ import pongproject.game.loginscreen.LoginScreen;
 import pongproject.game.menuscreen.MenuScreen;
 import pongproject.game.settingsscreen.SettingsScreen;
 
+
+/**
+ * @author Alex Pearce
+ *
+ */
+
 public class Pong extends Game {
 	
 
-	
-	
+
+	//Variables and instance references created. Anything declared here will be in scope of the entire application for shared use.
 	
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-
-
-
-	
 	
 	private Skin skin;
 	
@@ -54,7 +56,7 @@ public class Pong extends Game {
 	private Sound buttonSound;
 	private Sound backButtonSound;
 	private Sound buttonErrorSound;
-	private float buttonVolume;
+	private float globalVolume;
 	
 	private int appHeight;
 	private int appWidth;
@@ -136,8 +138,13 @@ public class Pong extends Game {
 	 * 
 	 */
 	
-	//initialises all necessary variables and sets screen to the menu
-	
+
+	/**
+	 * The create method is the starting point of the application.
+	 * I have initialized all screen instances, a databaseManager, bitmapFonts and music.
+	 * The current screen is then set to the menu screen.
+	 * 
+	 */
 	@Override
 	public void create () {
 		
@@ -155,7 +162,7 @@ public class Pong extends Game {
 		
 			
 		
-		Gdx.graphics.setTitle("Pong");
+		
 		
 		camera = new OrthographicCamera();
 		
@@ -174,6 +181,7 @@ public class Pong extends Game {
 		
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("openSans.ttf"));
 		
+		//Variables fonts created using a true type font file.
 		
 		parameter16 = new FreeTypeFontParameter();
 		parameter16.size = 16;
@@ -204,16 +212,19 @@ public class Pong extends Game {
 		font100.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		
+		//Button sounds initialized with internal sound files
 		buttonSound = Gdx.audio.newSound(Gdx.files.internal("buttonSound.mp3"));	
 		backButtonSound = Gdx.audio.newSound(Gdx.files.internal("backButtonSound.mp3"));
 		buttonErrorSound = Gdx.audio.newSound(Gdx.files.internal("buttonError.mp3"));
-		buttonVolume = 0.2f;
+		globalVolume = 0.2f;
 		
 	
 		
-		//errorFont.setColor(Color.RED);
+		
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
+		
+		//I have created one instance of each screen that will be re-used throughout the application
 		
 		menuScreen = new MenuScreen(this);
 		gameScreen = new GameScreen(this);
@@ -221,20 +232,22 @@ public class Pong extends Game {
 		loginScreen = new LoginScreen(this);
 		settingsScreen = new SettingsScreen(this);
 		
-	 //testing purposes
+
 		
 		loggedIn = false;
 		
-		//this.setScreen(menuScreen);
-		this.setScreen(menuScreen);
+		
+		this.setScreen(menuScreen); //Sets the first screen to the Menu
 		
 		
-		music[0].play();
-		music[0].setVolume(buttonVolume);
+		music[0].play(); //Begins playing the music
+		music[0].setVolume(globalVolume);
 		music[0].setLooping(true);
 	}
 
-	//Disposes of resources on game exit
+	/**
+	 * Dispose is called when the application exits. All resources are disposed of to be garbage collected.
+	 */
 	@Override
 	public void dispose() {
 		
@@ -260,7 +273,8 @@ public class Pong extends Game {
 	
 	}
 	
-	// Getter methods
+	
+	//Below are various getters and setters used by other classes in the application.
 	
 	public SpriteBatch getBatch() {
 		return batch;
@@ -316,12 +330,12 @@ public class Pong extends Game {
 		return gameScreen;
 	}
 	
-	public float getButtonVolume() {
-		return buttonVolume;
+	public float getGlobalVolume() {
+		return globalVolume;
 	}
 	
-	public void setButtonVolume(float buttonVolume) {
-		this.buttonVolume = buttonVolume;
+	public void setGlobalVolume(float volume) {
+		this.globalVolume = volume;
 	}
 	
 	public HighScoreScreen getHighScoreScreen() {

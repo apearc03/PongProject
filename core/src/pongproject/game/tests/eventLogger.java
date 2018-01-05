@@ -1,5 +1,11 @@
 package pongproject.game.tests;
 
+/**
+ * A class containing many static methods to be called during certain events within the game.
+ * 
+ * @author Alex Pearce
+ *
+ */
 public abstract class eventLogger {
 
 	

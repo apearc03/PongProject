@@ -1,18 +1,30 @@
 package pongproject.game.gamescreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * Class designed to represent a computer paddle
+ * 
+ * @author Alex Pearce
+ *
+ */
 public class ComputerPaddle extends Paddle{
 
 	
 	private Ball gameBall;
-	private float difficulty; //lower the difficulty number to make harder
+	//Float variable representing the difficulty
+	private float difficulty; 
+	//Sound variables for game events
 	private Sound cpHit;
 	private Sound cpScore;
 	private Sound cpWin;
 	
+	/**
+	 * Parameter initializes paddle attributes
+	 * 
+	 * @param ball
+	 */
 	public ComputerPaddle(Ball ball) {
 		super(Gdx.files.internal("paddleGreenCP.png"), 50);
 		this.gameBall = ball;
@@ -28,23 +40,18 @@ public class ComputerPaddle extends Paddle{
 	}
 
 	
-	//Move to ball y with max speed, max speed should change with x velocity.
-	
-	//make invisible ball 
-	
-	//maybe add directional movement like player paddle.
 	
 
-	
+	/**
+	 * 
+	 * Move's the paddle towards the ball position of the Y axis. 
+	 * 
+	 */
 	public void movePaddleToBall() {
 		
+		
+		updatePosition(((gameBall.getY()-getHeight()/2+gameBall.height/2)-getY())/difficulty); 
 
-	
-		
-		updatePosition(((gameBall.getY()-getHeight()/2+gameBall.height/2)-getY())/difficulty);
-		
-		
-		
 		
 		
 	}
@@ -53,7 +60,7 @@ public class ComputerPaddle extends Paddle{
 
 	
 	
-
+	//Methods to return game sounds associated with the computer paddle
 
 	@Override
 	public Sound scoreSound() {
