@@ -30,7 +30,7 @@ public class databaseManager {
 	
 	private String accountUsername; 
 	
-
+	
 	
 	//Statements and Strings representing queries 
 	private PreparedStatement insertStatement;
@@ -95,7 +95,6 @@ public class databaseManager {
 		 
 
 		
-		 
 		 check = false;
 		 insert = false;
 		 scoreInsert = false;
@@ -120,7 +119,7 @@ public class databaseManager {
 		
 		conn = DriverManager.getConnection(i, o, u);
 		
-		    
+		   
 	}
 	
 	

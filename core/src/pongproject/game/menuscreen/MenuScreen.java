@@ -58,13 +58,15 @@ public class MenuScreen implements Screen{
 	
 	private Sprite backgroundSprite;
 
-	
+
 	
 	/**
 	 * Constructor initializes all instance variables.
 	 * @param pong
 	 */
 	public MenuScreen(final Pong pong) {
+		
+
 		
 		pongGame = pong;
 		
@@ -248,7 +250,7 @@ public class MenuScreen implements Screen{
 				super.clicked(event, x, y);
 				pongGame.getButtonSound().play(pongGame.getGlobalVolume());
 				Gdx.app.exit();
-			
+				
 			}
 		});
 		
@@ -318,6 +320,8 @@ public class MenuScreen implements Screen{
 		stage.act(delta);
 		stage.draw();
 		
+	
+		
 	}
 	
 	
@@ -369,7 +373,7 @@ public class MenuScreen implements Screen{
 	 * 
 	 * @throws SQLException
 	 */
-	private void makeConnection() throws SQLException {
+	private void makeConnection() throws SQLException {  //Changed these two methods to public
 		pongGame.getData().makeConnection();
 		
 		eventLogger.databaseConnectionMade();

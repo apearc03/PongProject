@@ -81,20 +81,23 @@ public class Pong extends Game {
 	
 	/*to do
 	 * 
+	 * USE UNIVERSITY DATABASE INSTEAD OF AWS.
 	 * 
-	 * Add background to settings screen
+	 * ATTEMPT TO MAKE SIMPLE WEB SERVICE ON UNIVERSITY WEB SERVER TO RETRIEVE DATABASE LOGIN DETAILS
 	 * 
+	 * Push different versions to github. Separate repositories. Original is dev. Desktop and Android.
 	 * 
-	 * Change scores formula to account for difficulty?
+	 * Android versions slows down when ball reaches max speed?
+	 * 
+	 * Might be a bug on Desktop version where the controls fadeout is sped up after difficulty is changed. Play fade in is fine. Differences between the two are Controls uses the skin. Controls text is reassigned in show(). Try changing these.
+	 * 
+	 * Add jprofiler section? see email
 	 * 
 	 * Then remake project for different platforms.
 	 * 
 	 * When remaking project for deployment, remove eventLogger class for all. Remove database functionality for android. Remove necessary functionality for html.
 	 * 
-	 * 
-	 * Need to redo all fonts, have separate bitMapFonts for each ranking.
-	 * Do fonts for titles of screens.
-	 * Remember to close all fonts in dispose methods after they are sorted.
+	 *
 	 * 
 	 * 
 	 * 
@@ -115,17 +118,11 @@ public class Pong extends Game {
 	 * 
 	 * 
 	 * 
-	 * Add tab function to buttons?
 	 * 
 	 * 
 	 * 
-	 * Remove empty pause, resume implementations if possible
 	 * 
 	 * 
-	 * 
-	 * If randomly spawned powerups for length of paddle are used. Make use of libgdx timer to set duration of powerup. Random java class to set positioning on the middle x axis.
-	 * 
-	 * If you do 2 player, try to just use gameScreen class but with a new twoPlayerGameController class. Show player controls differently
 	 * 
 	 * 
 	 * Tweak difficulty and max ball x velocity at the end
@@ -133,7 +130,7 @@ public class Pong extends Game {
 	 * 
 	 * On export "Extract required libraries into generated JAR"
 		Remove unused libraries from build path? Controllers etc
-	 * Being creating final Jar. Make a new project with only the required libraries and platform launchers.
+	 * When creating final Jar. Make a new project with only the required libraries and platform launchers.
 	 * 
 	 * 
 	 */
@@ -226,7 +223,8 @@ public class Pong extends Game {
 		
 		//I have created one instance of each screen that will be re-used throughout the application
 		
-		menuScreen = new MenuScreen(this);
+		
+		menuScreen = new MenuScreen(this);	
 		gameScreen = new GameScreen(this);
 		highScoreScreen = new HighScoreScreen(this);
 		loginScreen = new LoginScreen(this);
