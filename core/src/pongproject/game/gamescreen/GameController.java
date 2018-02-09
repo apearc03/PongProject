@@ -380,7 +380,7 @@ public class GameController {
 						
 						if(pongGame.getFirstConnection()) {  //If there was a connection established attempts to add score to the database.
 							
-							pongGame.getData().checkConnection(); 
+							//pongGame.getData().checkConnection(); 
 							screen.getScoreStored().setPosition(pongGame.getAppWidth()/2-165, pongGame.getAppHeight()-200);
 							
 							gameScore -= Math.round(computerPadd.getDifficulty())*50; //Adjusts score dependent on difficulty

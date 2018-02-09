@@ -222,7 +222,7 @@ public class MenuScreen implements Screen{
 				super.clicked(event, x, y);
 				try {
 					makeConnection();
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					
 					showRetryConnection();
 				}
@@ -258,7 +258,7 @@ public class MenuScreen implements Screen{
 		//Attempts to make a connection to the database
 		try {
 			makeConnection();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			showRetryConnection();
 			pongGame.setFirstConnection(false);
@@ -287,14 +287,15 @@ public class MenuScreen implements Screen{
 				}
 			}	
 		} catch (SQLException e) {
-			
-			e.printStackTrace();
+			//Added to desktop application
+			showRetryConnection();
 		}
 		
 		if(pongGame.getLoggedIn()) {
 			loginButton.setVisible(true);
 		}
 	
+		
 		
 	}
 	
@@ -373,7 +374,7 @@ public class MenuScreen implements Screen{
 	 * 
 	 * @throws SQLException
 	 */
-	private void makeConnection() throws SQLException {  //Changed these two methods to public
+	private void makeConnection() throws Exception {  //Changed these two methods to public
 		pongGame.getData().makeConnection();
 		
 		eventLogger.databaseConnectionMade();

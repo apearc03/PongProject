@@ -137,6 +137,7 @@ public class LoginScreen implements Screen {
 				
 				
 				if(validatePassword(password)&validateUsername(username)) { //If the password and username values are valid return true
+							
 							try {
 									if(pongGame.getData().checkLogin(username, password)) { //Checks the database for a username and password match
 										

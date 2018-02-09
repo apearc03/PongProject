@@ -69,7 +69,7 @@ public class databaseManager {
 	
 	//Variables to obfuscate database login details
 	private xyz zxy = new xyz();
-	private byte[] z;
+	//private byte[] z;
 	private byte[] x;
 	private byte[] y;
 	 
@@ -86,12 +86,12 @@ public class databaseManager {
 	 */
 	public databaseManager() throws SQLException{
 
-		z = Base64.getDecoder().decode(zxy.x());
+		//z = Base64.getDecoder().decode(zxy.x());
 		 x = Base64.getDecoder().decode(zxy.y());
 		 y = Base64.getDecoder().decode(zxy.z());
 		 i = new String(y);
 		 o = new String(x);
-		 u = new String(z);
+		// u = new String(z);
 		 
 
 		
@@ -114,10 +114,12 @@ public class databaseManager {
 	 * 
 	 * @throws SQLException
 	 */
-	public void makeConnection() throws SQLException{
+	public void makeConnection() throws Exception{
 
+		u = zxy.recover("pong");
 		
 		conn = DriverManager.getConnection(i, o, u);
+		//conn = DriverManager.getConnection(i, o, u);
 		
 		   
 	}

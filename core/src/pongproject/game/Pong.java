@@ -81,9 +81,12 @@ public class Pong extends Game {
 	
 	/*to do
 	 * 
+	 * Add (GMT) to date and time title on highscore screen?
+	 * 
+	 * Implement web service and remove xyz class
+	 * 
 	 * USE UNIVERSITY DATABASE INSTEAD OF AWS.
 	 * 
-	 * ATTEMPT TO MAKE SIMPLE WEB SERVICE ON UNIVERSITY WEB SERVER TO RETRIEVE DATABASE LOGIN DETAILS
 	 * 
 	 * Push different versions to github. Separate repositories. Original is dev. Desktop and Android.
 	 * 
@@ -154,7 +157,7 @@ public class Pong extends Game {
 				
 				e.printStackTrace();
 			}
-		
+			
 			
 		
 			

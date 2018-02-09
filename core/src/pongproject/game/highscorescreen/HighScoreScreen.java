@@ -41,6 +41,7 @@ public class HighScoreScreen implements Screen{
 	private ResultSet winPercentage;
 	private String winPercentageString;
 	
+	
 	private boolean scoresAssigned;
 	private boolean playerScoresAssigned;
 
@@ -218,7 +219,7 @@ public class HighScoreScreen implements Screen{
 		Gdx.input.setInputProcessor(stage);
 		eventLogger.highScoreScreen();
 		
-			try { //Attemps to get the highScore data.
+			try { //Attempts to get the highScore data.
 				scores = pongGame.getData().highScores();
 				scoresAssigned = true;
 				
@@ -372,6 +373,7 @@ public class HighScoreScreen implements Screen{
 				winPercentage.close();
 		}
 	}
+	
 	
 	/**
 	 * 
