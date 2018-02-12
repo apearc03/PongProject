@@ -36,7 +36,7 @@ public class LoadingScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		font.draw(batch, "L O A D I N G ...", 485, 482);
+		font.draw(batch, "L O A D I N G ...", 470, 482);
 		batch.end();
 		i--;
 		if(i==loaded) {
