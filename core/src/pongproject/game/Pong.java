@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import pongproject.game.database.databaseManager;
 import pongproject.game.gamescreen.GameScreen;
 import pongproject.game.highscorescreen.HighScoreScreen;
+import pongproject.game.loadingscreen.LoadingScreen;
 import pongproject.game.loginscreen.LoginScreen;
 import pongproject.game.menuscreen.MenuScreen;
 import pongproject.game.settingsscreen.SettingsScreen;
@@ -29,7 +30,7 @@ import pongproject.game.settingsscreen.SettingsScreen;
 
 public class Pong extends Game {
 	
-
+	
 
 	//Variables and instance references created. Anything declared here will be in scope of the entire application for shared use.
 	
@@ -81,18 +82,19 @@ public class Pong extends Game {
 	
 	/*to do
 	 * 
-	 * Add (GMT) to date and time title on highscore screen?
 	 * 
-	 * Implement web service and remove xyz class
+	 * Spice up loading screen a bit
 	 * 
-	 * USE UNIVERSITY DATABASE INSTEAD OF AWS.
+	 * Test android app on other phone with larger screen.
+	 * 
+	 * 
+	 * Create detailed ReadMe file for android and desktop in one file.
 	 * 
 	 * 
 	 * Push different versions to github. Separate repositories. Original is dev. Desktop and Android.
 	 * 
 	 * Android versions slows down when ball reaches max speed?
 	 * 
-	 * Might be a bug on Desktop version where the controls fadeout is sped up after difficulty is changed. Play fade in is fine. Differences between the two are Controls uses the skin. Controls text is reassigned in show(). Try changing these.
 	 * 
 	 * Add jprofiler section? see email
 	 * 
@@ -107,26 +109,12 @@ public class Pong extends Game {
 	 * In all the exceptions where I have just returned to the menuScreen. 
 	 * Maybe put a line of code after to set a label or similar on the menuScreen to show that there has been a loss of connection to database.
 	 * 
-	 * Application currently uses freetype font library.
 	 * 
 	 * Remember to clear all scores from database before deployment, add dummy scores suitable for game mode of first to 2 or 3.
 	 * 
 	 * 
 	 * 
-	 * 
-	 * Might need to change name of paddle velocity variable. I think its speed not velocity since x remains the same.
 	 * Menu and buttons are placed on screen Y coordinate with magic number, need to place according to screen size
-	 * 
-	 * Tested with delta a lot, seemed to make things worse
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 
 	 * Tweak difficulty and max ball x velocity at the end
 	 * 
@@ -141,111 +129,116 @@ public class Pong extends Game {
 
 	/**
 	 * The create method is the starting point of the application.
-	 * I have initialized all screen instances, a databaseManager, bitmapFonts and music.
-	 * The current screen is then set to the menu screen.
 	 * 
 	 */
 	@Override
 	public void create () {
-		
-		
-		
-	
-			try {
-				data = new databaseManager();
-			} catch (SQLException e) {
-				
-				e.printStackTrace();
-			}
-			
-			
-		
-			
-		
-		
-		
-		camera = new OrthographicCamera();
-		
-		
-		batch = new SpriteBatch();
 
-		appWidth = 1024;
-		appHeight = 768;
+	LoadingScreen l = new LoadingScreen(this);
+	this.setScreen(l);
 		
-		
-		
-		
-		music[0] = Gdx.audio.newMusic(Gdx.files.internal("music2.ogg"));
-		music[1] = Gdx.audio.newMusic(Gdx.files.internal("music.ogg"));
-		
-		
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("openSans.ttf"));
-		
-		//Variables fonts created using a true type font file.
-		
-		parameter16 = new FreeTypeFontParameter();
-		parameter16.size = 16;
-		font16 = generator.generateFont(parameter16);
-		font16.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		
-		parameter14 = new FreeTypeFontParameter();
-		parameter14.size = 14;
-		font14 = generator.generateFont(parameter14);
-		font14.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		
-		parameter12 = new FreeTypeFontParameter();
-		parameter12.size = 12;
-		font12 = generator.generateFont(parameter12);
-		font12.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		parameter20 = new FreeTypeFontParameter();
-		parameter20.size = 20;
-		font20 = generator.generateFont(parameter20);
-		font20.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		
-		parameter100 = new FreeTypeFontParameter();
-		parameter100.size = 100;
-		font100 = generator.generateFont(parameter100);
-		font100.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		
-		//Button sounds initialized with internal sound files
-		buttonSound = Gdx.audio.newSound(Gdx.files.internal("buttonSound.mp3"));	
-		backButtonSound = Gdx.audio.newSound(Gdx.files.internal("backButtonSound.mp3"));
-		buttonErrorSound = Gdx.audio.newSound(Gdx.files.internal("buttonError.mp3"));
-		globalVolume = 0.2f;
-		
-	
-		
-		
-		
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		
-		//I have created one instance of each screen that will be re-used throughout the application
-		
-		
-		menuScreen = new MenuScreen(this);	
-		gameScreen = new GameScreen(this);
-		highScoreScreen = new HighScoreScreen(this);
-		loginScreen = new LoginScreen(this);
-		settingsScreen = new SettingsScreen(this);
-		
-
-		
-		loggedIn = false;
-		
-		
-		this.setScreen(menuScreen); //Sets the first screen to the Menu
-		
-		
-		music[0].play(); //Begins playing the music
-		music[0].setVolume(globalVolume);
-		music[0].setLooping(true);
 	}
+	/**
+	 * Init() initialises all necessary variables and object instances.
+	 * 
+	 */
+	public void init() {
+		
+		try {
+			data = new databaseManager();
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		
+	
+	batch = new SpriteBatch();
+	
+	
+	camera = new OrthographicCamera();
+	
+	
+	
 
+	appWidth = 1024;
+	appHeight = 768;
+	
+	
+	
+	
+	music[0] = Gdx.audio.newMusic(Gdx.files.internal("music2.ogg"));
+	music[1] = Gdx.audio.newMusic(Gdx.files.internal("music.ogg"));
+	
+	
+	generator = new FreeTypeFontGenerator(Gdx.files.internal("openSans.ttf"));
+	
+	//Variables fonts created using a true type font file.
+	parameter20 = new FreeTypeFontParameter();
+	parameter20.size = 20;
+	font20 = generator.generateFont(parameter20);
+	font20.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+	
+	parameter16 = new FreeTypeFontParameter();
+	parameter16.size = 16;
+	font16 = generator.generateFont(parameter16);
+	font16.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+	
+	
+	parameter14 = new FreeTypeFontParameter();
+	parameter14.size = 14;
+	font14 = generator.generateFont(parameter14);
+	font14.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+	
+	
+	parameter12 = new FreeTypeFontParameter();
+	parameter12.size = 12;
+	font12 = generator.generateFont(parameter12);
+	font12.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+	
+
+	
+	parameter100 = new FreeTypeFontParameter();
+	parameter100.size = 100;
+	font100 = generator.generateFont(parameter100);
+	font100.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+	
+	
+	//Button sounds initialized with internal sound files
+	buttonSound = Gdx.audio.newSound(Gdx.files.internal("buttonSound.mp3"));	
+	backButtonSound = Gdx.audio.newSound(Gdx.files.internal("backButtonSound.mp3"));
+	buttonErrorSound = Gdx.audio.newSound(Gdx.files.internal("buttonError.mp3"));
+	globalVolume = 0.2f;
+	
+
+	
+	
+	
+	skin = new Skin(Gdx.files.internal("uiskin.json"));
+	
+	//I have created one instance of each screen that will be re-used throughout the application
+
+	
+	
+	menuScreen = new MenuScreen(this);	
+	gameScreen = new GameScreen(this);
+	highScoreScreen = new HighScoreScreen(this);
+	loginScreen = new LoginScreen(this);
+	settingsScreen = new SettingsScreen(this);
+	
+
+	
+	loggedIn = false;
+	
+	
+	this.setScreen(menuScreen); //Sets the first screen to the Menu
+	
+	
+	music[0].play(); //Begins playing the music
+	music[0].setVolume(globalVolume);
+	music[0].setLooping(true);
+	}
+	
 	/**
 	 * Dispose is called when the application exits. All resources are disposed of to be garbage collected.
 	 */

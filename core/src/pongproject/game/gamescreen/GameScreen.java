@@ -38,14 +38,15 @@ public class GameScreen implements Screen{
 
 	private float elapsed;
 	private boolean gameStarted;
-	
+	//
+	private Action dummy;
+	private Label dum;
+	//
 	private LabelStyle loadStyle;
 	private Label controls;
 	private Label play;
 	private Action playFadeOut;
 	private Action controlsFadeOut;
-	
-
 	
 	private Label winner;
 	private Label scoreStored;
@@ -81,11 +82,18 @@ public class GameScreen implements Screen{
 		
 		loadStyle = new LabelStyle(pongGame.getFont100(), Color.ORANGE);
 		
+		//
+		dummy = Actions.fadeOut(5.0f);
+		dum = new Label("Use the up and down arrow keys to move",pongGame.getSkin());
+		dum.setScale(2.0f);
+		dum.setPosition(pongGame.getAppWidth()/2-dum.getWidth()/2, pongGame.getAppHeight()-dum.getHeight());
+		stage.addActor(dum);
+		//
 		
 		controlsFadeOut = Actions.fadeOut(5.0f);
-		controls = new Label("Use the up and down arrow keys to move", pongGame.getSkin());
-		controls.setScale(2.0f);
-		controls.setPosition(pongGame.getAppWidth()/2-controls.getWidth()/2, pongGame.getAppHeight()-controls.getHeight());
+		controls = new Label("", pongGame.getSkin()); //Use the up and down arrow keys to move
+		//controls.setScale(2.0f);
+		//controls.setPosition(pongGame.getAppWidth()/2-controls.getWidth()/2, pongGame.getAppHeight()-controls.getHeight());
 		stage.addActor(controls);
 		
 		
@@ -96,8 +104,7 @@ public class GameScreen implements Screen{
 		
 		
 		
-		
-		
+	
 		
 		
 		
@@ -174,8 +181,14 @@ public class GameScreen implements Screen{
 		
 		elapsed = 0;
 		
-		controls.setText("Use the " + Keys.toString(gameController.getPlayerPadd().getKeyUp()) + " and " + Keys.toString(gameController.getPlayerPadd().getKeyDown())  + " keys to move");
-		controls.setColor(Color.ORANGE);
+		
+		dum.setText("Use the " + Keys.toString(gameController.getPlayerPadd().getKeyUp()) + " and " + Keys.toString(gameController.getPlayerPadd().getKeyDown())  + " keys to move");
+		dum.setColor(Color.ORANGE);
+		dum.addAction(dummy);
+		
+		
+		//controls.setText("Use the " + Keys.toString(gameController.getPlayerPadd().getKeyUp()) + " and " + Keys.toString(gameController.getPlayerPadd().getKeyDown())  + " keys to move");
+		//controls.setColor(Color.ORANGE);
 		controls.addAction(controlsFadeOut);
 		
 		play.setColor(Color.ORANGE);
@@ -284,9 +297,10 @@ public class GameScreen implements Screen{
 		menuButton.setVisible(false);
 		playAgainButton.setVisible(false);
 		
-
-		
-		controlsFadeOut.reset();
+		//
+		dummy.reset();
+		//
+		//controlsFadeOut.reset();
 
 		playFadeOut.reset();
 		
