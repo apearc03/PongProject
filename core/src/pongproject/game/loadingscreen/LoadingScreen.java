@@ -20,13 +20,14 @@ public class LoadingScreen implements Screen{
 	private BitmapFont font;
 	private int i;
 	private int loaded;
-	
+	private String message;
 	public LoadingScreen(Pong pong) {
 		pongGame = pong;
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		i = 5;
 		loaded =  0;
+		message = "L O A D I N G . . .";
 	}
 	
 	@Override
@@ -36,7 +37,7 @@ public class LoadingScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		font.draw(batch, "L O A D I N G ...", 470, 482);
+		font.draw(batch, message, 470, 482);
 		batch.end();
 		i--;
 		if(i==loaded) {

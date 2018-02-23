@@ -83,7 +83,6 @@ public class Pong extends Game {
 	/*to do
 	 * 
 	 * 
-	 * Spice up loading screen a bit
 	 * 
 	 * Test android app on other phone with larger screen.
 	 * 
