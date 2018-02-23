@@ -2,7 +2,7 @@
 
 # BSc Computing project
 
-I have decided to build my own version of Pong for my BSc project. 
+I decided to build my own version of Pong for my BSc project. 
 The game will be developed using the LibGDX Java game development framework.
 
 ## Technologies
