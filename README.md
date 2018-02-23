@@ -18,7 +18,7 @@ Art/Music
 
 ## Technologies
 
-Java SE 1.8.
+Java SE.
 
 LibGDX - Java game Framework.
 
