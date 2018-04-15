@@ -86,4 +86,10 @@ public abstract class eventLogger {
 	public static void updateScore(int change) {
 		System.out.println("Score changed by " + change);
 	}
+	public static void gamePaused() {
+		System.out.println("Game paused");
+	}
+	public static void gameResumed() {
+		System.out.println("Game resumed");
+	}
 }

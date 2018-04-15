@@ -49,18 +49,18 @@ public class PlayerPaddle extends Paddle{
 	 */
 	public void movePaddle() {
 		
-		if(Gdx.input.isKeyPressed(keyUp)) {
+		
+			if(Gdx.input.isKeyPressed(keyUp)) {
+					
+				setyVelocity(4);
+	
+			}
+			
+			if(Gdx.input.isKeyPressed(keyDown)) {
 				
-			setyVelocity(4);
-
-		}
-		
-		if(Gdx.input.isKeyPressed(keyDown)) {
-			
-			setyVelocity(-4);
-			
-		}
-		
+				setyVelocity(-4);
+				
+			}
 	}
 
 	//Getter and Setter methods

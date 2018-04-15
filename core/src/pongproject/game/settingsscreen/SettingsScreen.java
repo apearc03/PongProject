@@ -50,7 +50,7 @@ public class SettingsScreen implements Screen {
 	
 	private Label controlsUp;
 	private Label controlsDown;
-	
+	private Label pauseControl;
 	private Label controlsLabel;
 	
 	private Label controlsError;
@@ -180,6 +180,9 @@ public class SettingsScreen implements Screen {
 		stage.addActor(applyButton);
 		
 		
+		pauseControl = new Label("Pause = Space Key", settingsStyle);
+		pauseControl.setPosition(500, 325);
+		stage.addActor(pauseControl);
 		
 		menuButton.addListener(new ClickListener() {
 			@Override
@@ -220,6 +223,11 @@ public class SettingsScreen implements Screen {
 			public boolean keyDown(InputEvent event, int keycode) {
 	
 				if(keycode == pongGame.getGameScreen().getGameController().getPlayerPadd().getKeyDown()) {
+					controlsError.setText("Up and Down controls cannot be the same!");
+					controlsError.setVisible(true);
+				}
+				else if(keycode == Keys.SPACE) {
+					controlsError.setText("Movement key cannot be the Pause key!");
 					controlsError.setVisible(true);
 				}
 				else {
@@ -238,6 +246,11 @@ public class SettingsScreen implements Screen {
 			public boolean keyDown(InputEvent event, int keycode) {
 				
 				if(keycode == pongGame.getGameScreen().getGameController().getPlayerPadd().getKeyUp()) {
+					controlsError.setText("Up and Down controls cannot be the same!");
+					controlsError.setVisible(true);
+				}
+				else if(keycode == Keys.SPACE) {
+					controlsError.setText("Movement key cannot be the Pause key!");
 					controlsError.setVisible(true);
 				}
 				else {

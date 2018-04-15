@@ -38,6 +38,10 @@ public class GameScreen implements Screen{
 
 	private float elapsed;
 	private boolean gameStarted;
+	private boolean gamePaused;
+	private boolean gameEnded;
+	private float pausedX;
+	private float pausedY;
 	//
 	private Action dummy;
 	private Label dum;
@@ -45,6 +49,7 @@ public class GameScreen implements Screen{
 	private LabelStyle loadStyle;
 	private Label controls;
 	private Label play;
+	private Label paused;
 	private Action playFadeOut;
 	private Action controlsFadeOut;
 	
@@ -109,7 +114,6 @@ public class GameScreen implements Screen{
 		
 		
 		
-		
 		playAgainButton = new TextButton("Play again", pongGame.getSkin());
 		playAgainButton.setSize(100, 30);
 		playAgainButton.setVisible(false);
@@ -160,7 +164,13 @@ public class GameScreen implements Screen{
 	
 		
 		
-	
+		pausedX = 0;
+		pausedY = 0;
+		
+		paused = new Label("Paused", pongGame.getSkin());
+		paused.setPosition(pongGame.getAppWidth()/2-paused.getWidth()/2,  pongGame.getAppHeight()/2-paused.getHeight()/2);
+		paused.setVisible(false);
+		stage.addActor(paused);
 	}
 
 	
@@ -195,7 +205,8 @@ public class GameScreen implements Screen{
 		play.addAction(playFadeOut);
 		
 		
-		
+		gamePaused = false;
+		gameEnded = false;
 		gameStarted = false;
 		
 	}
@@ -213,9 +224,10 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		
-	
+		
 		gameController.update();
 		
+		checkForPause();
 		
 		
 		
@@ -343,7 +355,34 @@ public class GameScreen implements Screen{
 		scoreStored.setVisible(true);
 	}
 
-	//Getter methods
+	/**
+	 * 
+	 * Checks if the game is paused and changes the asset state appropriately
+	 * 
+	 * 
+	 */
+	private void checkForPause() {
+		
+		if(gameStarted && !gameEnded) {
+			if(Gdx.input.isKeyJustPressed(Keys.SPACE)&&!gamePaused) {
+				eventLogger.gamePaused();
+				gamePaused = true;
+				pausedX = gameController.getBall().getxVelocity();
+				pausedY = gameController.getBall().getyVelocity();
+				gameController.getBall().setVelocity(0, 0);
+				paused.setVisible(true);
+				
+			}
+			else if(Gdx.input.isKeyJustPressed(Keys.SPACE)&&gamePaused) {
+				eventLogger.gameResumed();
+				gamePaused = false;
+				gameController.getBall().setVelocity(pausedX, pausedY);	
+				paused.setVisible(false);
+			}
+		}
+	}
+	
+	//Getter and setter methods
 	
 	public Label getScoreStored() {
 		return scoreStored;
@@ -360,5 +399,15 @@ public class GameScreen implements Screen{
 	public GameController getGameController() {
 		return gameController;
 	}
+	
+	public boolean getGamePaused() {
+		return gamePaused;
+	}
+	
+	public void setGameEnded(boolean ended) {
+		gameEnded = ended;
+	}
+	
+	
 }
 
